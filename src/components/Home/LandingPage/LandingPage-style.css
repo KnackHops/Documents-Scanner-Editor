@@ -1,0 +1,51 @@
+article.landingpage-container > form {
+    position: relative;
+    height: 25rem;
+    width: 35rem;
+    box-shadow: 0 0 3px black;
+    padding: 3rem 1rem;
+    transition: .25s all;
+}
+
+article.landingpage-container > form.login-container {
+    margin-top: 5rem;
+    height: 15rem;
+}
+
+@media only screen and (max-width: 750px) {
+    article.landingpage-container > form {
+        width: 100%;
+    }
+    
+}
+
+article.landingpage-container > form > p {
+    display: flex;
+    font-size: 1.25rem;
+    line-height: 1.5rem;
+    margin: .25rem 0;
+}
+
+article.landingpage-container > form > p > label {
+    flex: 1;
+}
+
+article.landingpage-container > form > p > input {
+    flex: 2;
+    font-size: 1rem;
+    line-height: 1.5rem;
+}
+
+article.landingpage-container > form > p:last-child {
+    width: 90%;
+    justify-content: flex-end;
+    position: absolute;
+    bottom: 0;
+    margin-bottom: 1rem;
+}
+
+article.landingpage-container > form > p:last-child > button {
+    margin-left: 1rem;
+    padding: .1rem .25rem;
+}
+
