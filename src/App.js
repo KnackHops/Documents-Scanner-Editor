@@ -1,24 +1,27 @@
-import logo from './logo.svg';
 import './App.css';
+import { useState, useEffect } from 'react';
+import ErrorBoundary from './wrappers/ErrorBoundary';
+import Headers from './components/Headers/Headers';
+import Home from './components/Home/Home'; 
 
 function App() {
+  const [logIn, setLogIn] = useState(false);
+
+  const testLogInHandle = () => {
+    setLogIn(!logIn);
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <ErrorBoundary>
+        <Headers logIn={logIn} testLogInHandle={testLogInHandle}/>
+        <Home logIn={logIn} />
+        <footer>
+                <p>Source code https://github.com/KnackHops/documents-scanner-editor</p>
+                <p>Developed by KnackHops</p>
+        </footer>
+      </ErrorBoundary>
+    </>
   );
 }
 
