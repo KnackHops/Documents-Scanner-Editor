@@ -1,5 +1,5 @@
 header {
-    height: 2.5rem;
+    height: 3rem;
     width: 100%;
     flex-flow: row;
     justify-content: space-between;
@@ -11,7 +11,9 @@ header.landingpage-header {
 }
 
 p.searchbar-container > input {
+    margin: 1rem 0;
     width: 25rem;
+    line-height: 1.5rem;
 }
 
 @media only screen and (max-width: 600px) {
