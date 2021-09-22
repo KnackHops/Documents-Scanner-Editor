@@ -1,23 +1,77 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import DocumentPage from '../DocumentPage/DocumentPage';
 import DocumentList from './DocumentList';
 
 const DocumentCentral = () => {
-    const [documentID, setDocumentID] = useState(null);
+    const [documentList, setDocumentList] = useState(null);
 
-    const documentHandler = id => {
-        setDocumentID(id);
+    const documentFetch = async () =>{
+        fetch('http://127.0.0.1:5000/document/fetch',{
+                method: 'GET',
+                mode: 'cors'
+            }).then(resp=>{
+                if(resp.ok){
+                    return resp.json()
+                }else{
+                    throw "error fetching!";
+                }
+            }).then(({documents})=>{
+                setDocumentList({documents})
+            }).catch(err=>{
+                console.log(err);
+            })
+    }
+
+    useEffect(()=>{
+        documentFetch()
+    }, [])
+
+    const [document, setDocument] = useState(null);
+
+    const documentHandler = data => {
+        if(!data){
+            setDocument(null)
+        }else{
+            setDocument(data)
+        }
+    }
+
+    const saveDocument = doc => {
+        if(doc){
+            let title = window.prompt("Enter title here!");
+            let data = {
+                title,
+                document: doc
+            }
+
+            fetch('http://127.0.0.1:5000/document/add', {
+                method: 'POST',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            }).then(resp=>{
+                if(resp.ok){
+                    documentFetch();
+                }else{
+                    throw 'Error adding data';
+                }
+            }).catch(err=>console.log(err))
+        }else{
+            console.log("empty!")
+        }
     }
 
     return (
         <>
-            {documentID ? <DocumentPage documentHandler={documentHandler}/> : <>
+            {document ? <DocumentPage documentHandler={documentHandler} document={document ? document : ""} saveDocument={saveDocument}/> : <>
                 <section className="central-container">
                 <p className="btn-container">
-                    <button>Add</button>
+                    <button onClick={()=>documentHandler(true)}>Add</button>
                 </p>
                 <ul className="document-list">
-                    <DocumentList documentHandler={documentHandler}/>
+                    {documentList ? <DocumentList documentHandler={documentHandler} documentList={documentList}/> : "Please wait!"}
                 </ul> 
                 </section></>}
         </>

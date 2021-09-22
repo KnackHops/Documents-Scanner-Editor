@@ -19,6 +19,23 @@ section.document-container > p.doc-btn-container {
     z-index: 2;
 }
 
+@media only screen and (max-width: 1210px) {
+    section.document-container > p.doc-btn-container {
+        left: 0;
+        margin-left: .25rem;
+        margin-top: 3.5rem;
+        z-index: 1;
+    }
+
+    section.document-container > div.ck-toolbar {
+        z-index: 2;
+    }
+
+    section.document-container > div.ck-content {
+        margin-top: 3rem;
+    }
+}
+
 p.doc-btn-container > button {
     width: 2.75rem;
 }
@@ -29,7 +46,7 @@ section.document-container > div.ck-toolbar {
     width: 100%;
 }
 
-section.document-container > div.ck-content {
+.document-container > div.ck-content {
     background-color: rgba(250, 250, 250);
     width: 8.5in;
     height: 11in;
