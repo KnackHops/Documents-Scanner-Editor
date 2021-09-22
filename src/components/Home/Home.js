@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import './Home-style.css'
-import DocumentPage from './DocumentPage/DocumentPage';
+import DocumentCentral from './DocumentCentral/DocumentCentral';
 import LandingPage from "./LandingPage/LandingPage";
 
 const Home = ({logIn}) => {
@@ -8,7 +8,7 @@ const Home = ({logIn}) => {
 
     return (
         <article className={`fd ${classForArticle}`}>
-            {logIn ? <DocumentPage /> : <LandingPage />}
+            {logIn ? <DocumentCentral /> : <LandingPage />}
         </article>
     )
 }
