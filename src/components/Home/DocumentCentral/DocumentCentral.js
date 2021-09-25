@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import DocumentPage from '../DocumentPage/DocumentPage';
 import DocumentList from './DocumentList';
 
@@ -13,7 +13,7 @@ const DocumentCentral = () => {
                 if(resp.ok){
                     return resp.json()
                 }else{
-                    throw "error fetching!";
+                    throw Error("error fetching!");
                 }
             }).then(({documents})=>{
                 setDocumentList({documents})
@@ -55,7 +55,7 @@ const DocumentCentral = () => {
                 if(resp.ok){
                     documentFetch();
                 }else{
-                    throw 'Error adding data';
+                    throw Error('Error adding data');
                 }
             }).catch(err=>console.log(err))
         }else{

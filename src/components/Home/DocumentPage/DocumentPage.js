@@ -1,8 +1,7 @@
 import "./DocumentPage-style.css"
 import DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
-import { useEffect } from "react";
-import { useCallback, useState } from "react/cjs/react.development";
+import { useCallback } from "react/cjs/react.development";
 
 const toolbarConfig = {
     toolbar: ['undo', 'redo', '|', 
@@ -38,13 +37,7 @@ const DocumentPage = ({documentHandler, document, saveDocument}) => {
         const data = editor.getData();
 
         return data;
-    })
-
-    const [documentData, setData] = useState(null);
-
-    useEffect(()=>{
-        setData(document);
-    }, [document])
+    }, [editor])
 
     return (
         <section className="document-container fd">
