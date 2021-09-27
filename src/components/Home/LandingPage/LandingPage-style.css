@@ -1,4 +1,4 @@
-article.landingpage-container > form {
+main.landingpage-container > form {
     position: relative;
     margin-top: 2.5rem;
     height: 20rem;
@@ -8,7 +8,7 @@ article.landingpage-container > form {
     transition: .25s all;
 }
 
-article.landingpage-container > form.login-container {
+main.landingpage-container > form.login-container {
     margin-top: 5rem;
     height: 15rem;
 }
@@ -20,24 +20,24 @@ article.landingpage-container > form.login-container {
     
 }
 
-article.landingpage-container > form > p {
+main.landingpage-container > form > p {
     display: flex;
     font-size: 1.25rem;
     line-height: 1.5rem;
     margin: .25rem 0;
 }
 
-article.landingpage-container > form > p > label {
+main.landingpage-container > form > p > label {
     flex: 1;
 }
 
-article.landingpage-container > form > p > input {
+main.landingpage-container > form > p > input {
     flex: 2;
     font-size: 1rem;
     line-height: 1.5rem;
 }
 
-article.landingpage-container > form > p:last-child {
+main.landingpage-container > form > p:last-child {
     width: 90%;
     justify-content: flex-end;
     position: absolute;
@@ -45,7 +45,7 @@ article.landingpage-container > form > p:last-child {
     margin-bottom: 1rem;
 }
 
-article.landingpage-container > form > p:last-child > button {
+main.landingpage-container > form > p:last-child > button {
     margin-left: 1rem;
     padding: .1rem .25rem;
 }

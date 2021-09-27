@@ -25,8 +25,6 @@ const DocumentPage = ({documentHandler, document, saveDocument}) => {
     const documentInit = newEditor => {
         editor = newEditor;
 
-        console.log(editor);
-
         editor.ui.getEditableElement().parentElement.insertBefore(
             editor.ui.view.toolbar.element,
             editor.ui.getEditableElement()
@@ -51,7 +49,7 @@ const DocumentPage = ({documentHandler, document, saveDocument}) => {
             </p>
             <CKEditor 
                 editor={DecoupledEditor}
-                data={document}
+                data={document.body}
                 onReady={editor=>documentInit(editor)}
                 config={toolbarConfig}
             />
