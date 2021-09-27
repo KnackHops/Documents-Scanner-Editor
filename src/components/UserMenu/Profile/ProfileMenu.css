@@ -1,0 +1,17 @@
+section.profile-container {
+    height: 40rem;
+}
+
+@media only screen and (max-height: 650px) {
+    section.profile-container {
+        height: 90%;
+    }
+}
+
+div.profile-container {
+    height: 100%;
+}
+
+div.subordinate-container > .user-list-container {
+    height: 100%;
+}

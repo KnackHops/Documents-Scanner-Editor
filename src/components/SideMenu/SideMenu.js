@@ -1,6 +1,8 @@
+import './SideMenu.css';
+
 const SideMenu = ({classCon, children}) => {
     return (
-        <aside className={`sideMenu ${classCon}`}>
+        <aside className={`side-menu ${classCon}`}>
             {children}
         </aside>
     )

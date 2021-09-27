@@ -1,43 +1,18 @@
-import { useCallback } from 'react';
-import { useState, useEffect, useContext } from 'react/cjs/react.development';
-import { UserContext } from '../../../App';
-import SideMenu from '../SideMenu';
-import AdminSide from './AdminSide';
-import UserLists from './UserLists';
+import { useState, useEffect } from 'react/cjs/react.development';
+import SideMenu from '../../SideMenu/SideMenu';
+import AdminSide from '../../SideMenu/Admin/AdminSide';
+import UserLists from '../../../wrappers/UserLists';
 import './AdminMenu.css';
 
-const AdminMenu = () => {
-    const [users, setUsers] = useState(null);
-    const [isLoaded, setLoaded] = useState(false);
-    const {id} = useContext(UserContext)
-
-    const fetchAdmin = useCallback(() => {
-
-        fetch(`http://127.0.0.1:5000/admin-fetch/?id=${id}`, {
-            method: 'GET',
-            mode: 'cors'
-        }).then(resp=>{
-            if(resp.ok){
-                return resp.json();
-            }
-        }).then(({_users})=>{
-            setUsers(_users);
-            setLoaded(true);
-        })
-    }, [id])
-
-    useEffect(()=>{
-        fetchAdmin();
-    }, [fetchAdmin])
-
+const AdminMenu = ({users, isLoaded, id}) => {
     const [sideMenuOpen, setSideMenu] = useState(false);
     const [sideUser, setSideUser] = useState(null);
 
-    const adminSideMenuHandler = (userid=null) => {
+    const adminSideMenuHandler = (userid=null, fromList=false) => {
         let flowChk = true;
         if(userid){
             if(sideUser){
-                if(sideUser.userid === userid){
+                if(sideUser.userid === userid && fromList){
                     flowChk = false;
                 }
             }
@@ -46,18 +21,28 @@ const AdminMenu = () => {
         }
 
         if(flowChk){
-            users.forEach(user => {
-                if(user.id === userid){
-                    setSideUser({
-                        userid,
-                        username: user.username,
-                        activated: user.activated,
-                        role: id===0 ? user.role : null,
-                        pinned_posts: user.pinned_posts
-                    })
-                }
-            });
-        }else{
+            let found = false;
+            if(users){
+                users.forEach(user => {
+                    if(user.id === userid){
+                        found = true;
+                        setSideUser({
+                            userid,
+                            username: user.username,
+                            activated: user.activated,
+                            role: id===0 ? user.role : null,
+                            pinned_posts: user.pinned_posts
+                        })
+                    }
+                });
+            }
+
+            if(!found){
+                flowChk = found;
+            }
+        }
+
+        if(!flowChk){
             setSideUser(null);
         }
 
@@ -65,16 +50,34 @@ const AdminMenu = () => {
     }
 
     useEffect(()=>{
-        if(users && sideUser){
-            adminSideMenuHandler(true, sideUser.userid);
+        if((users && sideUser) || (!users && sideUser)){
+            adminSideMenuHandler(sideUser.userid);
         }
     }, [users])
 
+    const userClickedHandler = e => {
+        e.preventDefault();
+        adminSideMenuHandler(Number(e.target.getAttribute('data-id')), true);
+    }
+
     return (
         <>
-            {isLoaded ? <UserLists users={users} sideMenuHandler={adminSideMenuHandler}/> : <p>Loading Users!</p>}
-            {/* {sideMenuOpen ? <SideMenu user={sideUser} fetchAdmin={fetchAdmin} id={id}/> : ""} */}
-            {sideMenuOpen ? <SideMenu classCon={'admin-container'}><AdminSide user={sideUser} fetchAdmin={fetchAdmin} id={id} /></SideMenu> : ""}
+            {isLoaded ? 
+                <UserLists 
+                    users={users} 
+                    handler={userClickedHandler}
+                    fromWhere={"admin"}
+                /> 
+            : <p>Loading Users!</p>}
+
+            {sideMenuOpen ? 
+                <SideMenu 
+                    classCon={'admin-side-container'}>
+                    <AdminSide 
+                        user={sideUser}
+                        id={id} 
+                        sideMenuHandler={adminSideMenuHandler}/>
+                </SideMenu> : ""}
         </>
     )
 }

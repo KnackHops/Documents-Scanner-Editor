@@ -1,53 +1,59 @@
 import { useContext } from "react";
 import './Headers-style.css';
-import { UserContext } from '../../App';
+import { UserContext, FunctionContext} from '../../wrappers/DocumentsScannerEditor';
+import { useEffect, useState } from "react/cjs/react.development";
+import ProfilePanel from "./ProfilePanel";
 
-const Headers = ({logIn, logInHandle, menuHandler}) => {
-    let classForHead = logIn ? "homepage-header" : "landingpage-header";
+const Headers = ({logIn}) => {
+    const classForHead = logIn ? "homepage-header" : "landingpage-header";
     const { username, role } = useContext(UserContext);
+    const { logInHandle, menuHandler } = useContext(FunctionContext);
 
     const bodyEventListener_panel = e => {
-        const parentClassPanel = e.target.parentNode.parentNode.className
-
-        if(!parentClassPanel.includes('nav-list') && 
-        !parentClassPanel.includes('profile-list') && 
-        !parentClassPanel.includes('profile-panel') && logIn){
-            if(document.querySelector('div.profile-panel').classList.contains('active')){
-                panelHandler();
+        if(e.target.className !== 'panel-btn-container' && e.target.className !== 'panel-btn' && e.target.className !== 'nav-btn'){
+            if(panelStatus==='active'){
+                setPanel('inactive');
             }
         }
     }
 
-    const panelHandler = (e=null) => {
+    const [panelStatus, setPanel] = useState("inactive");
+
+    const panelClicked = (e=null) => {
         if(e){
             e.preventDefault();
         }
-        const body = document.querySelector('body');
-        const profilePanel = document.querySelector('div.profile-panel');
-
-        profilePanel.classList.toggle('active');
-        
-        if(profilePanel.classList.contains('active')){
-            body.addEventListener('click', bodyEventListener_panel)
-        }else{
-            body.removeEventListener('click', bodyEventListener_panel)
-        }
+        panelStatus === 'active' ? setPanel("inactive") : setPanel("active");
     }
 
-    const panelClicked = e => {
+    useEffect(()=>{
+        const body = document.querySelector('body');
+        if(logIn){
+            if(panelStatus === 'active'){
+                body.addEventListener('click', bodyEventListener_panel);
+            }else{
+                body.removeEventListener('click', bodyEventListener_panel);
+        }}
+        return ()=>{
+            if(panelStatus==='active'){
+                body.removeEventListener('click', bodyEventListener_panel);
+            }
+        }
+    }, [panelStatus])
+
+    const menuClicked = e => {
         const fromWhere = e.target.getAttribute('data');
-        panelHandler();
+        setPanel("inactive");
         menuHandler(fromWhere);
     }
 
     const logOutHandler = () => {
-        panelHandler();
         logInHandle();
     }
 
     return (
         <header className={`fd ${classForHead}`}>
-            <div className="icon" onClick={logInHandle}>
+            <div className="icon">
                 Doc
             </div>
             {logIn ? <>
@@ -57,16 +63,14 @@ const Headers = ({logIn, logInHandle, menuHandler}) => {
                 <nav>
                     <ul className="fd nav-list">
                         <li><button>Scan</button></li>
-                        <li><button onClick={panelHandler}>{username}</button></li>
+                        <li><button className="nav-btn" onClick={panelClicked}>{username}</button></li>
                     </ul>
                 </nav>
-                <div className="profile-panel">
-                    <ul className="fd profile-list">
-                        <li><button onClick={panelClicked} data='profile'>Profile</button></li>
-                        {role === 'admin' ? <li><button onClick={panelClicked} data='admin'>Admin</button></li>:""}
-                        <li><button onClick={logOutHandler}>Log Out</button></li>
-                    </ul>
-                </div>
+                <ProfilePanel 
+                    panelStatus={panelStatus} 
+                    menuClicked={menuClicked} 
+                    logOutHandler={logOutHandler}
+                    role={role}/>
             </> : ""}
         </header>
     )

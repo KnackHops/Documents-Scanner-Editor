@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import DocumentPage from '../DocumentPage/DocumentPage';
-import DocumentList from './DocumentList';
+import DocumentPage from './DocumentPage';
+import DocumentList from '../../../wrappers/DocumentList';
 
 const DocumentCentral = () => {
     const [documentList, setDocumentList] = useState(null);
@@ -28,11 +28,18 @@ const DocumentCentral = () => {
 
     const [document, setDocument] = useState(null);
 
-    const documentHandler = data => {
-        if(!data){
-            setDocument(null)
+    const documentHandler = id => {
+        if(!id){
+            setDocument(null);
         }else{
-            setDocument(data)
+            documentList.forEach(doc => {
+                if(doc.id===id){
+                    setDocument({
+                        id,
+                        body: doc.document
+                    })
+                }
+            });
         }
     }
 
@@ -71,7 +78,7 @@ const DocumentCentral = () => {
                     <button onClick={()=>documentHandler(true)}>Add</button>
                 </p>
                 <ul className="document-list">
-                    {documentList ? <DocumentList documentHandler={documentHandler} documentList={documentList}/> : "Please wait!"}
+                    {documentList ? <DocumentList handler={documentHandler} documentList={documentList}/> : "Please wait!"}
                 </ul> 
                 </section></>}
         </>
