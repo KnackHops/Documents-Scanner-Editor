@@ -8,10 +8,28 @@ section.profile-container {
     }
 }
 
-div.profile-container {
+div.subordinate-container, div.user-settings-container{
     height: 100%;
 }
 
 div.subordinate-container > .user-list-container {
     height: 100%;
+}
+
+div.subordinate-container {
+    position: relative;
+}
+
+div.subordinate-search-container > div.user-list-container {
+    position: absolute;
+    left: 8rem;
+    width: 40%;
+}
+
+div.subordinate-search-container > div.user-list-container > ul.user-list {
+    background-color: wheat;
+}
+
+div.subordinate-search-container > div.user-list-container li {
+    box-shadow: none;
 }

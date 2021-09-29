@@ -1,6 +1,5 @@
 .admin-side-container {
-    right:  -12rem;
-    top: 0;
-    width: 10rem;
-    height: 8.5rem;
+    left: 2.5rem;
+    width: 25rem;
+    height: 10rem;
 }

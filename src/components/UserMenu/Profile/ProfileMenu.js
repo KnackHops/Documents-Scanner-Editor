@@ -1,8 +1,12 @@
 import './ProfileMenu.css';
-import { useState } from 'react/cjs/react.development';
+import { useContext, useEffect, useState } from 'react/cjs/react.development';
 import ProfileChange from './ProfileChange';
+import { SideContext } from '../../../wrappers/DocumentsScannerEditor';
+import SideMenu from '../../SideMenu/SideMenu';
+import ProfileSide from '../../SideMenu/Profile/ProfileSide';
 
 const ProfileMenu = ({children}) => {
+    const { sideUser } = useContext(SideContext);
     const [profilePanel, setPanel] = useState('user-settings');
     
     const panelBtnHandler = e =>{
@@ -12,7 +16,8 @@ const ProfileMenu = ({children}) => {
     }
 
     return (
-        <div className={`${profilePanel}-container profile-container`}>
+        <>
+        <div className={`${profilePanel}-container`}>
             <p>
                 <button onClick={panelBtnHandler}>
                     {
@@ -24,6 +29,12 @@ const ProfileMenu = ({children}) => {
             <ProfileChange/> :
             children}
         </div>
+        {profilePanel === 'subordinate' && sideUser ?
+            <SideMenu   
+                classCon={`profile-side-container ${sideUser.sideClass}-container`}>
+                    <ProfileSide />
+            </SideMenu>:""}
+        </>
     )
 }
 

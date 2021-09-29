@@ -1,12 +1,12 @@
-import { useState, useEffect } from 'react/cjs/react.development';
+import { useContext, useEffect } from 'react/cjs/react.development';
 import SideMenu from '../../SideMenu/SideMenu';
 import AdminSide from '../../SideMenu/Admin/AdminSide';
 import UserLists from '../../../wrappers/UserLists';
 import './AdminMenu.css';
+import { SideContext } from '../../../wrappers/DocumentsScannerEditor';
 
 const AdminMenu = ({users, isLoaded, id}) => {
-    const [sideMenuOpen, setSideMenu] = useState(false);
-    const [sideUser, setSideUser] = useState(null);
+    const { sideUser, setSideUser } = useContext(SideContext);
 
     const adminSideMenuHandler = (userid=null, fromList=false) => {
         let flowChk = true;
@@ -45,8 +45,6 @@ const AdminMenu = ({users, isLoaded, id}) => {
         if(!flowChk){
             setSideUser(null);
         }
-
-        setSideMenu(flowChk);
     }
 
     useEffect(()=>{
@@ -54,6 +52,12 @@ const AdminMenu = ({users, isLoaded, id}) => {
             adminSideMenuHandler(sideUser.userid);
         }
     }, [users])
+
+    useEffect(()=>{
+        return ()=>{
+            setSideUser(null);
+        }
+    },[])
 
     const userClickedHandler = e => {
         e.preventDefault();
@@ -70,7 +74,7 @@ const AdminMenu = ({users, isLoaded, id}) => {
                 /> 
             : <p>Loading Users!</p>}
 
-            {sideMenuOpen ? 
+            {sideUser ? 
                 <SideMenu 
                     classCon={'admin-side-container'}>
                     <AdminSide 
