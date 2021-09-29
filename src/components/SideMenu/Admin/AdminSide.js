@@ -163,9 +163,6 @@ const AdminSide = ({user, id, sideMenuHandler}) => {
             <p>
                 <button type="button" onClick={roleHandler}>Change User role to {user.role === 'admin' ? 'Normal' : 'Admin'}</button>
             </p> : ""}
-            <p>
-                <button type="button" onClick={()=>sideMenuHandler()}>Close Panel</button>
-            </p>
         </div>
     )
 }

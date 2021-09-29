@@ -2,4 +2,5 @@ aside.side-menu {
     position: absolute;
     background-color: blanchedalmond;
     padding: 0 .5rem;
+    top: 2.5rem;
 }

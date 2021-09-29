@@ -1,85 +1,109 @@
-import { useState, useEffect } from 'react';
+import { useState, useContext } from 'react';
 import DocumentPage from './DocumentPage';
 import DocumentList from '../../../wrappers/DocumentList';
+import { DocumentContext } from '../../../wrappers/DocumentsScannerEditor';
 
 const DocumentCentral = () => {
-    const [documentList, setDocumentList] = useState(null);
-
-    const documentFetch = async () =>{
-        fetch('http://127.0.0.1:5000/document/fetch',{
-                method: 'GET',
-                mode: 'cors'
-            }).then(resp=>{
-                if(resp.ok){
-                    return resp.json()
-                }else{
-                    throw Error("error fetching!");
-                }
-            }).then(({documents})=>{
-                setDocumentList({documents})
-            }).catch(err=>{
-                console.log(err);
-            })
-    }
-
-    useEffect(()=>{
-        documentFetch()
-    }, [])
+    const {documentList, documentFetch} = useContext(DocumentContext);
 
     const [document, setDocument] = useState(null);
 
-    const documentHandler = id => {
-        if(!id){
+    const documentLoadHandler = id => {
+        if(!id && id!==0){
             setDocument(null);
         }else{
-            documentList.forEach(doc => {
-                if(doc.id===id){
-                    setDocument({
-                        id,
-                        body: doc.document
-                    })
-                }
-            });
+            if(id===true){
+                setDocument({
+                    id: null,
+                    body: null
+                })
+            }else{
+                documentList.documents.forEach(doc => {
+                    if(doc.id===id){
+                        setDocument({
+                            id,
+                            body: doc.document
+                        })
+                    }
+                });
+            }
         }
     }
 
-    const saveDocument = doc => {
+    const documentHandler = (id, doc) => {
         if(doc){
-            let title = window.prompt("Enter title here!");
+            let title;
             let data = {
-                title,
                 document: doc
             }
 
-            fetch('http://127.0.0.1:5000/document/add', {
-                method: 'POST',
-                mode: 'cors',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            }).then(resp=>{
-                if(resp.ok){
-                    documentFetch();
+            if(id || id===0){
+                if(data.document === document.body){
+                    window.alert("No change detected!");
                 }else{
-                    throw Error('Error adding data');
+                    title = window.prompt("Enter the title of the document you are editing!");
+                    data.title = title;
+                    data.id = id;
+                    documentEdit(data);
                 }
-            }).catch(err=>console.log(err))
+            }else{
+                title = window.prompt("Enter title here!");
+                data.title = title;
+                documentSave(data);
+            }
         }else{
-            console.log("empty!")
+            console.log("empty!");
         }
+    }
+
+    const documentSave = data => {
+        fetch('http://127.0.0.1:5000/document/add', {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        }).then(resp=>{
+            if(resp.ok){
+                return resp.json();
+            }else{
+                throw Error('Error adding data');
+            }
+        }).then(({id})=>{
+            documentFetch();
+            setDocument({
+                id,
+                body: data.document
+            })
+        }).catch(err=>console.log(err))
+    }
+
+    const documentEdit = data => {
+        fetch('http://127.0.0.1:5000/document/edit', {
+            method: 'PUT',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        }).then(resp=>{
+            if(resp.ok){
+                documentFetch();
+            }else{
+                throw Error('Error updating data');
+            }
+        }).catch(err=>console.log(err))
     }
 
     return (
         <>
-            {document ? <DocumentPage documentHandler={documentHandler} document={document ? document : ""} saveDocument={saveDocument}/> : <>
+            {document ? <DocumentPage documentLoadHandler={documentLoadHandler} document={document ? document : ""} documentHandler={documentHandler}/> : <>
                 <section className="central-container">
                 <p className="btn-container">
-                    <button onClick={()=>documentHandler(true)}>Add</button>
+                    <button onClick={()=>documentLoadHandler(true)}>Add</button>
                 </p>
-                <ul className="document-list">
-                    {documentList ? <DocumentList handler={documentHandler} documentList={documentList}/> : "Please wait!"}
-                </ul> 
+                {documentList ? <DocumentList handler={documentLoadHandler} documentList={documentList} fromWhere={'document-central'}/> : "Please wait!"}
                 </section></>}
         </>
     )

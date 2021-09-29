@@ -1,7 +1,7 @@
 import "./DocumentPage-style.css"
 import DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
-import { useCallback } from "react/cjs/react.development";
+import { useCallback, useEffect, useState } from "react/cjs/react.development";
 
 const toolbarConfig = {
     toolbar: ['undo', 'redo', '|', 
@@ -19,31 +19,45 @@ const toolbarConfig = {
     placeholder: "Fresh start is what we need...start typing!"
 }
 
-const DocumentPage = ({documentHandler, document, saveDocument}) => {
-    let editor = null;
-    
+const DocumentPage = ({documentLoadHandler, document, documentHandler}) => {
+    const [editor, setEditor] = useState(null);
     const documentInit = newEditor => {
-        editor = newEditor;
-
-        editor.ui.getEditableElement().parentElement.insertBefore(
-            editor.ui.view.toolbar.element,
-            editor.ui.getEditableElement()
-        );
+        setEditor(newEditor);
     }
+
+    useEffect(()=>{
+        if(editor){
+            editor.ui.getEditableElement().parentElement.insertBefore(
+                editor.ui.view.toolbar.element,
+                editor.ui.getEditableElement()
+            );
+        }
+    }, [editor])
 
     const dataHandler = useCallback(()=>{
         const data = editor.getData();
-
-        return data;
-    }, [editor])
+        
+        if(document.id || document.id === 0){
+            return [document.id, data];
+        }else{
+            return [null, data];
+        }
+    }, [document, editor])
 
     return (
         <section className="document-container fd">
             <p className="doc-btn-container">
-                <button className="" onClick={()=>saveDocument(dataHandler())}>
-                    Save
+                <button className="" onClick={()=>documentHandler(...dataHandler())}>
+                    {
+                        document.id || document.id === 0 ? "Edit" : "Save"
+                    }
                 </button>
-                <button className="" onClick={()=>documentHandler(null)}>
+                {document.id || document.id === 0 ?<>
+                <button>
+                    Send
+                </button>
+                </> : ""}
+                <button className="" onClick={()=>documentLoadHandler(null)}>
                     Exit
                 </button>
             </p>

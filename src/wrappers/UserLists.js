@@ -1,7 +1,7 @@
 const UserLists = ({users, handler, fromWhere}) => {
     return (
-        <div className="user-list-container">
-            <ul className="user-list fd">
+        <div className={`${fromWhere}-list-container user-list-container`}>
+            <ul className={`${fromWhere}-list user-list fd`}>
             {users ? 
             users.map(user=>
                 <li className="fd" key={user.id} onClick={handler}>

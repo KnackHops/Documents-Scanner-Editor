@@ -1,13 +1,14 @@
 import { useContext } from "react";
 import './Headers-style.css';
-import { UserContext, FunctionContext} from '../../wrappers/DocumentsScannerEditor';
+import { UserContext, FunctionContext, DocumentContext} from '../../wrappers/DocumentsScannerEditor';
 import { useEffect, useState } from "react/cjs/react.development";
 import ProfilePanel from "./ProfilePanel";
+import DocumentList from "../../wrappers/DocumentList";
 
 const Headers = ({logIn}) => {
     const classForHead = logIn ? "homepage-header" : "landingpage-header";
     const { username, role } = useContext(UserContext);
-    const { logInHandle, menuHandler } = useContext(FunctionContext);
+    const { logInHandle, menuHandler, searchHandler } = useContext(FunctionContext);
 
     const bodyEventListener_panel = e => {
         if(e.target.className !== 'panel-btn-container' && e.target.className !== 'panel-btn' && e.target.className !== 'nav-btn'){
@@ -50,6 +51,20 @@ const Headers = ({logIn}) => {
     const logOutHandler = () => {
         logInHandle();
     }
+    const {documentList} = useContext(DocumentContext);
+    const [searchDoc, setSearchDoc] = useState("");
+    const [docsSearched, setSearched] = useState(null);
+
+    useEffect(()=>{
+        if(documentList){
+            setSearched(searchHandler(documentList.documents, searchDoc, 'document'));
+            console.log(docsSearched, searchDoc);
+        }
+    }, [searchDoc])
+
+    useEffect(()=>{
+        console.log(docsSearched)
+    }, [docsSearched])
 
     return (
         <header className={`fd ${classForHead}`}>
@@ -58,8 +73,10 @@ const Headers = ({logIn}) => {
             </div>
             {logIn ? <>
                 <p className="searchbar-container">
-                    <input className="searchbar" aria-label="Searchbar" type="text" />
+                    <input className="searchbar" aria-label="Searchbar" type="text" value={searchDoc} onChange={e=>setSearchDoc(e.target.value)} />
                 </p>
+                {docsSearched ? 
+                <DocumentList handler={()=>console.log("yippe")} documentList={docsSearched} /> : ""}
                 <nav>
                     <ul className="fd nav-list">
                         <li><button>Scan</button></li>
