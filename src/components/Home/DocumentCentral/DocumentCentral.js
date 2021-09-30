@@ -30,9 +30,19 @@ const DocumentCentral = () => {
         }
     }
 
+    const documentChk = (text) => {
+        const title = window.prompt(text);
+
+        if(title && title.replace(/\s/g, '').length){
+            return title;
+        }else{
+            window.alert("Title empty!");
+            return null;
+        }
+    }
+
     const documentHandler = (id, doc) => {
         if(doc){
-            let title;
             let data = {
                 document: doc
             }
@@ -41,15 +51,17 @@ const DocumentCentral = () => {
                 if(data.document === document.body){
                     window.alert("No change detected!");
                 }else{
-                    title = window.prompt("Enter the title of the document you are editing!");
-                    data.title = title;
-                    data.id = id;
-                    documentEdit(data);
+                    data.title = documentChk("Enter the title of the document you are editing!");
+                    if(data.title){
+                        data.id = id;
+                        documentEdit(data);
+                    }
                 }
             }else{
-                title = window.prompt("Enter title here!");
-                data.title = title;
-                documentSave(data);
+                data.title = documentChk("Enter title here!");
+                if(data.title){
+                    documentSave(data);
+                }
             }
         }else{
             console.log("empty!");
