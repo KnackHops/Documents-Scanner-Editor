@@ -23,7 +23,7 @@ const Subordinate = ({users, isLoaded}) => {
 
         let flowChk = true;
         if(sideUser){
-            if(sideUser.id === id && sideUser.sideClass === sideClass){
+            if(sideUser.id === id && sideUser.sideClass === sideClass && !e?.reLoad){
                 flowChk = false;
             }
         }
@@ -78,11 +78,14 @@ const Subordinate = ({users, isLoaded}) => {
     }, [sideUser])
 
     useEffect(()=>{
-        // userSearchHandler();
-        setSearches(searchHandler(users, searchUser, "user"));
+        setSearches(searchHandler(UsersGet(false), searchUser, "user"));
     }, [searchUser])
 
     const UsersGet = useCallback((isSub = true)=>{
+        if(!users){
+            return null
+        }
+
         let _users = []
 
         users.forEach(user => {

@@ -56,15 +56,11 @@ const Headers = ({logIn}) => {
     const [docsSearched, setSearched] = useState(null);
 
     useEffect(()=>{
-        if(documentList){
+        if(documentList?.documents){
             setSearched(searchHandler(documentList.documents, searchDoc, 'document'));
             console.log(docsSearched, searchDoc);
         }
     }, [searchDoc])
-
-    useEffect(()=>{
-        console.log(docsSearched)
-    }, [docsSearched])
 
     return (
         <header className={`fd ${classForHead}`}>
