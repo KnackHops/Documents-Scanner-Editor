@@ -2,7 +2,7 @@ import { useContext } from "react/cjs/react.development"
 import { UserContext } from "../../../wrappers/DocumentsScannerEditor"
 
 const ProfileChange = () => {
-    const { id, username, mobile, role, email } = useContext(UserContext);
+    const { username, mobile, role, email } = useContext(UserContext);
 
     const mobileHandler = e => {
         e.preventDefault();

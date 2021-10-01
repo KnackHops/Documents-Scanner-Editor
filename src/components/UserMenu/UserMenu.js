@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext, useCallback, createContext } from 'react/cjs/react.development';
+import { useEffect, useContext, createContext } from 'react/cjs/react.development';
 import './UserMenu.css';
 import AdminMenu from './Admin/AdminMenu';
 import ProfileMenu from './Profile/ProfileMenu';
@@ -9,46 +9,7 @@ const FetchContext = createContext();
 
 const UserMenu = ({ openMenu }) => {
     const { menuHandler } = useContext(FunctionContext);
-    const [users, setUsers] = useState(null);
-    const [isLoaded, setLoaded] = useState(false);
-    const {id, role} = useContext(UserContext)
-
-    const fetchUsers = useCallback((friendOnly=false) => {
-        if(friendOnly){
-            fetch(`http://127.0.0.1:5000/subordinate-fetch/?id=${id}`, {
-                method: 'GET',
-                mode: 'cors'
-            }).then(resp=>{
-                if(resp.ok){
-                    return resp.json();
-                }else{
-                    setUsers(null);
-                    setLoaded(false);
-                }
-            }).then(({fetched_users: _users}) =>{
-                setUsers(_users);
-                setLoaded(true);
-            })
-        }else{
-            if(role==='admin'){
-                fetch(`http://127.0.0.1:5000/admin-fetch/?id=${id}`, {
-                    method: 'GET',
-                    mode: 'cors'
-                }).then(resp=>{
-                    if(resp.ok){
-                        return resp.json();
-                    }else{
-                        setUsers(null);
-                        setLoaded(false);
-                    }
-                }).then(({fetched_users: _users})=>{
-                    setUsers(_users);
-                    setLoaded(true);
-                })
-            }
-        }
-        
-    }, [id, role])
+    const {id, fetchUsers, users, isLoaded } = useContext(UserContext)
 
     useEffect(()=>{
         if(openMenu==='admin'){

@@ -3,7 +3,7 @@ import DocumentList from '../../../wrappers/DocumentList';
 import { FetchContext } from '../../UserMenu/UserMenu';
 import { useContext } from 'react/cjs/react.development';
 
-const AdminSide = ({user, id, sideMenuHandler}) => {
+const AdminSide = ({user, id }) => {
     const { fetchUsers } = useContext(FetchContext);
 
     const activateUser = textPrompt => {
@@ -138,7 +138,7 @@ const AdminSide = ({user, id, sideMenuHandler}) => {
 
     return(
         <div className="admin-menu">
-            <h1>Menu</h1>
+            <h1>{`User: ${user.username}`}</h1>
             <p>
                 <button type="button" onClick={activateHandler}>{user.activated ? "Deactivate" : "Activate"} this User</button>
             </p>
