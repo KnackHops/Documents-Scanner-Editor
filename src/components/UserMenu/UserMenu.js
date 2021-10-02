@@ -9,20 +9,21 @@ const FetchContext = createContext();
 
 const UserMenu = ({ openMenu }) => {
     const { menuHandler } = useContext(FunctionContext);
-    const {id, fetchUsers, users, isLoaded } = useContext(UserContext)
+    const {fetchUsers, users, setLoaded } = useContext(UserContext)
 
     useEffect(()=>{
+        setLoaded(false);
         if(openMenu==='admin'){
             fetchUsers();
         }else{
             fetchUsers(true)
         }
-    }, [openMenu, fetchUsers])
+    }, [openMenu])
 
     useEffect(()=>{
-        const menuContainer = document.querySelector('div.user-menu-container');
+        const menuContainer = document.querySelector('div.user-menu-bg');
         const menuEventListener = e => {
-            if(e.target.className.includes('user-menu-container')){
+            if(e.target.className.includes('user-menu-bg')){
                 menuHandler();
             }
         }
@@ -31,18 +32,16 @@ const UserMenu = ({ openMenu }) => {
     }, [menuHandler])
 
     return (
-        <div className="user-menu-container fd">
+        <div className="user-menu-bg fd">
             <section className={`user-menu ${openMenu}-container fd`}>
                 <div className={`${openMenu}-title`}>
                     <h1>{openMenu === 'admin' ? 'Admin' : 'Profile'}</h1>
                 </div>
-                <FetchContext.Provider value={{fetchUsers}}>
-                    {openMenu === 'admin' ? 
-                    <AdminMenu users={users} isLoaded={isLoaded} id={id} /> : 
-                    <ProfileMenu>
-                        <Subordinate users={users} isLoaded={isLoaded} />
-                    </ProfileMenu>}
-                </FetchContext.Provider>
+                {openMenu === 'admin' ? 
+                <AdminMenu /> : 
+                <ProfileMenu>
+                    <Subordinate />
+                </ProfileMenu>}
             </section>
         </div>
     )

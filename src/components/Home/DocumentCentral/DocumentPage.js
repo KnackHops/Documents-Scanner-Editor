@@ -1,7 +1,9 @@
 import "./DocumentPage-style.css"
 import DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
-import { useCallback, useEffect, useState } from "react/cjs/react.development";
+import { useCallback, useContext, useEffect, useState } from "react/cjs/react.development";
+import { FunctionContext } from "../../../wrappers/DocumentsScannerEditor";
+import DocumentPopUp from "./DocumentPopUp";
 
 const toolbarConfig = {
     toolbar: ['undo', 'redo', '|', 
@@ -21,6 +23,7 @@ const toolbarConfig = {
 
 const DocumentPage = ({documentLoadHandler, document, documentHandler}) => {
     const [editor, setEditor] = useState(null);
+
     const documentInit = newEditor => {
         setEditor(newEditor);
     }
@@ -44,20 +47,27 @@ const DocumentPage = ({documentLoadHandler, document, documentHandler}) => {
         }
     }, [document, editor])
 
+    const {popUpHandler} = useContext(FunctionContext);
+
+    const sendPopHandler = e => {
+        e.preventDefault();
+        popUpHandler(true, 'document-page', <DocumentPopUp document={document} />);
+    }
+
     return (
         <section className="document-container fd">
             <p className="doc-btn-container">
-                <button className="" onClick={()=>documentHandler(...dataHandler())}>
+                <button onClick={()=>documentHandler(...dataHandler())}>
                     {
                         document.id || document.id === 0 ? "Edit" : "Save"
                     }
                 </button>
                 {document.id || document.id === 0 ?<>
-                <button>
+                <button onClick={sendPopHandler}>
                     Send
                 </button>
                 </> : ""}
-                <button className="" onClick={()=>documentLoadHandler(null)}>
+                <button onClick={()=>documentLoadHandler(null)}>
                     Exit
                 </button>
             </p>

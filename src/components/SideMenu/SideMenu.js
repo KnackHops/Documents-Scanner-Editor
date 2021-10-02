@@ -1,9 +1,16 @@
-import { useContext } from 'react/cjs/react.development';
-import { SideContext } from '../../wrappers/DocumentsScannerEditor';
+import { useContext, useEffect } from 'react/cjs/react.development';
+import { DocumentContext, SideContext } from '../../wrappers/DocumentsScannerEditor';
 import './SideMenu.css';
 
 const SideMenu = ({classCon, children}) => {
     const { setSideUser } = useContext(SideContext);
+    const { setSideDocuList } = useContext(DocumentContext);
+
+    useEffect(()=>{
+        return ()=>{
+            setSideDocuList({documents: null})
+        }
+    }, [])
     return (
         <aside className={`side-menu ${classCon}`}>
             {children}

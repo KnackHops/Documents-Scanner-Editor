@@ -1,13 +1,15 @@
 import './AdminSide.css';
 import DocumentList from '../../../wrappers/DocumentList';
-import { FetchContext } from '../../UserMenu/UserMenu';
-import { useContext } from 'react/cjs/react.development';
+import { useContext, useEffect } from 'react/cjs/react.development';
+import { DocumentContext, SideContext, UserContext } from '../../../wrappers/DocumentsScannerEditor';
 
-const AdminSide = ({user, id }) => {
-    const { fetchUsers } = useContext(FetchContext);
+const AdminSide = () => {
+    const { fetchUsers, id } = useContext(UserContext);
+    const { documentFetch, sideDocuList } = useContext(DocumentContext);
+    const { sideUser } = useContext(SideContext);
 
     const activateUser = textPrompt => {
-        window.confirm(`User ${user.username} ${textPrompt[1]} commence! You can close the admin window!`);
+        window.confirm(`User ${sideUser.username} ${textPrompt[1]} commence! You can close the admin window!`);
         fetch('http://127.0.0.1:5000/admin-activate', {
             method: 'PUT',
             mode: 'cors',
@@ -16,7 +18,7 @@ const AdminSide = ({user, id }) => {
             },
             body: JSON.stringify({
                 id,
-                userid: user.userid
+                userid: sideUser.id
             })
         }).then(resp=>{
             if(resp.ok){
@@ -29,21 +31,21 @@ const AdminSide = ({user, id }) => {
     }
 
     const deleteUser = txt => {
-        window.confirm(`${txt} User ${user.username}!`);
-        fetch(`http://127.0.0.1:5000/admin-delete-user/?id=${id}&userid=${user.userid}`, {
+        window.confirm(`${txt} User ${sideUser.username}!`);
+        fetch(`http://127.0.0.1:5000/admin-delete-user/?id=${id}&userid=${sideUser.id}`, {
             method: 'DELETE',
             mode: 'cors'
         }).then(resp=>{
             if(resp.ok){
                 fetchUsers();
             }else{
-                window.alert(`Error deleting ${user.username}`);
+                window.alert(`Error deleting ${sideUser.username}`);
             }
         })
     }
 
     const changeUserRole = role => {
-        window.confirm(`User ${user.username} role will be changed to ${role}!`);
+        window.confirm(`User ${sideUser.username} role will be changed to ${role}!`);
         fetch('http://127.0.0.1:5000/admin-role-change', {
             method: 'PUT',
             mode: 'cors',
@@ -52,7 +54,7 @@ const AdminSide = ({user, id }) => {
             },
             body: JSON.stringify({
                 id,
-                userid: user.userid,
+                userid: sideUser.id,
                 role
             })
         }).then(resp=>{
@@ -105,12 +107,12 @@ const AdminSide = ({user, id }) => {
     const usernameCheck = text => {
         const username = window.prompt(`Please Enter username of the user you are ${text}`);
 
-        return username === user.username ? true : window.alert('Wrong username entered!');
+        return username === sideUser.username ? true : window.alert('Wrong username entered!');
     }
 
     const activateHandler = e => {
         e.preventDefault();
-        const textPrompt = user.activated ? ["deactivating", "deactivation"] : ["activating", "activation"];
+        const textPrompt = sideUser.activated ? ["deactivating", "deactivation"] : ["activating", "activation"];
 
         if(usernameCheck(textPrompt[0])){
             adminCheck(activateUser, textPrompt);
@@ -128,23 +130,27 @@ const AdminSide = ({user, id }) => {
 
     const roleHandler = e => {
         e.preventDefault();
-        const conF = window.confirm(`Change role to ${user.role === 'admin' ? 'normal' : 'admin'}?`)
+        const conF = window.confirm(`Change role to ${sideUser.role === 'admin' ? 'normal' : 'admin'}?`)
 
         if(conF){
-            const newRole = user.role === 'admin' ? 'normal' : 'admin';
+            const newRole = sideUser.role === 'admin' ? 'normal' : 'admin';
             adminCheck(changeUserRole, newRole)
         }
     }
 
+    useEffect(()=>{
+        documentFetch(true, true);
+    }, [sideUser])
+
     return(
         <div className="admin-menu">
-            <h1>{`User: ${user.username}`}</h1>
+            <h1>{`User: ${sideUser.username}`}</h1>
             <p>
-                <button type="button" onClick={activateHandler}>{user.activated ? "Deactivate" : "Activate"} this User</button>
+                <button type="button" onClick={activateHandler}>{sideUser.activated ? "Deactivate" : "Activate"} this User</button>
             </p>
-            {!user.activated && id === 0 ?
+            {!sideUser.activated && id === 0 ?
             <p>
-                <button type="button" onClick={deleteHandler}>Delete {user.username}</button>
+                <button type="button" onClick={deleteHandler}>Delete {sideUser.username}</button>
             </p>: 
             <div>
                 <div>
@@ -154,14 +160,17 @@ const AdminSide = ({user, id }) => {
                     <p>
                         <button>Add pin</button>
                     </p>
+                    {sideDocuList?.documents ? 
+                    <DocumentList 
+                        documentList={sideDocuList} 
+                        handler={()=>console.log("You clicked one!")}
+                        fromWhere="admin-side-pinned"
+                    /> : "None"}
                 </div>
-                <ul>
-                    <DocumentList handler={id=>console.log(id)} documentList={user.pinned_posts}/>
-                </ul>
             </div>}
-            {user.role ? 
+            {sideUser.role ? 
             <p>
-                <button type="button" onClick={roleHandler}>Change User role to {user.role === 'admin' ? 'Normal' : 'Admin'}</button>
+                <button type="button" onClick={roleHandler}>Change User role to {sideUser.role === 'admin' ? 'Normal' : 'Admin'}</button>
             </p> : ""}
         </div>
     )
