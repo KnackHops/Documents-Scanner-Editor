@@ -3,10 +3,11 @@ import SideMenu from '../../SideMenu/SideMenu';
 import AdminSide from '../../SideMenu/Admin/AdminSide';
 import UserLists from '../../../wrappers/UserLists';
 import './AdminMenu.css';
-import { SideContext } from '../../../wrappers/DocumentsScannerEditor';
+import { SideContext, UserContext } from '../../../wrappers/DocumentsScannerEditor';
 
-const AdminMenu = ({users, isLoaded, id}) => {
+const AdminMenu = () => {
     const { sideUser, setSideUser } = useContext(SideContext);
+    const { id, users, isLoaded } = useContext(UserContext);
 
     const adminSideMenuHandler = (userid=null, fromList=false) => {
         let flowChk = true;
@@ -27,7 +28,7 @@ const AdminMenu = ({users, isLoaded, id}) => {
                     if(user.id === userid){
                         found = true;
                         setSideUser({
-                            userid,
+                            id: userid,
                             username: user.username,
                             activated: user.activated,
                             role: id===0 ? user.role : null,
@@ -66,7 +67,7 @@ const AdminMenu = ({users, isLoaded, id}) => {
 
     return (
         <>
-            {isLoaded ? 
+            {isLoaded && Array.isArray(users) ? 
                 <UserLists 
                     users={users} 
                     handler={userClickedHandler}
@@ -78,8 +79,6 @@ const AdminMenu = ({users, isLoaded, id}) => {
                 <SideMenu 
                     classCon={'admin-side-container'}>
                     <AdminSide 
-                        user={sideUser}
-                        id={id} 
                         sideMenuHandler={adminSideMenuHandler}/>
                 </SideMenu> : ""}
         </>

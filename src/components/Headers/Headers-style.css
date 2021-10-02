@@ -4,25 +4,45 @@ header {
     flex-flow: row;
     justify-content: space-between;
     align-items: center;
+    position: relative;
 }
 
 header.landingpage-header {
     justify-content: center;
 }
 
-p.searchbar-container, ul.nav-list {
+div.searchbar-container, ul.nav-list {
     position: relative;
     z-index: 10;
 }
 
-p.searchbar-container > input {
-    margin: 1rem 0;
+div.searchbar-container > p {
     width: 25rem;
+}
+
+div.searchbar-container > p > input {
+    margin: 1rem 0;
+    width: 100%;
     line-height: 1.5rem;
+}
+
+.header-search.document-list-container {
+    position: absolute;
+    top: 2.8rem;
+    width: 25rem;
+    background-color: blanchedalmond;
+}
+
+.header-search.document-list-container > ul > li:hover {
+    background-color: blueviolet;
 }
 
 @media only screen and (max-width: 600px) {
     p.searchbar-container > input {
+        width: 15rem;
+    }
+
+    .header-search.document-list-container {
         width: 15rem;
     }
 }

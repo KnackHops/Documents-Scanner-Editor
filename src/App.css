@@ -19,3 +19,20 @@ footer {
 ul {
   list-style: none;
 }
+
+.pop-up-bg {
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  z-index: 999;
+  background-color: rgba(0, 0, 0, .3);
+  justify-content: center;
+}
+
+.pop-up-bg > aside {
+  margin-top: 20vh;
+  z-index: 1000;
+  height: 30rem;
+  width: 20rem;
+  background-color: rosybrown;
+}

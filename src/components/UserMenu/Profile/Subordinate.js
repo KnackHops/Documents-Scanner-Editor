@@ -1,10 +1,11 @@
-import { useCallback, useContext, useEffect, useState } from "react/cjs/react.development";
-import { SideContext, FunctionContext } from "../../../wrappers/DocumentsScannerEditor";
+import { useContext, useEffect, useState } from "react/cjs/react.development";
+import { SideContext, FunctionContext, UserContext } from "../../../wrappers/DocumentsScannerEditor";
 import UserLists from "../../../wrappers/UserLists";
 
-const Subordinate = ({users, isLoaded}) => {
+const Subordinate = () => {
     const { sideUser, setSideUser } = useContext(SideContext);
     const { searchHandler } = useContext(FunctionContext);
+    const { users, isLoaded } = useContext(UserContext);
 
     const subordinateUserHandler = e => {
         let sideClass = null;
@@ -29,18 +30,18 @@ const Subordinate = ({users, isLoaded}) => {
         }
 
         if(flowChk){
-            let mobile, email;
-            users.forEach(user=>{
+            let mobile = null
+            let email = null
+            let found = false
+
+            users.sub_users.forEach(user=>{
                 if(user.id === id){
-                    if(user.isSubordinate){
-                        mobile = user.mobile;
-                        email = user.email;
-                    }else{
-                        mobile = null;
-                        email = null;
-                    }
+                    mobile = user.mobile;
+                    email = user.email;
+                    found = true;
                 }
             })
+
             setSideUser({
                 id,
                 username,
@@ -78,40 +79,8 @@ const Subordinate = ({users, isLoaded}) => {
     }, [sideUser])
 
     useEffect(()=>{
-        setSearches(searchHandler(UsersGet(false), searchUser, "user"));
+        setSearches(searchHandler(users?.nonsub_users, searchUser, "user"));
     }, [searchUser])
-
-    const UsersGet = useCallback((isSub = true)=>{
-        if(!users){
-            return null
-        }
-
-        let _users = []
-
-        users.forEach(user => {
-            if(user.isSubordinate){
-                if(isSub){
-                    _users.push({
-                        id: user.id,
-                        username: user.username
-                    })
-                }
-            }else{
-                if(!isSub){
-                    _users.push({
-                        id: user.id,
-                        username: user.username
-                    })
-                }
-            }
-        });
-
-        if(_users.length > 0){
-            return _users;
-        }else{
-            return null;
-        }
-    }, [users])
 
     return(
         <>
@@ -130,7 +99,7 @@ const Subordinate = ({users, isLoaded}) => {
             <p>Subordinates: Click the username to send a document</p>
             {isLoaded ? 
             <UserLists 
-                users={UsersGet()} 
+                users={users?.sub_users} 
                 handler={subordinateUserHandler}
                 fromWhere={"profile-subordinate"}
             />

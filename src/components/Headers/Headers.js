@@ -24,7 +24,15 @@ const Headers = ({logIn}) => {
         if(e){
             e.preventDefault();
         }
+        
+        if(panelStatus === 'inactive'){
+            if(searchDoc){
+                setSearchDoc("");
+            }   
+        }
+
         panelStatus === 'active' ? setPanel("inactive") : setPanel("active");
+        
     }
 
     useEffect(()=>{
@@ -58,7 +66,6 @@ const Headers = ({logIn}) => {
     useEffect(()=>{
         if(documentList?.documents){
             setSearched(searchHandler(documentList.documents, searchDoc, 'document'));
-            console.log(docsSearched, searchDoc);
         }
     }, [searchDoc])
 
@@ -68,11 +75,13 @@ const Headers = ({logIn}) => {
                 Doc
             </div>
             {logIn ? <>
-                <p className="searchbar-container">
-                    <input className="searchbar" aria-label="Searchbar" type="text" value={searchDoc} onChange={e=>setSearchDoc(e.target.value)} />
-                </p>
-                {docsSearched ? 
-                <DocumentList handler={()=>console.log("yippe")} documentList={docsSearched} /> : ""}
+                <div className="searchbar-container">
+                    <p>
+                        <input className="searchbar" aria-label="Searchbar" type="text" value={searchDoc} onChange={e=>setSearchDoc(e.target.value)} />
+                    </p>
+                    {docsSearched ? 
+                    <DocumentList handler={()=>console.log("yippe")} documentList={docsSearched} fromWhere="header-search" /> : ""}
+                </div>
                 <nav>
                     <ul className="fd nav-list">
                         <li><button>Scan</button></li>

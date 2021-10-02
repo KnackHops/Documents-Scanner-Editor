@@ -1,12 +1,15 @@
 import { useContext } from "react/cjs/react.development";
-import { SideContext, UserContext } from "../../../wrappers/DocumentsScannerEditor";
+import { FunctionContext, SideContext, UserContext } from "../../../wrappers/DocumentsScannerEditor";
 import './ProfileSide.css';
+import SidePopUp from "../SidePopUp";
 
 const ProfileSide = () => {
     const { sideUser, setSideUser } = useContext(SideContext);
     const { id, fetchUsers } = useContext(UserContext);
+    const { popUpHandler } = useContext(FunctionContext);
 
     const profileSubordinateHandler = e => {
+        console.log("he")
         const whichFrom = e.target.getAttribute('data-sub');
 
         if(whichFrom === 'subordinate'){
@@ -60,7 +63,9 @@ const ProfileSide = () => {
             </p>
         </div>
         <p>
-            <button>Send a document</button>
+            <button onClick={()=>{
+                popUpHandler(true, "profile-side", <SidePopUp />)
+            }}>Send a document</button>
         </p>
         {sideUser.sideClass === 'profile-subordinate' ? 
         <div>

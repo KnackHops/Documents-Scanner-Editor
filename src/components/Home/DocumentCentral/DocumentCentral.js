@@ -22,6 +22,7 @@ const DocumentCentral = () => {
                     if(doc.id===id){
                         setDocument({
                             id,
+                            title: doc.title,
                             body: doc.document
                         })
                     }
@@ -86,6 +87,7 @@ const DocumentCentral = () => {
             documentFetch();
             setDocument({
                 id,
+                title: data.title,
                 body: data.document
             })
         }).catch(err=>console.log(err))
@@ -110,7 +112,7 @@ const DocumentCentral = () => {
 
     return (
         <>
-            {document ? <DocumentPage documentLoadHandler={documentLoadHandler} document={document ? document : ""} documentHandler={documentHandler}/> : <>
+            {document ? <DocumentPage documentLoadHandler={documentLoadHandler} document={document} documentHandler={documentHandler}/> : <>
                 <section className="central-container">
                 <p className="btn-container">
                     <button onClick={()=>documentLoadHandler(true)}>Add</button>

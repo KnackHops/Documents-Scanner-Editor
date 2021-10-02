@@ -54,3 +54,13 @@ section.document-container > div.ck-toolbar {
     padding: .5in;
     box-shadow: 0 0 .4rem rgba(0, 0, 0, .4);
 }
+
+aside.pop-document-page {
+    height: 10rem;
+    width: 20rem;
+    background-color: gainsboro;
+}
+
+main.homepage-container > section.central-container{
+    width: 100%;
+}
