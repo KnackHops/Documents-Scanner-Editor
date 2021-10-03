@@ -1,12 +1,14 @@
 import './AdminSide.css';
 import DocumentList from '../../../wrappers/DocumentList';
 import { useContext, useEffect } from 'react/cjs/react.development';
-import { DocumentContext, SideContext, UserContext } from '../../../wrappers/DocumentsScannerEditor';
+import { DocumentContext, FunctionContext, SideContext, UserContext } from '../../../wrappers/DocumentsScannerEditor';
+import SidePopUp from '../SidePopUp';
 
 const AdminSide = () => {
     const { fetchUsers, id } = useContext(UserContext);
-    const { documentFetch, sideDocuList } = useContext(DocumentContext);
+    const { documentFetch, unpinHandler, sideDocuList } = useContext(DocumentContext);
     const { sideUser } = useContext(SideContext);
+    const { popUpHandler } = useContext(FunctionContext);
 
     const activateUser = textPrompt => {
         window.confirm(`User ${sideUser.username} ${textPrompt[1]} commence! You can close the admin window!`);
@@ -142,8 +144,19 @@ const AdminSide = () => {
         documentFetch(true, true);
     }, [sideUser])
 
+    const docuClicked = id => {
+        const con = window.confirm("Are you sure you want to unpin this document?");
+
+        if(con){
+            unpinHandler(sideUser.id, id, {
+                reload: true,
+                varFetch: [true, true]
+            });
+        }
+    }
+
     return(
-        <div className="admin-menu">
+        <>
             <h1>{`User: ${sideUser.username}`}</h1>
             <p>
                 <button type="button" onClick={activateHandler}>{sideUser.activated ? "Deactivate" : "Activate"} this User</button>
@@ -158,12 +171,14 @@ const AdminSide = () => {
                         Pinned Posts
                     </p>
                     <p>
-                        <button>Add pin</button>
+                        <button onClick={()=>{
+                            popUpHandler(true, 'admin-side', <SidePopUp />)
+                        }}>Add pin</button>
                     </p>
                     {sideDocuList?.documents ? 
                     <DocumentList 
                         documentList={sideDocuList} 
-                        handler={()=>console.log("You clicked one!")}
+                        handler={docuClicked}
                         fromWhere="admin-side-pinned"
                     /> : "None"}
                 </div>
@@ -172,7 +187,7 @@ const AdminSide = () => {
             <p>
                 <button type="button" onClick={roleHandler}>Change User role to {sideUser.role === 'admin' ? 'Normal' : 'Admin'}</button>
             </p> : ""}
-        </div>
+        </>
     )
 }
 

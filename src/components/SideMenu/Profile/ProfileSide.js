@@ -9,7 +9,6 @@ const ProfileSide = () => {
     const { popUpHandler } = useContext(FunctionContext);
 
     const profileSubordinateHandler = e => {
-        console.log("he")
         const whichFrom = e.target.getAttribute('data-sub');
 
         if(whichFrom === 'subordinate'){

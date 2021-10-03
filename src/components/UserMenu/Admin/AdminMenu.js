@@ -32,7 +32,7 @@ const AdminMenu = () => {
                             username: user.username,
                             activated: user.activated,
                             role: id===0 ? user.role : null,
-                            pinned_posts: user.pinned_posts
+                            sideClass: "admin-side"
                         })
                     }
                 });

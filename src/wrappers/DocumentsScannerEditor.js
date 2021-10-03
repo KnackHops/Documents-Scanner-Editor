@@ -70,7 +70,7 @@ export default  function DocumentsScannerEditor() {
         }
     }, [user])
 
-    const sendHandler = ( userid, docid, doctitle) => {
+    const sendHandler = ( userid, docid, doctitle, fromDocPop=false) => {
         fetch(`http://127.0.0.1:5000/document/pin-doc`, {
             method: 'POST',
             mode: 'cors',
@@ -107,13 +107,33 @@ export default  function DocumentsScannerEditor() {
                     })
                 }
 
-                window.confirm(`Document: ${doctitle} is sent to User: ${user.username}`);
+                window.confirm(`Document: ${doctitle} is sent to User: ${_username}`);
 
                 if(sideDocuList?.documents){
                     documentFetch(true);
                 }
+                if(fromDocPop){
+                    fetchUsers(fromDocPop);
+                }
             }else{
                 console.log("error pinning");
+            }
+        })
+    }
+
+    const unpinHandler = (userid, docid, fetchChk) => {
+        fetch(`http://127.0.0.1:5000/document/unpin-doc/?userid=${userid}&docid=${docid}`,{
+            method: 'DELETE',
+            mode: 'cors'
+        }).then(resp=>{
+            if(resp.ok){
+                window.confirm("Unpinning document done!");
+
+                if(fetchChk?.reload){
+                    documentFetch(fetchChk.varFetch[0], fetchChk.varFetch[1]);
+                }
+            }else{
+                window.alert("Unpinning document error!");
             }
         })
     }
@@ -154,41 +174,25 @@ export default  function DocumentsScannerEditor() {
     const [users, setUsers] = useState(null);
     const [isLoaded, setLoaded] = useState(false);
 
-    const fetchUsers = useCallback((friendOnly=false) => {
-        if(friendOnly){
-            fetch(`http://127.0.0.1:5000/subordinate-fetch/?id=${user.id}`, {
-                method: 'GET',
-                mode: 'cors'
-            }).then(resp=>{
-                if(resp.ok){
-                    return resp.json();
-                }else{
-                    setUsers(null);
-                    setLoaded(false);
-                }
-            }).then(({fetched_users: _users}) =>{
-                setUsers(usersGet(_users));
-                setLoaded(true);
-            })
-        }else{
-            if(user.role==='admin'){
-                fetch(`http://127.0.0.1:5000/admin-fetch/?id=${user.id}`, {
-                    method: 'GET',
-                    mode: 'cors'
-                }).then(resp=>{
-                    if(resp.ok){
-                        return resp.json();
-                    }else{
-                        setUsers(null);
-                        setLoaded(false);
-                    }
-                }).then(({fetched_users: _users})=>{
-                    setUsers(_users);
-                    setLoaded(true);
-                })
+    const fetchUsers = useCallback((sub_fetch=false) => {
+        console.log("yi")
+        const link = sub_fetch ? "subordinate-fetch" : "admin-fetch";
+        fetch(`http://127.0.0.1:5000/${link}/?id=${user.id}`, {
+            method: 'GET',
+            mode: 'cors'
+        }).then(resp=>{
+            if(resp.ok){
+                return resp.json();
+            }else{
+                setUsers(null);
+                setLoaded(false);
             }
-        }
-        
+        }).then(({fetched_users: _users})=>{
+            sub_fetch ?
+                setUsers(usersGet(_users)) :
+                setUsers(_users);
+            setLoaded(true);
+        })
     }, [user])
 
     const usersGet = (_users) =>{
@@ -275,13 +279,16 @@ export default  function DocumentsScannerEditor() {
                     email: user ? user.email : null,
                     fetchUsers,
                     setLoaded,
+                    setUsers,
                     isLoaded,
                     users
                 }}>
                     <DocumentContext.Provider value={{
+                    setDocumentList,
                     documentList,
                     documentFetch,
                     sendHandler,
+                    unpinHandler,
                     sideDocuList,
                     setSideDocuList
                     }}>

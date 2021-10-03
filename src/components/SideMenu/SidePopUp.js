@@ -4,12 +4,19 @@ import { DocumentContext, SideContext } from "../../wrappers/DocumentsScannerEdi
 
 const SidePopUp = () => {
     const {sideUser} = useContext(SideContext);
-    const {documentFetch, sideDocuList, sendHandler} = useContext(DocumentContext);
+    const {documentFetch, sideDocuList, sendHandler, setSideDocuList} = useContext(DocumentContext);
 
     useEffect(()=>{
         if(sideUser){
             documentFetch(true);
         }
+        return ()=>{
+            if(sideUser?.sideClass === "admin-side"){
+                documentFetch(true, true);
+            }else{
+                setSideDocuList({documents: null});
+            }
+        };
     }, [sideUser])
 
     const docuClicked = id => {
