@@ -2,11 +2,25 @@ import { useState, useContext } from 'react';
 import DocumentPage from './DocumentPage';
 import DocumentList from '../../../wrappers/DocumentList';
 import { DocumentContext } from '../../../wrappers/DocumentsScannerEditor';
+import { useEffect } from 'react/cjs/react.development';
 
 const DocumentCentral = () => {
-    const {documentList, documentFetch} = useContext(DocumentContext);
+    const {documentList, documentFetch, setDocumentList} = useContext(DocumentContext);
 
     const [document, setDocument] = useState(null);
+
+    const documentFind = id => {
+        documentList.documents.forEach(doc => {
+            if(doc.id===id){
+                setDocument({
+                    id,
+                    title: doc.title,
+                    body: doc.document,
+                    pinned: doc.pinned
+                })
+            }
+        });
+    }
 
     const documentLoadHandler = id => {
         if(!id && id!==0){
@@ -15,21 +29,29 @@ const DocumentCentral = () => {
             if(id===true){
                 setDocument({
                     id: null,
-                    body: null
+                    body: ""
                 })
             }else{
-                documentList.documents.forEach(doc => {
-                    if(doc.id===id){
-                        setDocument({
-                            id,
-                            title: doc.title,
-                            body: doc.document
-                        })
-                    }
-                });
+                documentFind(id);
             }
         }
     }
+
+    useEffect(()=>{
+        if(document?.id && !document?.body){
+            documentFind(document.id);
+        }
+    }, [document])
+
+    useEffect(()=>{
+        if(document){
+            documentFind(document.id);
+        }
+    }, [documentList])
+
+    useEffect(()=>{
+        return () => setDocumentList({documents: null})
+    }, [])
 
     const documentChk = (text) => {
         const title = window.prompt(text);
@@ -84,12 +106,11 @@ const DocumentCentral = () => {
                 throw Error('Error adding data');
             }
         }).then(({id})=>{
-            documentFetch();
             setDocument({
                 id,
-                title: data.title,
-                body: data.document
-            })
+                body: ""
+            });
+            documentFetch();
         }).catch(err=>console.log(err))
     }
 
@@ -103,16 +124,18 @@ const DocumentCentral = () => {
             body: JSON.stringify(data)
         }).then(resp=>{
             if(resp.ok){
-                documentFetch();
+                return resp.json();
             }else{
                 throw Error('Error updating data');
             }
+        }).then(()=>{
+            documentFetch();
         }).catch(err=>console.log(err))
     }
 
     return (
         <>
-            {document ? <DocumentPage documentLoadHandler={documentLoadHandler} document={document} documentHandler={documentHandler}/> : <>
+            {document ? <DocumentPage documentLoadHandler={documentLoadHandler} document={document} documentHandler={documentHandler} setDocument={setDocument}/> : <>
                 <section className="central-container">
                 <p className="btn-container">
                     <button onClick={()=>documentLoadHandler(true)}>Add</button>

@@ -2,7 +2,7 @@ import "./DocumentPage-style.css"
 import DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import { useCallback, useContext, useEffect, useState } from "react/cjs/react.development";
-import { FunctionContext } from "../../../wrappers/DocumentsScannerEditor";
+import { DocumentContext, FunctionContext, UserContext } from "../../../wrappers/DocumentsScannerEditor";
 import DocumentPopUp from "./DocumentPopUp";
 
 const toolbarConfig = {
@@ -22,6 +22,8 @@ const toolbarConfig = {
 }
 
 const DocumentPage = ({documentLoadHandler, document, documentHandler}) => {
+    const { unpinHandler } = useContext(DocumentContext);
+    const { id } = useContext(UserContext);
     const [editor, setEditor] = useState(null);
 
     const documentInit = newEditor => {
@@ -54,6 +56,18 @@ const DocumentPage = ({documentLoadHandler, document, documentHandler}) => {
         popUpHandler(true, 'document-page', <DocumentPopUp document={document} />);
     }
 
+    const unpinClicked = e => {
+        e.preventDefault();
+        const con = window.confirm("Are you sure you want to unpin this document for you?");
+
+        if(con){
+            unpinHandler(id, document.id, {
+                reload: true,
+                varFetch: [false, false]
+            })
+        }
+    }
+
     return (
         <section className="document-container fd">
             <p className="doc-btn-container">
@@ -63,9 +77,19 @@ const DocumentPage = ({documentLoadHandler, document, documentHandler}) => {
                     }
                 </button>
                 {document.id || document.id === 0 ?<>
-                <button onClick={sendPopHandler}>
+                {
+                    <>
+                    <button onClick={sendPopHandler}>
                     Send
-                </button>
+                    </button>
+                    {
+                        document.pinned ? 
+                        <button onClick={unpinClicked}>
+                            Unpin
+                        </button> : ""
+                    }
+                    </>
+                }
                 </> : ""}
                 <button onClick={()=>documentLoadHandler(null)}>
                     Exit

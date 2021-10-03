@@ -4,11 +4,13 @@ import './SideMenu.css';
 
 const SideMenu = ({classCon, children}) => {
     const { setSideUser } = useContext(SideContext);
-    const { setSideDocuList } = useContext(DocumentContext);
+    const { setSideDocuList, sideDocuList } = useContext(DocumentContext);
 
     useEffect(()=>{
         return ()=>{
-            setSideDocuList({documents: null})
+            if(sideDocuList){
+                setSideDocuList({documents: null})
+            }
         }
     }, [])
     return (
