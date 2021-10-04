@@ -25,7 +25,11 @@ const SidePopUp = () => {
                 const con = window.confirm(`Are you sure you want to send Document: ${docu.title} to User: ${sideUser.username}?`);
 
                 if(con){
-                    sendHandler(sideUser.id, docu.id, docu.title);
+                    sendHandler(sideUser.username, sideUser.id, docu.id, docu.title).then(resp=>{
+                        if(resp.ok){
+                            documentFetch(true)
+                        }
+                    })
                 }
             }
         })

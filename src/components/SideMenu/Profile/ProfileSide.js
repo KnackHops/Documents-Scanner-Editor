@@ -1,12 +1,12 @@
 import { useContext } from "react/cjs/react.development";
-import { FunctionContext, SideContext, UserContext } from "../../../wrappers/DocumentsScannerEditor";
+import { MenuContext, SideContext, UserContext } from "../../../wrappers/DocumentsScannerEditor";
 import './ProfileSide.css';
 import SidePopUp from "../SidePopUp";
 
-const ProfileSide = () => {
+const ProfileSide = ({fetchUsers}) => {
     const { sideUser, setSideUser } = useContext(SideContext);
-    const { id, fetchUsers } = useContext(UserContext);
-    const { popUpHandler } = useContext(FunctionContext);
+    const { id } = useContext(UserContext);
+    const { popUpHandler } = useContext(MenuContext);
 
     const profileSubordinateHandler = e => {
         const whichFrom = e.target.getAttribute('data-sub');

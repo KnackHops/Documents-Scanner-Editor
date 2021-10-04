@@ -1,11 +1,10 @@
 import { useContext, useEffect, useState } from "react/cjs/react.development";
-import { SideContext, FunctionContext, UserContext } from "../../../wrappers/DocumentsScannerEditor";
+import { SideContext, MenuContext } from "../../../wrappers/DocumentsScannerEditor";
 import UserLists from "../../../wrappers/UserLists";
 
-const Subordinate = () => {
+const Subordinate = ({users, isLoaded}) => {
     const { sideUser, setSideUser } = useContext(SideContext);
-    const { searchHandler } = useContext(FunctionContext);
-    const { users, isLoaded } = useContext(UserContext);
+    const { searchHandler } = useContext(MenuContext);
 
     const subordinateUserHandler = e => {
         let sideClass = null;
@@ -32,13 +31,11 @@ const Subordinate = () => {
         if(flowChk){
             let mobile = null
             let email = null
-            let found = false
 
             users.sub_users.forEach(user=>{
                 if(user.id === id){
                     mobile = user.mobile;
                     email = user.email;
-                    found = true;
                 }
             })
 

@@ -1,19 +1,17 @@
 import { useState } from "react";
 import { useContext, useEffect } from "react/cjs/react.development";
-import { DocumentContext, UserContext } from "../../../wrappers/DocumentsScannerEditor";
+import { DocumentContext, UserContext, useUsers } from "../../../wrappers/DocumentsScannerEditor";
 import UserLists from "../../../wrappers/UserLists";
 
 const DocumentPopUp = ({document}) => {
-    const {fetchUsers, id, users, setUsers} = useContext(UserContext);
+    const {id} = useContext(UserContext);
     const {sendHandler} = useContext(DocumentContext);
+    const {fetchUsers, users} = useUsers(id, true);
 
     const [popUsers, setPopUsers] = useState(users);
 
     useEffect(()=>{
         fetchUsers(true);
-        return ()=>{
-            setUsers(null)
-        }
     }, [id])
 
     const idFilterGet = id_filtered => {
@@ -81,17 +79,18 @@ const DocumentPopUp = ({document}) => {
         }
     }, [users])
 
-    const sendBtnHandler = e =>{
+    const sendBtnHandler = async e => {
         e.preventDefault();
-
-        const con = window.confirm(`Are you sure you want to send Document: "${document.title}" to User: "${e.target.innerHTML}"?`);
+        const username = e.target.innerHTML;
+        const con = window.confirm(`Are you sure you want to send Document: "${document.title}" to User: "${username}"?`);
 
         if(con){
             const userid = Number(e.target.getAttribute('data-id'));
             const docid = document.id;
             const doctitle = document.title;
 
-            sendHandler(userid, docid, doctitle, true);
+            await sendHandler(username, userid, docid, doctitle, true);
+            fetchUsers(true)
         }
     }
     

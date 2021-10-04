@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import './Headers-style.css';
-import { UserContext, FunctionContext, DocumentContext} from '../../wrappers/DocumentsScannerEditor';
+import { UserContext, MenuContext, DocumentContext, SideContext} from '../../wrappers/DocumentsScannerEditor';
 import { useEffect, useState } from "react/cjs/react.development";
 import ProfilePanel from "./ProfilePanel";
 import DocumentList from "../../wrappers/DocumentList";
@@ -8,7 +8,8 @@ import DocumentList from "../../wrappers/DocumentList";
 const Headers = ({logIn}) => {
     const classForHead = logIn ? "homepage-header" : "landingpage-header";
     const { username, role } = useContext(UserContext);
-    const { logInHandle, menuHandler, searchHandler } = useContext(FunctionContext);
+    const { logInHandle, menuHandler, searchHandler, openMenu } = useContext(MenuContext);
+    const { isAttached } = useContext(SideContext);
 
     const bodyEventListener_panel = e => {
         if(e.target.className !== 'panel-btn-container' && e.target.className !== 'panel-btn' && e.target.className !== 'nav-btn'){
@@ -29,6 +30,10 @@ const Headers = ({logIn}) => {
             if(searchDoc){
                 setSearchDoc("");
             }   
+        }
+
+        if(openMenu){
+            menuHandler();
         }
 
         panelStatus === 'active' ? setPanel("inactive") : setPanel("active");
@@ -85,14 +90,15 @@ const Headers = ({logIn}) => {
                 <nav>
                     <ul className="fd nav-list">
                         <li><button>Scan</button></li>
-                        <li><button className="nav-btn" onClick={panelClicked}>{username}</button></li>
+                        {isAttached  && <li><button className="nav-btn" onClick={panelClicked}>{username}</button></li>}
                     </ul>
                 </nav>
+                {isAttached && 
                 <ProfilePanel 
                     panelStatus={panelStatus} 
                     menuClicked={menuClicked} 
                     logOutHandler={logOutHandler}
-                    role={role}/>
+                    role={role}/>}
             </> : ""}
         </header>
     )

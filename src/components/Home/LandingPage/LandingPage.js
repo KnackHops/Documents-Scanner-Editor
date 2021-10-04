@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import "./LandingPage-style.css";
 import { userCheck } from "./UserCheck";
-import { FunctionContext } from "../../../wrappers/DocumentsScannerEditor";
+import { MenuContext } from "../../../wrappers/DocumentsScannerEditor";
 
 const initialState = {
         username: '',
@@ -13,7 +13,7 @@ const initialState = {
 const LandingPage = () => {
     const [whichOpen, setWhichOpen] = useState("login");
     const [userInp, setUserInput] = useState(initialState)
-    const { logInHandle } = useContext(FunctionContext);
+    const { logInHandle } = useContext(MenuContext);
     
     const openHandler = e => {
         e.preventDefault();
@@ -54,7 +54,7 @@ const LandingPage = () => {
             if(resp.ok){
                 return resp.json();
             }else{
-                throw Error('error registering');
+                throw Error('error logging in');
             }
         }).then(data=>{
             if('id' in data){

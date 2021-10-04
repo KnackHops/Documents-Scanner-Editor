@@ -4,10 +4,12 @@ import AdminSide from '../../SideMenu/Admin/AdminSide';
 import UserLists from '../../../wrappers/UserLists';
 import './AdminMenu.css';
 import { SideContext, UserContext } from '../../../wrappers/DocumentsScannerEditor';
+import { useUsers } from '../../../wrappers/DocumentsScannerEditor';
 
 const AdminMenu = () => {
     const { sideUser, setSideUser } = useContext(SideContext);
-    const { id, users, isLoaded } = useContext(UserContext);
+    const { id } = useContext(UserContext);
+    const { users, isLoaded, fetchUsers, clearUsers } = useUsers(id);
 
     const adminSideMenuHandler = (userid=null, fromList=false) => {
         let flowChk = true;
@@ -57,6 +59,7 @@ const AdminMenu = () => {
     useEffect(()=>{
         return ()=>{
             setSideUser(null);
+            clearUsers();
         }
     },[])
 
@@ -75,10 +78,11 @@ const AdminMenu = () => {
                 /> 
             : <p>Loading Users!</p>}
 
-            {sideUser ? 
+            {sideUser && sideUser?.sideClass == 'admin-side' ? 
                 <SideMenu 
                     classCon={'admin-side-container'}>
                     <AdminSide 
+                        fetchUsers={fetchUsers}
                         sideMenuHandler={adminSideMenuHandler}/>
                 </SideMenu> : ""}
         </>

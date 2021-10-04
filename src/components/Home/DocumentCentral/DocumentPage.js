@@ -2,7 +2,7 @@ import "./DocumentPage-style.css"
 import DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import { useCallback, useContext, useEffect, useState } from "react/cjs/react.development";
-import { DocumentContext, FunctionContext, UserContext } from "../../../wrappers/DocumentsScannerEditor";
+import { DocumentContext, UserContext, MenuContext } from "../../../wrappers/DocumentsScannerEditor";
 import DocumentPopUp from "./DocumentPopUp";
 
 const toolbarConfig = {
@@ -49,7 +49,7 @@ const DocumentPage = ({documentLoadHandler, document, documentHandler}) => {
         }
     }, [document, editor])
 
-    const {popUpHandler} = useContext(FunctionContext);
+    const {popUpHandler} = useContext(MenuContext);
 
     const sendPopHandler = e => {
         e.preventDefault();

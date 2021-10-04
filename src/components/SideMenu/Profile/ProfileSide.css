@@ -1,7 +1,9 @@
-.profile-side-container.profile-search-container {
+.profile-side-container.profile-search-container, .profile-side-container.profile-subordinate-container {
+    position: fixed;
     height: 20rem;
     width: 30rem;
-    left: 5rem;
+    left: calc(50% - 15rem);
+    top: 20%;
 }
 
 @media only screen and (max-width: 670px) {

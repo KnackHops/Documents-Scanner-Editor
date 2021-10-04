@@ -1,5 +1,7 @@
-.admin-side-container {
-    left: 2.5rem;
+aside.side-menu.admin-side-container {
+    position: fixed;
     width: 25rem;
     height: 10rem;
+    left: calc(50% - 12.5rem);
+    top: 20%;
 }
