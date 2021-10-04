@@ -1,11 +1,27 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useLayoutEffect } from 'react';
 import DocumentPage from './DocumentPage';
 import DocumentList from '../../../wrappers/DocumentList';
-import { DocumentContext } from '../../../wrappers/DocumentsScannerEditor';
+import AsideHome from './AsideHome';
+import { DocumentContext, SideContext } from '../../../wrappers/DocumentsScannerEditor';
 import { useEffect } from 'react/cjs/react.development';
 
 const DocumentCentral = () => {
     const {documentList, documentFetch, setDocumentList} = useContext(DocumentContext);
+    const {isAttached, setAttached} = useContext(SideContext);
+
+    const windowWidth = () => {
+        if(window.innerWidth >= 1050){
+            setAttached(true)
+        }else if(window.innerWidth <= 1049){
+            setAttached(false)
+        }
+    }
+
+    useLayoutEffect(()=>{
+        windowWidth();
+        window.addEventListener("resize", windowWidth);
+        return ()=>window.removeEventListener("resize", windowWidth)
+    }, [])
 
     const [document, setDocument] = useState(null);
 
@@ -137,11 +153,12 @@ const DocumentCentral = () => {
         <>
             {document ? <DocumentPage documentLoadHandler={documentLoadHandler} document={document} documentHandler={documentHandler} setDocument={setDocument}/> : <>
                 <section className="central-container">
-                <p className="btn-container">
-                    <button onClick={()=>documentLoadHandler(true)}>Add</button>
-                </p>
-                {documentList ? <DocumentList handler={documentLoadHandler} documentList={documentList} fromWhere={'document-central'}/> : "Please wait!"}
+                    <p className="btn-container">
+                        <button onClick={()=>documentLoadHandler(true)}>Add</button>
+                    </p>
+                    {documentList ? <DocumentList handler={documentLoadHandler} documentList={documentList} fromWhere={'document-central'}/> : "Please wait!"}
                 </section></>}
+                {!isAttached && !document && <AsideHome />}
         </>
     )
 }

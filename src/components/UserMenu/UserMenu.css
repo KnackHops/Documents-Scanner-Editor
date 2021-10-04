@@ -5,13 +5,13 @@ div.user-menu-bg {
     background-color: rgba(0, 0, 0, .2);
     z-index: 11;
     justify-content: center;
-    align-items: center;
 }
 
 section.user-menu {
+    margin-top: 5rem;
     height: 50rem;
     width: 40rem;
-    background-color: cadetblue;
+    background-color: bisque;
     padding: .5rem 1rem 2rem 1rem;
     flex-direction: column;
     position: relative;

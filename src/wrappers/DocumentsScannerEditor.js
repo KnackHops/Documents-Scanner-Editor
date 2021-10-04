@@ -1,13 +1,79 @@
-import { useState, useEffect, createContext, useCallback } from "react";
+import { useState, useEffect, createContext } from "react";
 import Headers from '../components/Headers/Headers';
 import UserMenu from '../components/UserMenu/UserMenu';
 import Home from '../components/Home/Home';
 import PopUpAside from "./PopUpAside";
 
 const UserContext = createContext(null);
-const FunctionContext = createContext(null);
+const MenuContext = createContext(null);
 const SideContext = createContext(null);
 const DocumentContext = createContext(null);
+
+const useUsers = (id, sub_fetch=false) => {
+    const [users, setUsers] = useState(null);
+    const [isLoaded, setLoaded] = useState(false);
+
+    useEffect(()=>{
+        fetchUsers();
+    },[id])
+
+    const fetchUsers = () => {
+        const link = sub_fetch ? "subordinate-fetch" : "admin-fetch";
+        fetch(`http://127.0.0.1:5000/${link}/?id=${id}`, {
+            method: 'GET',
+            mode: 'cors'
+        }).then(resp=>{
+            if(resp.ok){
+                return resp.json();
+            }else{
+                setUsers(null);
+                setLoaded(false);
+            }
+        }).then(({fetched_users: _users})=>{
+            sub_fetch ?
+                setUsers(usersGet(_users)) :
+                setUsers(_users);
+            setLoaded(true);
+        })
+    }
+
+    const usersGet = (_users) =>{
+        if(!_users){
+            return null
+        }
+
+        let sub_users = []
+        let nonsub_users = []
+
+        _users.forEach(user => {
+            if(user.isSubordinate){
+                sub_users.push(user)
+            }
+            if(!user.isSubordinate){
+                nonsub_users.push(user)
+            }
+        });
+
+        if(sub_users.length > 0 || nonsub_users.length > 0){
+            return ({
+                sub_users,
+                nonsub_users
+            });
+        }else{
+            return ({
+                sub_users: null,
+                nonsub_users: null
+            })
+        }
+    }
+
+    const clearUsers = () => {
+        setUsers(null);
+        setLoaded(false);
+    }
+
+    return {users, isLoaded, fetchUsers, clearUsers};
+}
 
 export default  function DocumentsScannerEditor() {
     const [logIn, setLogIn] = useState(false);
@@ -70,54 +136,28 @@ export default  function DocumentsScannerEditor() {
         }
     }, [user])
 
-    const sendHandler = ( userid, docid, doctitle, fromDocPop=false) => {
-        fetch(`http://127.0.0.1:5000/document/pin-doc`, {
-            method: 'POST',
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                userid,
-                docid,
-                doctitle
-            })
-        }).then(resp=>{
-            if(resp.ok){
-                let _username;
-                if('sub_users' in users){
-                    users.sub_users.forEach(user=>{
-                        if(user.id === userid){
-                            _username = user.username;
-                        }
-                    })
-
-                    if(!_username){
-                        users.nonsub_users.forEach(user=>{
-                            if(user.id === userid){
-                                _username = user.username;
-                            }
-                        })
-                    }
+    const sendHandler = ( username, userid, docid, doctitle) => {
+        return new Promise((resolve, reject) => {
+            fetch(`http://127.0.0.1:5000/document/pin-doc`, {
+                method: 'POST',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    userid,
+                    docid,
+                    doctitle
+                })
+            }).then(resp=>{
+                if(resp.ok){
+                    window.confirm(`Document: ${doctitle} is sent to User ${username}`);
+                    resolve();
                 }else{
-                    users.forEach(user=>{
-                        if(user.id === userid){
-                            _username = user.username;
-                        }
-                    })
+                    console.log("error pinning");
+                    reject();
                 }
-
-                window.confirm(`Document: ${doctitle} is sent to User: ${_username}`);
-
-                if(sideDocuList?.documents){
-                    documentFetch(true);
-                }
-                if(fromDocPop){
-                    fetchUsers(fromDocPop);
-                }
-            }else{
-                console.log("error pinning");
-            }
+            })
         })
     }
 
@@ -171,59 +211,58 @@ export default  function DocumentsScannerEditor() {
         }
     }
 
-    const [users, setUsers] = useState(null);
-    const [isLoaded, setLoaded] = useState(false);
+    // const [users, setUsers] = useState(null);
+    // const [isLoaded, setLoaded] = useState(false);
 
-    const fetchUsers = useCallback((sub_fetch=false) => {
-        console.log("yi")
-        const link = sub_fetch ? "subordinate-fetch" : "admin-fetch";
-        fetch(`http://127.0.0.1:5000/${link}/?id=${user.id}`, {
-            method: 'GET',
-            mode: 'cors'
-        }).then(resp=>{
-            if(resp.ok){
-                return resp.json();
-            }else{
-                setUsers(null);
-                setLoaded(false);
-            }
-        }).then(({fetched_users: _users})=>{
-            sub_fetch ?
-                setUsers(usersGet(_users)) :
-                setUsers(_users);
-            setLoaded(true);
-        })
-    }, [user])
+    // const fetchUsers = useCallback((sub_fetch=false) => {
+    //     const link = sub_fetch ? "subordinate-fetch" : "admin-fetch";
+    //     fetch(`http://127.0.0.1:5000/${link}/?id=${user.id}`, {
+    //         method: 'GET',
+    //         mode: 'cors'
+    //     }).then(resp=>{
+    //         if(resp.ok){
+    //             return resp.json();
+    //         }else{
+    //             setUsers(null);
+    //             setLoaded(false);
+    //         }
+    //     }).then(({fetched_users: _users})=>{
+    //         sub_fetch ?
+    //             setUsers(usersGet(_users)) :
+    //             setUsers(_users);
+    //         setLoaded(true);
+    //     })
+    // }, [user])
 
-    const usersGet = (_users) =>{
-        if(!_users){
-            return null
-        }
+    // const usersGet = (_users) =>{
+    //     if(!_users){
+    //         return null
+    //     }
 
-        let sub_users = []
-        let nonsub_users = []
+    //     let sub_users = []
+    //     let nonsub_users = []
 
-        _users.forEach(user => {
-            if(user.isSubordinate){
-                sub_users.push(user)
-            }
-            if(!user.isSubordinate){
-                nonsub_users.push(user)
-            }
-        });
+    //     _users.forEach(user => {
+    //         if(user.isSubordinate){
+    //             sub_users.push(user)
+    //         }
+    //         if(!user.isSubordinate){
+    //             nonsub_users.push(user)
+    //         }
+    //     });
 
-        if(sub_users.length > 0 || nonsub_users.length > 0){
-            return ({
-                sub_users,
-                nonsub_users
-            });
-        }else{
-            return ({
-                sub_users: null,
-                nonsub_users: null
-            })
-        }
-    }
+    //     if(sub_users.length > 0 || nonsub_users.length > 0){
+    //         return ({
+    //             sub_users,
+    //             nonsub_users
+    //         });
+    //     }else{
+    //         return ({
+    //             sub_users: null,
+    //             nonsub_users: null
+    //         })
+    //     }
+    // }
 
     const [popUp, setPopUp] = useState({
         openUp: false
@@ -263,25 +302,34 @@ export default  function DocumentsScannerEditor() {
         }
     }, [popUp.openUp])
 
+    const [isAttached, setAttached] = useState(true);
+
+    useEffect(()=>{
+        if(openMenu && !isAttached){
+            setOpen(false);
+        }
+    },[isAttached])
+
+    useEffect(()=>{
+        console.log(sideUser);
+    }, [sideUser])
+
     return (
         <>
-            <FunctionContext.Provider value={{
+            <MenuContext.Provider value={{
                 logInHandle, 
                 menuHandler,
                 searchHandler,
-                popUpHandler
+                popUpHandler,
+                popUp,
+                openMenu
             }}>
                 <UserContext.Provider value={{
                     id: user ? user.id : null,
                     username: user ? user.username : null,
                     role: user ? user.role : null,
                     mobile: user ? user.mobile : null,
-                    email: user ? user.email : null,
-                    fetchUsers,
-                    setLoaded,
-                    setUsers,
-                    isLoaded,
-                    users
+                    email: user ? user.email : null
                 }}>
                     <DocumentContext.Provider value={{
                     setDocumentList,
@@ -294,26 +342,19 @@ export default  function DocumentsScannerEditor() {
                     }}>
                         <SideContext.Provider value={{
                         setSideUser,
-                        sideUser
+                        sideUser,
+                        isAttached,
+                        setAttached
                         }}>
-                            {popUp.openUp ? 
-                                <PopUpAside fromWhere={popUp.fromWhere}>
-                                        {popUp.Compo}
-                                </PopUpAside> : ""}
-
-                            {
-                                openMenu && <UserMenu openMenu={openMenu}/>
-                            }
-                        </SideContext.Provider>
-
                             <Headers logIn={logIn}/>
                             <Home logIn={logIn}/>
-
+                        </SideContext.Provider>
                     </DocumentContext.Provider>
                 </UserContext.Provider>
-            </FunctionContext.Provider>
+            </MenuContext.Provider>
         </>
     )
 }
 
-export { UserContext, FunctionContext, SideContext, DocumentContext };
+export { UserContext, MenuContext, SideContext, DocumentContext };
+export { useUsers };

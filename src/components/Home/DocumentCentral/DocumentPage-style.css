@@ -65,3 +65,10 @@ aside.pop-document-page {
 main.homepage-container > section.central-container{
     width: 100%;
 }
+
+div.side-user-bg {
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, .2);
+}

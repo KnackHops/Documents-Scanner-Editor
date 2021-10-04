@@ -1,14 +1,14 @@
 import './AdminSide.css';
 import DocumentList from '../../../wrappers/DocumentList';
 import { useContext, useEffect } from 'react/cjs/react.development';
-import { DocumentContext, FunctionContext, SideContext, UserContext } from '../../../wrappers/DocumentsScannerEditor';
+import { DocumentContext, MenuContext, SideContext, UserContext } from '../../../wrappers/DocumentsScannerEditor';
 import SidePopUp from '../SidePopUp';
 
-const AdminSide = () => {
-    const { fetchUsers, id } = useContext(UserContext);
+const AdminSide = ({fetchUsers}) => {
+    const { id } = useContext(UserContext);
     const { documentFetch, unpinHandler, sideDocuList } = useContext(DocumentContext);
     const { sideUser } = useContext(SideContext);
-    const { popUpHandler } = useContext(FunctionContext);
+    const { popUpHandler } = useContext(MenuContext);
 
     const activateUser = textPrompt => {
         window.confirm(`User ${sideUser.username} ${textPrompt[1]} commence! You can close the admin window!`);
