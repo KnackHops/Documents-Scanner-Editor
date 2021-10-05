@@ -3,12 +3,11 @@ import DocumentList from '../../../wrappers/DocumentList';
 import { useContext, useEffect } from 'react/cjs/react.development';
 import { DocumentContext, MenuContext, SideContext, UserContext } from '../../../wrappers/DocumentsScannerEditor';
 import SidePopUp from '../SidePopUp';
+import useDocuments from '../../../hooks/useDocuments';
 
 const AdminSide = ({fetchUsers}) => {
     const { id } = useContext(UserContext);
-    const { documentFetch, unpinHandler, sideDocuList } = useContext(DocumentContext);
     const { sideUser } = useContext(SideContext);
-    const { popUpHandler } = useContext(MenuContext);
 
     const activateUser = textPrompt => {
         window.confirm(`User ${sideUser.username} ${textPrompt[1]} commence! You can close the admin window!`);
@@ -140,20 +139,23 @@ const AdminSide = ({fetchUsers}) => {
         }
     }
 
+    const {documentFetch, documentList} = useDocuments(sideUser.id, false);
+    const {unpinHandler} = useContext(DocumentContext);
+
     useEffect(()=>{
         documentFetch(true, true);
     }, [sideUser])
 
-    const docuClicked = id => {
+    const docuClicked = async docid => {
         const con = window.confirm("Are you sure you want to unpin this document?");
 
         if(con){
-            unpinHandler(sideUser.id, id, {
-                reload: true,
-                varFetch: [true, true]
-            });
+            await unpinHandler(sideUser.id, docid);
+            documentFetch(true, true);
         }
     }
+
+    const { popUpHandler } = useContext(MenuContext);
 
     return(
         <>
@@ -175,9 +177,9 @@ const AdminSide = ({fetchUsers}) => {
                             popUpHandler(true, 'admin-side', <SidePopUp />)
                         }}>Add pin</button>
                     </p>
-                    {sideDocuList?.documents ? 
+                    {documentList?.documents ? 
                     <DocumentList 
-                        documentList={sideDocuList} 
+                        documentList={documentList} 
                         handler={docuClicked}
                         fromWhere="admin-side-pinned"
                     /> : "None"}

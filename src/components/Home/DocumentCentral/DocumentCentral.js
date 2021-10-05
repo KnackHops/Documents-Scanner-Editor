@@ -2,12 +2,13 @@ import { useState, useContext, useLayoutEffect } from 'react';
 import DocumentPage from './DocumentPage';
 import DocumentList from '../../../wrappers/DocumentList';
 import AsideHome from './AsideHome';
-import { DocumentContext, SideContext } from '../../../wrappers/DocumentsScannerEditor';
+import { DocumentContext, SideContext, UserContext } from '../../../wrappers/DocumentsScannerEditor';
 import { useEffect } from 'react/cjs/react.development';
+import useDocuments from '../../../hooks/useDocuments';
 
 const DocumentCentral = () => {
-    const {documentList, documentFetch, setDocumentList} = useContext(DocumentContext);
     const {isAttached, setAttached} = useContext(SideContext);
+    const {id} = useContext(UserContext);
 
     const windowWidth = () => {
         if(window.innerWidth >= 1050){
@@ -23,20 +24,8 @@ const DocumentCentral = () => {
         return ()=>window.removeEventListener("resize", windowWidth)
     }, [])
 
-    const [document, setDocument] = useState(null);
-
-    const documentFind = id => {
-        documentList.documents.forEach(doc => {
-            if(doc.id===id){
-                setDocument({
-                    id,
-                    title: doc.title,
-                    body: doc.document,
-                    pinned: doc.pinned
-                })
-            }
-        });
-    }
+    const {documentList, documentFetch} = useDocuments(id)
+    const {document, setDocument, documentFind} = useContext(DocumentContext);
 
     const documentLoadHandler = id => {
         if(!id && id!==0){
@@ -48,26 +37,22 @@ const DocumentCentral = () => {
                     body: ""
                 })
             }else{
-                documentFind(id);
+                documentFind(id, documentList);
             }
         }
     }
 
     useEffect(()=>{
-        if(document?.id && !document?.body){
-            documentFind(document.id);
-        }
-    }, [document])
-
-    useEffect(()=>{
         if(document){
-            documentFind(document.id);
+            documentFind(document.id, documentList);
         }
     }, [documentList])
-
+    
     useEffect(()=>{
-        return () => setDocumentList({documents: null})
-    }, [])
+        if(document?.id && !document?.body){
+            documentFind(document.id, documentList);
+        }
+    }, [document])
 
     const documentChk = (text) => {
         const title = window.prompt(text);
@@ -151,13 +136,20 @@ const DocumentCentral = () => {
 
     return (
         <>
-            {document ? <DocumentPage documentLoadHandler={documentLoadHandler} document={document} documentHandler={documentHandler} setDocument={setDocument}/> : <>
-                <section className="central-container">
-                    <p className="btn-container">
-                        <button onClick={()=>documentLoadHandler(true)}>Add</button>
-                    </p>
-                    {documentList ? <DocumentList handler={documentLoadHandler} documentList={documentList} fromWhere={'document-central'}/> : "Please wait!"}
-                </section></>}
+            {document ? 
+            <DocumentPage 
+                documentLoadHandler={documentLoadHandler} 
+                document={document} documentHandler={documentHandler} 
+                setDocument={setDocument} 
+                documentFetch={documentFetch}/> : 
+            <>
+            <section className="central-container">
+                <p className="btn-container">
+                    <button onClick={()=>documentLoadHandler(true)}>Add</button>
+                </p>
+            {documentList ? <DocumentList handler={documentLoadHandler} documentList={documentList} fromWhere={'document-central'}/> : "Please wait!"}
+                </section>
+            </>}
                 {!isAttached && !document && <AsideHome />}
         </>
     )

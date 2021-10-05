@@ -2,10 +2,10 @@ import './ProfileMenu.css';
 import { useContext, useState } from 'react/cjs/react.development';
 import ProfileChange from './ProfileChange';
 import { SideContext, UserContext } from '../../../wrappers/DocumentsScannerEditor';
-import { useUsers } from '../../../wrappers/DocumentsScannerEditor';
 import SideMenu from '../../SideMenu/SideMenu';
 import ProfileSide from '../../SideMenu/Profile/ProfileSide';
 import Subordinate from './Subordinate';
+import useUsers from '../../../hooks/useUser';
 
 const ProfileMenu = () => {
     const { sideUser } = useContext(SideContext);

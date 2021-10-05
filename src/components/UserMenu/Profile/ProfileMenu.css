@@ -16,14 +16,22 @@ div.subordinate-container > .user-list-container {
     height: 100%;
 }
 
-div.subordinate-container {
+div.subordinate-search-container > p {
     position: relative;
 }
 
-div.subordinate-search-container > div.user-list-container {
+
+section.homeuser-menu-container > div:last-child  div.subordinate-search-container div.user-list-container {
+    left: 0;
+    top: 3rem;
+}
+
+div.subordinate-search-container > p > div.user-list-container {
     position: absolute;
+    background-color: darkkhaki;
+    top: 1.5rem;
     left: 8rem;
-    width: 40%;
+    width: 9rem;
 }
 
 div.subordinate-search-container > div.user-list-container > ul.user-list {

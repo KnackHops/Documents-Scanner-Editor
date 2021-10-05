@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { useContext, useEffect } from "react/cjs/react.development";
-import { DocumentContext, UserContext, useUsers } from "../../../wrappers/DocumentsScannerEditor";
+import { UserContext, DocumentContext } from "../../../wrappers/DocumentsScannerEditor";
 import UserLists from "../../../wrappers/UserLists";
+import useUsers from "../../../hooks/useUser";
 
 const DocumentPopUp = ({document}) => {
     const {id} = useContext(UserContext);
-    const {sendHandler} = useContext(DocumentContext);
+    const {pinHandler} = useContext(DocumentContext);
     const {fetchUsers, users} = useUsers(id, true);
 
     const [popUsers, setPopUsers] = useState(users);
@@ -22,7 +23,7 @@ const DocumentPopUp = ({document}) => {
 
         users.sub_users.forEach(user=>{
             id_filtered.forEach(each_id =>{
-                if(user.id == each_id.id){
+                if(user.id === each_id.id){
                     _users.sub_users.push(user);
                 }
             })
@@ -30,7 +31,7 @@ const DocumentPopUp = ({document}) => {
 
         users.nonsub_users.forEach(user=>{
             id_filtered.forEach(each_id => {
-                if(user.id == each_id.id){
+                if(user.id === each_id.id){
                     _users.nonsub_users.push(user);
                 }
             })
@@ -89,7 +90,7 @@ const DocumentPopUp = ({document}) => {
             const docid = document.id;
             const doctitle = document.title;
 
-            await sendHandler(username, userid, docid, doctitle, true);
+            await pinHandler(username, userid, docid, doctitle, true);
             fetchUsers(true)
         }
     }

@@ -21,8 +21,9 @@ const toolbarConfig = {
     placeholder: "Fresh start is what we need...start typing!"
 }
 
-const DocumentPage = ({documentLoadHandler, document, documentHandler}) => {
+const DocumentPage = ({documentLoadHandler, document, documentHandler, documentFetch}) => {
     const { unpinHandler } = useContext(DocumentContext);
+
     const { id } = useContext(UserContext);
     const [editor, setEditor] = useState(null);
 
@@ -56,15 +57,13 @@ const DocumentPage = ({documentLoadHandler, document, documentHandler}) => {
         popUpHandler(true, 'document-page', <DocumentPopUp document={document} />);
     }
 
-    const unpinClicked = e => {
+    const unpinClicked = async e => {
         e.preventDefault();
         const con = window.confirm("Are you sure you want to unpin this document for you?");
 
         if(con){
-            unpinHandler(id, document.id, {
-                reload: true,
-                varFetch: [false, false]
-            })
+            await unpinHandler(id, document.id);
+            documentFetch();
         }
     }
 

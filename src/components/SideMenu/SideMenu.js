@@ -1,25 +1,32 @@
-import { useContext, useEffect } from 'react/cjs/react.development';
-import { DocumentContext, SideContext } from '../../wrappers/DocumentsScannerEditor';
+import { useCallback } from 'react';
+import { useContext } from 'react/cjs/react.development';
+import { SideContext } from '../../wrappers/DocumentsScannerEditor';
+import PanelBackGround from '../../wrappers/PanelBackGround';
 import './SideMenu.css';
 
 const SideMenu = ({classCon, children}) => {
-    const { setSideUser } = useContext(SideContext);
-    const { setSideDocuList, sideDocuList } = useContext(DocumentContext);
+    const { setSideUser, isAttached } = useContext(SideContext);
 
-    useEffect(()=>{
-        return ()=>{
-            if(sideDocuList){
-                setSideDocuList({documents: null})
-            }
-        }
-    }, [])
+    const SideMain = useCallback(()=>{
+        return (
+            <aside className={`side-menu ${classCon}`}>
+                {children}
+                <p>
+                    <button onClick={()=>setSideUser(null)}>Close Panel</button>
+                </p>
+            </aside>
+        )
+    }, [children])
+
     return (
-        <aside className={`side-menu ${classCon}`}>
-            {children}
-            <p>
-                <button onClick={()=>setSideUser(null)}>Close Panel</button>
-            </p>
-        </aside>
+        <>
+            {!isAttached ?   
+                <PanelBackGround classCon="side-menu-not-att" handler={()=>""}>
+                    <SideMain />
+                </PanelBackGround> : 
+                    <SideMain />}
+            
+        </>
     )
 }
 

@@ -1,7 +1,7 @@
 import './Home-style.css'
 import LandingPage from './LandingPage/LandingPage';
 import DocumentCentral from './DocumentCentral/DocumentCentral';
-import { useContext } from 'react/cjs/react.development';
+import { useContext, useEffect } from 'react/cjs/react.development';
 import { MenuContext } from '../../wrappers/DocumentsScannerEditor';
 import PopUpAside from '../../wrappers/PopUpAside';
 import UserMenu from '../UserMenu/UserMenu';

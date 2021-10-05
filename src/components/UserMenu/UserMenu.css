@@ -1,10 +1,5 @@
 div.user-menu-bg {
-    position: fixed;
-    height: 100%;
-    width: 100%;
-    background-color: rgba(0, 0, 0, .2);
     z-index: 11;
-    justify-content: center;
 }
 
 section.user-menu {
@@ -15,6 +10,27 @@ section.user-menu {
     padding: .5rem 1rem 2rem 1rem;
     flex-direction: column;
     position: relative;
+}
+
+section.homeuser-menu-container {
+    z-index: 0;
+    width: 15rem;
+    padding: 0 .5rem;
+    height: 100%;
+    background-color: darkgrey;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+}
+
+section.homeuser-menu-container > div {
+    height: 100%;
+    flex-direction: column;
+}
+
+section.homeuser-menu-container > div:last-child > .subordinate-container {
+    display: flex;
+    flex-direction: column;
 }
 
 .user-list-container {

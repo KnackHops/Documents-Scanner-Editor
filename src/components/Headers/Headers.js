@@ -1,13 +1,14 @@
 import { useContext } from "react";
 import './Headers-style.css';
-import { UserContext, MenuContext, DocumentContext, SideContext} from '../../wrappers/DocumentsScannerEditor';
+import { UserContext, MenuContext, SideContext, DocumentContext} from '../../wrappers/DocumentsScannerEditor';
 import { useEffect, useState } from "react/cjs/react.development";
 import ProfilePanel from "./ProfilePanel";
 import DocumentList from "../../wrappers/DocumentList";
+import useDocuments from "../../hooks/useDocuments";
 
 const Headers = ({logIn}) => {
     const classForHead = logIn ? "homepage-header" : "landingpage-header";
-    const { username, role } = useContext(UserContext);
+    const { id, username, role } = useContext(UserContext);
     const { logInHandle, menuHandler, searchHandler, openMenu } = useContext(MenuContext);
     const { isAttached } = useContext(SideContext);
 
@@ -64,7 +65,8 @@ const Headers = ({logIn}) => {
     const logOutHandler = () => {
         logInHandle();
     }
-    const {documentList} = useContext(DocumentContext);
+    const {documentList} = useDocuments(id);
+    const {documentFind} = useContext(DocumentContext);
     const [searchDoc, setSearchDoc] = useState("");
     const [docsSearched, setSearched] = useState(null);
 
@@ -74,6 +76,23 @@ const Headers = ({logIn}) => {
         }
     }, [searchDoc])
 
+    const documentSearchHandler = id =>{
+        documentFind(id, documentList);
+        setSearchDoc("");
+    }
+
+    const onSearchEnter = e => {
+        if(searchDoc){
+            const code = e.code;
+            if(code === "Enter"){
+                if(documentList?.documents.length > 0){
+                    documentFind(documentList?.documents[0].id, documentList);
+                    setSearchDoc("");
+                }
+            }
+        }
+    }
+
     return (
         <header className={`fd ${classForHead}`}>
             <div className="icon">
@@ -82,15 +101,15 @@ const Headers = ({logIn}) => {
             {logIn ? <>
                 <div className="searchbar-container">
                     <p>
-                        <input className="searchbar" aria-label="Searchbar" type="text" value={searchDoc} onChange={e=>setSearchDoc(e.target.value)} />
+                        <input className="searchbar" aria-label="Searchbar" type="text" value={searchDoc} onChange={e=>setSearchDoc(e.target.value)} onKeyDown={onSearchEnter}/>
                     </p>
                     {docsSearched ? 
-                    <DocumentList handler={()=>console.log("yippe")} documentList={docsSearched} fromWhere="header-search" /> : ""}
+                    <DocumentList handler={documentSearchHandler} documentList={docsSearched} fromWhere="header-search" /> : ""}
                 </div>
                 <nav>
                     <ul className="fd nav-list">
                         <li><button>Scan</button></li>
-                        {isAttached  && <li><button className="nav-btn" onClick={panelClicked}>{username}</button></li>}
+                        {isAttached  && <li><button className="nav-btn" onClick={panelClicked} >{username}</button></li>}
                     </ul>
                 </nav>
                 {isAttached && 

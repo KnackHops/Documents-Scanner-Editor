@@ -36,3 +36,11 @@ ul {
   width: 25rem;
   background-color: rosybrown;
 }
+
+.universal-bg {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, .2);
+  justify-content: center;
+}
