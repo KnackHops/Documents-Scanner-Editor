@@ -1,7 +1,7 @@
 aside.side-menu.admin-side-container {
     position: fixed;
     width: 25rem;
-    height: 10rem;
     left: calc(50% - 12.5rem);
     top: 20%;
+    font-size: 1.5rem;
 }

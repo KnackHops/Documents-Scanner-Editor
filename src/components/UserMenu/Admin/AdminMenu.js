@@ -4,7 +4,7 @@ import AdminSide from '../../SideMenu/Admin/AdminSide';
 import UserLists from '../../../wrappers/UserLists';
 import './AdminMenu.css';
 import { SideContext, UserContext } from '../../../wrappers/DocumentsScannerEditor';
-import { useUsers } from '../../../wrappers/DocumentsScannerEditor';
+import useUsers from '../../../hooks/useUser';
 
 const AdminMenu = () => {
     const { sideUser, setSideUser } = useContext(SideContext);

@@ -85,15 +85,15 @@ const Subordinate = ({users, isLoaded}) => {
                 <p>
                     <label htmlFor="search-user">Search for a User: </label>
                     <input type="text" id="search-user" value={searchUser} onChange={e=>setSearchUser(e.target.value.toLowerCase())} onKeyDown={searchEnter}></input>
-                </p>
-                {usersSearched ?
+                    {usersSearched ?
                     <UserLists 
                         users={usersSearched}
                         handler={subordinateUserHandler}
                         fromWhere={"profile-search"}
                     /> : ""}
+                </p>
             </div>
-            <p>Subordinates: Click the username to send a document</p>
+            <p>Subordinates:</p>
             {isLoaded ? 
             <UserLists 
                 users={users?.sub_users} 

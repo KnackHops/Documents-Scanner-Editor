@@ -7,10 +7,6 @@ div#root {
   flex-direction: column;
 }
 
-article {
-  flex: 10;
-}
-
 footer {
   text-align: center;
   font-size: .6rem;
@@ -35,4 +31,24 @@ ul {
   height: 30rem;
   width: 25rem;
   background-color: rosybrown;
+}
+
+.universal-bg {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, .2);
+  justify-content: center;
+}
+
+.universal-container {
+  max-width: 96vw;
+  margin: 0 2vw;
+}
+
+@media only screen and (max-width: 1050px) {
+  .universal-container {
+    max-width: 98vw;
+    margin: 0 1vw;
+  }
 }

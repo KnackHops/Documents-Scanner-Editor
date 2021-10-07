@@ -1,6 +1,5 @@
 .profile-side-container.profile-search-container, .profile-side-container.profile-subordinate-container {
     position: fixed;
-    height: 20rem;
     width: 30rem;
     left: calc(50% - 15rem);
     top: 20%;

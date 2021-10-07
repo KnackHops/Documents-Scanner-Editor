@@ -1,30 +1,18 @@
-import { useEffect, useContext, useCallback } from 'react/cjs/react.development';
+import { useContext, useCallback } from 'react/cjs/react.development';
 import './UserMenu.css';
 import AdminMenu from './Admin/AdminMenu';
 import ProfileMenu from './Profile/ProfileMenu';
 import { MenuContext, SideContext, UserContext } from '../../wrappers/DocumentsScannerEditor';
+import PanelBackGround from '../../wrappers/PanelBackGround';
 
 const UserMenu = ({ openMenu }) => {
     const { menuHandler } = useContext(MenuContext);
     const { isAttached } = useContext(SideContext);
     const { id, role } = useContext(UserContext)
 
-    useEffect(()=>{
-        const menuContainer = document.querySelector('div.user-menu-bg');
-        if(menuContainer){
-            const menuEventListener = e => {
-                if(e.target.className.includes('user-menu-bg')){
-                    menuHandler();
-                }
-            }
-            menuContainer.addEventListener("click", menuEventListener)
-            return () => menuContainer.removeEventListener("click", menuEventListener)
-        }
-    }, [menuHandler])
-
     const MenuSection = useCallback(() => {
         return ( 
-            <div className="user-menu-bg fd">
+            <PanelBackGround classCon={'user-menu'} handler={menuHandler}>
                 <section className={`user-menu ${openMenu}-container fd`}>
                     <div className={`${openMenu}-title`}>
                         <h1>{openMenu === 'admin' ? 'Admin' : 'Profile'}</h1>
@@ -33,15 +21,22 @@ const UserMenu = ({ openMenu }) => {
                         <AdminMenu /> : 
                         <ProfileMenu />}
                 </section>
-            </div>
+            </PanelBackGround>
         )
     }, [id, openMenu])
 
     const HomeMenuSection = useCallback(() => {
         return (
-            <section className={`homeuser-menu-containerfd`}>
-                {role === 'admin' && <AdminMenu />}
-                <ProfileMenu />
+            <section className={`homeuser-menu-container`}>
+                {role === 'admin' && 
+                <div className="fd">
+                    <h1>Admin</h1>
+                    <AdminMenu />
+                </div>}
+                <div className="fd">
+                    <h1>Profile</h1>
+                    <ProfileMenu />
+                </div>
             </section>
         )
     }, [id])

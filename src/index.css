@@ -8,8 +8,9 @@
 }
 
 html, body {
-  font: 10px;
   height: 100%;
+  font-size: 10px;
+  overflow-x: hidden;
 }
 
 body {

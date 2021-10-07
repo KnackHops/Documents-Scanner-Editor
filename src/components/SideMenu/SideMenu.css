@@ -1,3 +1,9 @@
+div.side-menu-not-att-bg {
+    top: 5rem;
+    left: 0;
+    z-index: 2;
+}
+
 aside.side-menu {
     background-color: blanchedalmond;
     padding: 0 .5rem;

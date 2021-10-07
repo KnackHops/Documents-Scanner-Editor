@@ -4,6 +4,7 @@ import { userCheck } from "./UserCheck";
 import { MenuContext } from "../../../wrappers/DocumentsScannerEditor";
 
 const initialState = {
+        fullname: "",
         username: '',
         password: '',
         email: '',
@@ -30,14 +31,15 @@ const LandingPage = () => {
             
             whichOpen === 'login' ?
             loginUser({
-                username: user.username,
+                username: user.username.toLowerCase(),
                 password: user.password
             }) 
             : registerUser({
-                username: user.username,
+                fullname: user.fullname.toLowerCase(),
+                username: user.username.toLowerCase(),
                 password: user.password,
                 mobile: user.mobile,
-                email: user.email
+                email: user.email.toLowerCase()
             });
         }
     }
@@ -91,7 +93,8 @@ const LandingPage = () => {
     }
 
     return (
-        <form className={`${whichOpen}-container`} onSubmit={formHandler}>
+        <div className="fd universal-container">
+            <form className={`land-page-form ${whichOpen}-container`} onSubmit={formHandler}>
                 <p>
                     <label 
                         htmlFor="username">
@@ -118,6 +121,18 @@ const LandingPage = () => {
                 </p> 
                 {
                     whichOpen === "register" ? <>
+                    <p>
+                    <label
+                        htmlFor="fullname">
+                            fullname
+                    </label>
+                    <input
+                        type="text"
+                        id="username"
+                        name="fullname"
+                        value={userInp.fullname}
+                        onChange={e=>inputHandler(e, 'fullname')}></input>
+                </p>
                     <p>
                         <label 
                             htmlFor="email">
@@ -155,6 +170,7 @@ const LandingPage = () => {
                     <button type="submit">Submit</button>
                 </p>
             </form>
+        </div>
     )
 }
 

@@ -1,0 +1,26 @@
+div.universal-bg {
+    align-items: flex-start;
+    top: 0;
+    z-index: 10000;
+}
+
+aside.pop-up-container.pop-scan-header {
+    height: 92rem;
+    width: 70rem;
+    margin-top: 3vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.scan-head {
+    width: 100%;
+    justify-content: space-around;
+}
+
+aside.pop-up-container > video {
+    height: 90rem;
+    width: 68rem;
+}
+

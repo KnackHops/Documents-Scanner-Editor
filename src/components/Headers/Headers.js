@@ -1,15 +1,16 @@
-import { useContext } from "react";
+import { useContext, useMemo } from "react";
 import './Headers-style.css';
-import { UserContext, MenuContext, DocumentContext, SideContext} from '../../wrappers/DocumentsScannerEditor';
+import { UserContext, MenuContext, SideContext, DocumentContext} from '../../wrappers/DocumentsScannerEditor';
 import { useEffect, useState } from "react/cjs/react.development";
 import ProfilePanel from "./ProfilePanel";
 import DocumentList from "../../wrappers/DocumentList";
+import useDocuments from "../../hooks/useDocuments";
+import NavPanelList from "./NavPanelList";
+import ScanPopUp from "./ScanPopUp";
 
 const Headers = ({logIn}) => {
     const classForHead = logIn ? "homepage-header" : "landingpage-header";
-    const { username, role } = useContext(UserContext);
     const { logInHandle, menuHandler, searchHandler, openMenu } = useContext(MenuContext);
-    const { isAttached } = useContext(SideContext);
 
     const bodyEventListener_panel = e => {
         if(e.target.className !== 'panel-btn-container' && e.target.className !== 'panel-btn' && e.target.className !== 'nav-btn'){
@@ -61,10 +62,14 @@ const Headers = ({logIn}) => {
         menuHandler(fromWhere);
     }
 
+    const { id, username, role } = useContext(UserContext);
+
     const logOutHandler = () => {
         logInHandle();
     }
-    const {documentList} = useContext(DocumentContext);
+
+    const {documentList} = useDocuments(id);
+    const {documentFind} = useContext(DocumentContext);
     const [searchDoc, setSearchDoc] = useState("");
     const [docsSearched, setSearched] = useState(null);
 
@@ -74,32 +79,122 @@ const Headers = ({logIn}) => {
         }
     }, [searchDoc])
 
+    const documentSearchHandler = id =>{
+        documentFind(id, documentList);
+        setSearchDoc("");
+    }
+
+    const onSearchEnter = e => {
+        if(searchDoc){
+            const code = e.code;
+            if(code === "Enter"){
+                if(documentList?.documents.length > 0){
+                    documentFind(documentList?.documents[0].id, documentList);
+                    setSearchDoc("");
+                }
+            }
+        }
+    }
+
+    const {popUpHandler} = useContext(MenuContext);
+
+    const scanPopHandler = e => {
+        e.preventDefault();
+
+        popUpHandler(true, "scan-header", <ScanPopUp />)
+    }
+    
+    const { isAttached } = useContext(SideContext);
+
+    const nav_arr = useMemo(()=>{
+        let _arr = []
+
+        if ( logIn ) {
+            _arr.push({
+                label: 'Scan',
+                handler: scanPopHandler
+            })
+
+            if ( isAttached ) {
+                _arr.push({
+                    label: username,
+                    handler: panelClicked
+                })
+            }else{
+                _arr.push({
+                    label: 'Log Out',
+                    handler: logOutHandler
+                })
+            }
+        } else {
+            _arr = [
+                {
+                    label: 'About',
+                    handler: () => console.log("About!")
+                },
+                {
+                    label: 'Sign in',
+                    handler: () => console.log("Sign in!")
+                },
+                {
+                    label: 'Contacts',
+                    handler: () => console.log("Contacts!")
+                }
+            ]
+        }
+
+        return _arr
+
+    }, [logIn, username, isAttached])
+
+    const burgerMachine = () => {
+        const burg = document.querySelector(".burger");
+        const navL = document.querySelector(".nav-list");
+
+        burg.classList.toggle("-open");
+        navL.classList.toggle("-open");
+    }
+
+    useEffect(()=>{
+        if(document.querySelector(".burger").classList.contains("-open")){
+            burgerMachine();
+        }
+    }, [isAttached])
+
     return (
-        <header className={`fd ${classForHead}`}>
-            <div className="icon">
-                Doc
-            </div>
-            {logIn ? <>
-                <div className="searchbar-container">
-                    <p>
-                        <input className="searchbar" aria-label="Searchbar" type="text" value={searchDoc} onChange={e=>setSearchDoc(e.target.value)} />
-                    </p>
-                    {docsSearched ? 
-                    <DocumentList handler={()=>console.log("yippe")} documentList={docsSearched} fromWhere="header-search" /> : ""}
+        <header className={`${classForHead}`}>
+            <div className="fd universal-container">
+                <div className="icon">
+                    Doc
                 </div>
-                <nav>
-                    <ul className="fd nav-list">
-                        <li><button>Scan</button></li>
-                        {isAttached  && <li><button className="nav-btn" onClick={panelClicked}>{username}</button></li>}
-                    </ul>
-                </nav>
-                {isAttached && 
-                <ProfilePanel 
-                    panelStatus={panelStatus} 
-                    menuClicked={menuClicked} 
-                    logOutHandler={logOutHandler}
-                    role={role}/>}
-            </> : ""}
+                {logIn ? <>
+                    <div className="searchbar-container">
+                        <p>
+                            <input className="searchbar" aria-label="Searchbar" type="text" value={searchDoc} onChange={e=>setSearchDoc(e.target.value)} onKeyDown={onSearchEnter}/>
+                        </p>
+                        {docsSearched ? 
+                        <DocumentList handler={documentSearchHandler} documentList={docsSearched} fromWhere="header-search" /> : ""}
+                    </div>
+                    <NavPanelList 
+                    classCon="signed"
+                    arr={nav_arr}
+                    />
+                    {isAttached && 
+                    <ProfilePanel 
+                        panelStatus={panelStatus} 
+                        menuClicked={menuClicked} 
+                        logOutHandler={logOutHandler}
+                        role={role}/>}
+                </> : 
+                <NavPanelList classCon="not-signed" arr={nav_arr}/>}
+                <div className={`burger ${logIn ? "-signed" : "-not-signed"}`}
+                    onClick={burgerMachine}
+                >
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
         </header>
     )
 }

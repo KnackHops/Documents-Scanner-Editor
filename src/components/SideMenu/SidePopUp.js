@@ -1,34 +1,36 @@
 import { useContext, useEffect } from "react/cjs/react.development";
+import useDocuments from "../../hooks/useDocuments";
 import DocumentList from "../../wrappers/DocumentList";
 import { DocumentContext, SideContext } from "../../wrappers/DocumentsScannerEditor";
 
 const SidePopUp = () => {
     const {sideUser} = useContext(SideContext);
-    const {documentFetch, sideDocuList, sendHandler, setSideDocuList} = useContext(DocumentContext);
+    const {pinHandler} = useContext(DocumentContext);
+    const {documentList, documentFetch, setDocumentList} = useDocuments(sideUser.id, false);
 
     useEffect(()=>{
         if(sideUser){
             documentFetch(true);
         }
-        return ()=>{
+
+        return () =>{
             if(sideUser?.sideClass === "admin-side"){
                 documentFetch(true, true);
             }else{
-                setSideDocuList({documents: null});
+                setDocumentList({documents: null});
             }
         };
+
     }, [sideUser])
 
     const docuClicked = id => {
-        sideDocuList.documents.forEach(docu => {
+        documentList.documents.forEach(docu => {
             if(docu.id == id){
                 const con = window.confirm(`Are you sure you want to send Document: ${docu.title} to User: ${sideUser.username}?`);
 
                 if(con){
-                    sendHandler(sideUser.username, sideUser.id, docu.id, docu.title).then(resp=>{
-                        if(resp.ok){
-                            documentFetch(true)
-                        }
+                    pinHandler(sideUser.username, sideUser.id, docu.id, docu.title).then(()=>{
+                        documentFetch(true)
                     })
                 }
             }
@@ -38,7 +40,7 @@ const SidePopUp = () => {
     return (
         <>
             <DocumentList 
-                documentList={sideDocuList}
+                documentList={documentList}
                 fromWhere={"profile-side"}
                 handler={docuClicked}
             />
