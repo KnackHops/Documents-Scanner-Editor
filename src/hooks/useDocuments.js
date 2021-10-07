@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 const useDocuments = (id, load=true) => {
     const [documentList, setDocumentList] = useState({documents: null});
 
-    const documentFetch = useCallback((sideDoc = false, pinOr = false) =>{
+    const documentFetch = useCallback( ( sideDoc = false, pinOr = false ) =>{
         let which_get = sideDoc ? ( pinOr ? "pinned" : "nonpinned" ) : 'default';
 
         fetch(`http://127.0.0.1:5000/document/fetch/?id=${id}&which_get=${which_get}`,{
@@ -23,11 +23,11 @@ const useDocuments = (id, load=true) => {
         })
     }, [id])
 
-    useEffect(()=>{
-        if(id || id===0 && load){
+    useEffect( () => {
+        if ( ( id || id === 0 ) && load ) {
             documentFetch();
         }
-    }, [id, documentFetch])
+    }, [id, documentFetch, load])
 
     return {documentList, documentFetch, setDocumentList};
 }

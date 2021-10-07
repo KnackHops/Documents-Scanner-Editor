@@ -7,6 +7,7 @@ const UserLists = ({users, handler, fromWhere}) => {
                 <li className="fd" key={user.id} onClick={handler}>
                     <p data-id={user.id} style={fromWhere === 'admin' ? (user.activated === false ? {color: 'red'} : {color: 'black'}) : {}}>
                         {user.username}
+                        {user?.fullname ? `/${user.fullname}` : ""}
                     </p>
                 </li>)
             : 

@@ -1,4 +1,5 @@
-import { useState, useContext, useLayoutEffect } from 'react';
+import { useContext, useLayoutEffect } from 'react';
+import './DocumentCentral.css';
 import DocumentPage from './DocumentPage';
 import DocumentList from '../../../wrappers/DocumentList';
 import AsideHome from './AsideHome';
@@ -7,22 +8,8 @@ import { useEffect } from 'react/cjs/react.development';
 import useDocuments from '../../../hooks/useDocuments';
 
 const DocumentCentral = () => {
-    const {isAttached, setAttached} = useContext(SideContext);
+    const {isAttached} = useContext(SideContext);
     const {id} = useContext(UserContext);
-
-    const windowWidth = () => {
-        if(window.innerWidth >= 1050){
-            setAttached(true)
-        }else if(window.innerWidth <= 1049){
-            setAttached(false)
-        }
-    }
-
-    useLayoutEffect(()=>{
-        windowWidth();
-        window.addEventListener("resize", windowWidth);
-        return ()=>window.removeEventListener("resize", windowWidth)
-    }, [])
 
     const {documentList, documentFetch} = useDocuments(id)
     const {document, setDocument, documentFind} = useContext(DocumentContext);
@@ -135,7 +122,7 @@ const DocumentCentral = () => {
     }
 
     return (
-        <>
+        <div className="fd universal-container">
             {document ? 
             <DocumentPage 
                 documentLoadHandler={documentLoadHandler} 
@@ -151,7 +138,7 @@ const DocumentCentral = () => {
                 </section>
             </>}
                 {!isAttached && !document && <AsideHome />}
-        </>
+        </div>
     )
 }
 

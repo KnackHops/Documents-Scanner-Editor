@@ -1,0 +1,26 @@
+main.homepage-container > div > section.central-container {
+    width: 100%;
+}
+
+.document-central.document-list > li{
+    background-color:lightblue;
+    font-size: 2rem;
+}
+
+.document-central.document-list > li.pinned {
+    background-color: lawngreen;
+}
+
+
+aside.pop-document-page {
+    height: 10rem;
+    width: 20rem;
+    background-color: gainsboro;
+}
+
+div.side-user-bg {
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, .2);
+}

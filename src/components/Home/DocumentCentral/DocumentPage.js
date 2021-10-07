@@ -33,6 +33,7 @@ const DocumentPage = ({documentLoadHandler, document, documentHandler, documentF
 
     useEffect(()=>{
         if(editor){
+            console.log(editor.ui.getEditableElement().parentElement)
             editor.ui.getEditableElement().parentElement.insertBefore(
                 editor.ui.view.toolbar.element,
                 editor.ui.getEditableElement()
@@ -68,7 +69,7 @@ const DocumentPage = ({documentLoadHandler, document, documentHandler, documentF
     }
 
     return (
-        <section className="document-container fd">
+        <article className="document-container fd">
             <p className="doc-btn-container">
                 <button onClick={()=>documentHandler(...dataHandler())}>
                     {
@@ -98,9 +99,9 @@ const DocumentPage = ({documentLoadHandler, document, documentHandler, documentF
                 editor={DecoupledEditor}
                 data={document.body}
                 onReady={editor=>documentInit(editor)}
-                config={toolbarConfig}
-            />
-        </section>
+                config={toolbarConfig} />
+            
+        </article>
     )
 }
 

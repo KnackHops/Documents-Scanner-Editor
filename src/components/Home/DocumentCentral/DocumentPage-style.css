@@ -1,16 +1,16 @@
-section.document-container {
+article.document-container  {
     width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, .2);
+    background-color: grey;
     flex-direction: column;
     align-items: center;
     position: relative;
 }
 
-section.document-container > p.doc-btn-container {
+article.document-container > p.doc-btn-container {
     right: 0;
-    height: 2.5rem;
-    margin-right: .5rem;
+    top: 0;
+    height: 4rem;
+    margin-right: 1rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -19,29 +19,43 @@ section.document-container > p.doc-btn-container {
 }
 
 @media only screen and (max-width: 1210px) {
-    section.document-container > p.doc-btn-container {
+    article.document-container > p.doc-btn-container {
         justify-content: flex-start;
         left: 0;
         margin-left: .25rem;
-        margin-top: 3.5rem;
+        margin-top: 4rem;
         z-index: 1;
     }
 
-    section.document-container > div.ck-toolbar {
+    article.document-container > div.ck-toolbar {
         z-index: 2;
     }
 
-    section.document-container > div.ck-content {
-        margin-top: 3rem;
+    article.document-container > div.ck-content {
+        transition: transform .2s ease-in-out;
+        margin-top: 4rem;
+    }
+}
+
+@media only screen and (max-width: 850px) {
+    article.document-container > div.ck-content {
+        margin-top: -6rem;
+        transform: scale(.8);
+    }
+}
+
+@media only screen and (max-width: 675px) {
+    article.document-container > div.ck-content {
+        margin-top: -16rem;
+        transform: scale(.6)
     }
 }
 
 p.doc-btn-container > button {
-    width: 2.75rem;
     margin: 0 .15rem;
 }
 
-section.document-container > div.ck-toolbar {
+article.document-container > div.ck-toolbar {
     position: sticky;
     top: 0;
     width: 100%;
@@ -53,22 +67,6 @@ section.document-container > div.ck-toolbar {
     height: 11in;
     margin: 1rem;
     padding: .5in;
+    font-size: 12px;
     box-shadow: 0 0 .4rem rgba(0, 0, 0, .4);
-}
-
-aside.pop-document-page {
-    height: 10rem;
-    width: 20rem;
-    background-color: gainsboro;
-}
-
-main.homepage-container > section.central-container{
-    width: 100%;
-}
-
-div.side-user-bg {
-    position: fixed;
-    height: 100%;
-    width: 100%;
-    background-color: rgba(0, 0, 0, .2);
 }

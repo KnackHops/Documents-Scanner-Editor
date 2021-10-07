@@ -1,43 +1,47 @@
-main.landingpage-container > form {
+main.landingpage-container > div.universal-container {
+    justify-content: center;
+}
+
+main.landingpage-container > div.universal-container >  form.land-page-form {
     position: relative;
-    margin-top: 2.5rem;
-    height: 20rem;
-    width: 35rem;
+    margin-top: 10rem;
+    height: 30rem;
+    width: 50rem;
     box-shadow: 0 0 3px black;
     padding: 3rem 1rem;
     transition: .25s all;
 }
 
-main.landingpage-container > form.login-container {
+main.landingpage-container > div.universal-container >  form.login-container {
     margin-top: 5rem;
-    height: 15rem;
+    height: 20rem;
 }
 
 @media only screen and (max-width: 750px) {
-    article.landingpage-container > form {
+    article.landingpage-container  form.land-page-form {
         width: 100%;
     }
     
 }
 
-main.landingpage-container > form > p {
+main.landingpage-container  form.land-page-form > p {
     display: flex;
-    font-size: 1.25rem;
-    line-height: 1.5rem;
+    font-size: 2rem;
+    line-height: 1.75rem;
     margin: .25rem 0;
 }
 
-main.landingpage-container > form > p > label {
+main.landingpage-container  form.land-page-form > p > label {
     flex: 1;
 }
 
-main.landingpage-container > form > p > input {
+main.landingpage-container  form.land-page-form > p > input {
     flex: 2;
-    font-size: 1rem;
-    line-height: 1.5rem;
+    font-size: 1.5rem;
+    line-height: 1.75rem;
 }
 
-main.landingpage-container > form > p:last-child {
+main.landingpage-container  form.land-page-form > p:last-child {
     width: 90%;
     justify-content: flex-end;
     position: absolute;
@@ -45,7 +49,7 @@ main.landingpage-container > form > p:last-child {
     margin-bottom: 1rem;
 }
 
-main.landingpage-container > form > p:last-child > button {
+main.landingpage-container  form.land-page-form > p:last-child > button {
     margin-left: 1rem;
     padding: .1rem .25rem;
 }

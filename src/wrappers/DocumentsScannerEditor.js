@@ -74,17 +74,26 @@ export default  function DocumentsScannerEditor() {
             return null
         }
 
+        let _search;
+
+        if(isNaN(search)){
+            _search = search.toLowerCase();
+        }else{
+            _search = search;
+        }
+
         let _arr = fromWhere === 'document' ? {documents: []} : [];
         arr.forEach(item => {
             if(fromWhere === 'user'){
-                if(item?.username.includes(search) || item?.id === Number(search)){
+                if(item?.username.includes(_search) || item?.fullname.includes(_search) || item?.id === Number(_search)){
                     _arr.push({
                         id: item.id,
+                        fullname: item.fullname,
                         username: item.username
                     })
                 }
             }else if(fromWhere === 'document'){
-                if(item?.id === Number(search) || item?.title?.includes(search)){
+                if(item?.id === Number(_search) || item?.title?.includes(_search)){
                     _arr.documents.push({
                         id: item.id,
                         title: item.title
