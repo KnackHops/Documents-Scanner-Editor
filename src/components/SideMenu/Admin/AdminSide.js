@@ -11,7 +11,7 @@ const AdminSide = ({fetchUsers}) => {
 
     const activateUser = textPrompt => {
         window.confirm(`User ${sideUser.username} ${textPrompt[1]} commence! You can close the admin window!`);
-        fetch('http://127.0.0.1:5000/admin-activate', {
+        fetch('https://document-editor-09.herokuapp.com/admin-activate', {
             method: 'PUT',
             mode: 'cors',
             headers: {
@@ -33,7 +33,7 @@ const AdminSide = ({fetchUsers}) => {
 
     const deleteUser = txt => {
         window.confirm(`${txt} User ${sideUser.username}!`);
-        fetch(`http://127.0.0.1:5000/admin-delete-user/?id=${id}&userid=${sideUser.id}`, {
+        fetch(`https://document-editor-09.herokuapp.com/admin-delete-user/?id=${id}&userid=${sideUser.id}`, {
             method: 'DELETE',
             mode: 'cors'
         }).then(resp=>{
@@ -47,7 +47,7 @@ const AdminSide = ({fetchUsers}) => {
 
     const changeUserRole = role => {
         window.confirm(`User ${sideUser.username} role will be changed to ${role}!`);
-        fetch('http://127.0.0.1:5000/admin-role-change', {
+        fetch('https://document-editor-09.herokuapp.com/admin-role-change', {
             method: 'PUT',
             mode: 'cors',
             headers: {
@@ -82,7 +82,7 @@ const AdminSide = ({fetchUsers}) => {
         const password = window.prompt("Please Enter your password");
 
         if(password){
-            fetch('http://127.0.0.1:5000/admin-check',{
+            fetch('https://document-editor-09.herokuapp.com/admin-check',{
                 method: 'POST',
                 mode: 'cors',
                 headers: {

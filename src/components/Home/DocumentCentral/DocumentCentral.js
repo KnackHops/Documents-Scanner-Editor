@@ -82,7 +82,7 @@ const DocumentCentral = () => {
     const { popUpHandler } = useContext(MenuContext);
 
     const documentSave = data => {
-        fetch('http://127.0.0.1:5000/document/add', {
+        fetch(' https://document-editor-09.herokuapp.com/document/add', {
             method: 'POST',
             mode: 'cors',
             headers: {
@@ -109,7 +109,7 @@ const DocumentCentral = () => {
     }
 
     const documentEdit = data => {
-        fetch('http://127.0.0.1:5000/document/edit', {
+        fetch('https://document-editor-09.herokuapp.com/document/edit', {
             method: 'PUT',
             mode: 'cors',
             headers: {

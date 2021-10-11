@@ -45,7 +45,7 @@ const LandPageForm = ({panSlide}) => {
     }
 
     const loginUser = _user => {
-        fetch('http://127.0.0.1:5000/login', {
+        fetch('https://document-editor-09.herokuapp.com/login', {
             method: 'POST',
             mode: 'cors',
             headers: {
@@ -68,7 +68,7 @@ const LandPageForm = ({panSlide}) => {
     }
 
     const registerUser = _user => {
-        fetch('http://127.0.0.1:5000/register', {
+        fetch('https://document-editor-09.herokuapp.com/register', {
             method: 'POST',
             mode: 'cors',
             headers: {

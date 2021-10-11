@@ -6,7 +6,7 @@ const useDocuments = (id, load=true) => {
     const documentFetch = useCallback( ( sideDoc = false, pinOr = false ) =>{
         let which_get = sideDoc ? ( pinOr ? "pinned" : "nonpinned" ) : 'default';
 
-        fetch(`http://127.0.0.1:5000/document/fetch/?id=${id}&which_get=${which_get}`,{
+        fetch(`https://document-editor-09.herokuapp.com/document/fetch/?id=${id}&which_get=${which_get}`,{
             method: 'GET',
             mode: 'cors'
         }).then(resp=>{

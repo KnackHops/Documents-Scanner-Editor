@@ -10,7 +10,7 @@ const DocumentContext = createContext(null);
 export default  function DocumentsScannerEditor() {
     const pinHandler = ( username, userid, docid, doctitle) => {
         return new Promise((resolve, reject) => {
-            fetch(`http://127.0.0.1:5000/document/pin-doc`, {
+            fetch(`https://document-editor-09.herokuapp.com/document/pin-doc`, {
                 method: 'POST',
                 mode: 'cors',
                 headers: {
@@ -40,7 +40,7 @@ export default  function DocumentsScannerEditor() {
 
     const unpinHandler = (userid, docid) => {
         return new Promise((resolve, reject) => {
-            fetch(`http://127.0.0.1:5000/document/unpin-doc/?userid=${userid}&docid=${docid}`,{
+            fetch(`https://document-editor-09.herokuapp.com/document/unpin-doc/?userid=${userid}&docid=${docid}`,{
                 method: 'DELETE',
                 mode: 'cors'
             }).then(resp=>{

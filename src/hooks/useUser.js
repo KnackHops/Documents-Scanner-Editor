@@ -6,7 +6,7 @@ const useUsers = (id, sub_fetch=false) => {
 
     const fetchUsers = useCallback(() => {
         const link = sub_fetch ? "subordinate-fetch" : "admin-fetch";
-        fetch(`http://127.0.0.1:5000/${link}/?id=${id}`, {
+        fetch(`https://document-editor-09.herokuapp.com/${link}/?id=${id}`, {
             method: 'GET',
             mode: 'cors'
         }).then(resp=>{

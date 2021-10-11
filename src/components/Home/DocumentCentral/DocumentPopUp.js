@@ -57,7 +57,7 @@ const DocumentPopUp = ({document}) => {
                 id_lists.push({id: user.id});
             })
 
-            fetch(`http://127.0.0.1:5000/send-user-fetch`, {
+            fetch(`https://document-editor-09.herokuapp.com/send-user-fetch`, {
                 method: 'POST',
                 mode: 'cors',
                 headers: {
