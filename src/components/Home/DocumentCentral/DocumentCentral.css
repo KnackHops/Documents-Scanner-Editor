@@ -1,14 +1,23 @@
 main.homepage-container > div > section.central-container {
     width: 100%;
+    padding: 1rem .5rem;
+}
+
+.document-central.document-list {
+    font-size: 2rem;
 }
 
 .document-central.document-list > li{
     background-color:lightblue;
-    font-size: 2rem;
+    margin: .5rem 0 .5rem 0;
+    padding: .25rem 0 .25rem 2rem;
+    border-radius: .5rem;
+    box-shadow: 0 .3rem .5rem black;
+    cursor: pointer;
 }
 
-.document-central.document-list > li.pinned {
-    background-color: lawngreen;
+.document-central.document-list > li.is-pinned {
+    background-color: mediumspringgreen;
 }
 
 

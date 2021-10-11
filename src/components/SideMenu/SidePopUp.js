@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react/cjs/react.development";
+import { useContext, useEffect } from "react";
 import useDocuments from "../../hooks/useDocuments";
 import DocumentList from "../../wrappers/DocumentList";
 import { DocumentContext, SideContext } from "../../wrappers/DocumentsScannerEditor";

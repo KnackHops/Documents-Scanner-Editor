@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { useContext, useEffect } from "react/cjs/react.development";
+import { useState, useContext, useEffect } from "react";
 import { UserContext, DocumentContext } from "../../../wrappers/DocumentsScannerEditor";
 import UserLists from "../../../wrappers/UserLists";
 import useUsers from "../../../hooks/useUser";

@@ -1,4 +1,4 @@
-import { useContext, useCallback } from 'react/cjs/react.development';
+import { useContext, useCallback } from 'react';
 import './UserMenu.css';
 import AdminMenu from './Admin/AdminMenu';
 import ProfileMenu from './Profile/ProfileMenu';

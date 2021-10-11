@@ -1,0 +1,54 @@
+section.land-page-section {
+    height: calc(60vh - 5rem);
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+    background-color: cornflowerblue;
+}
+
+main.landingpage-container > section.land-page-section >  form.land-page-form {
+    position: relative;
+    height: calc(58vh - 5rem);
+    width: 50rem;
+    box-shadow: 0 0 3px black;
+    padding: 3rem 1rem;
+    transition: .25s all;
+    margin-right: 3vw;
+    flex-direction: column;
+    background-color: rgba(255, 255, 255, .1);
+}
+
+@media only screen and (max-width: 750px) {
+    main.landingpage-container > section.land-page-section >  form.land-page-form {
+        width: 95vw;
+        margin: 0 .5rem 0 .5rem;
+    }
+    
+}
+
+main.landingpage-container  form.land-page-form > p {
+    display: flex;
+    font-size: 2rem;
+    line-height: 1.75rem;
+    margin: .5rem .5rem;
+}
+
+main.landingpage-container  form.land-page-form > p > label {
+    flex: 1;
+}
+
+main.landingpage-container  form.land-page-form > p > input {
+    flex: 3;
+    font-size: 1.5rem;
+    line-height: 1.75rem;
+}
+
+main.landingpage-container  form.land-page-form > p:last-child {
+    margin-top: auto;
+    justify-content: space-between;
+    transition: transform .1s ease-in;
+}
+
+main.landingpage-container  form.land-page-form > p:last-child > button {
+    padding: .1rem .25rem;
+}

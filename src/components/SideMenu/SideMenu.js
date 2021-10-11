@@ -1,5 +1,4 @@
-import { useCallback } from 'react';
-import { useContext } from 'react/cjs/react.development';
+import { useCallback, useContext } from 'react';
 import { SideContext } from '../../wrappers/DocumentsScannerEditor';
 import PanelBackGround from '../../wrappers/PanelBackGround';
 import './SideMenu.css';

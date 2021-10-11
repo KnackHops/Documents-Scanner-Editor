@@ -1,7 +1,6 @@
-import { useContext, useMemo } from "react";
+import { useContext, useState, useEffect, useMemo } from "react";
 import './Headers-style.css';
 import { UserContext, MenuContext, SideContext, DocumentContext} from '../../wrappers/DocumentsScannerEditor';
-import { useEffect, useState } from "react/cjs/react.development";
 import ProfilePanel from "./ProfilePanel";
 import DocumentList from "../../wrappers/DocumentList";
 import useDocuments from "../../hooks/useDocuments";
@@ -129,12 +128,12 @@ const Headers = ({logIn}) => {
         } else {
             _arr = [
                 {
-                    label: 'About',
-                    handler: () => console.log("About!")
-                },
-                {
                     label: 'Sign in',
                     handler: () => console.log("Sign in!")
+                },
+                {
+                    label: 'About',
+                    handler: () => console.log("About!")
                 },
                 {
                     label: 'Contacts',
@@ -147,13 +146,43 @@ const Headers = ({logIn}) => {
 
     }, [logIn, username, isAttached])
 
+    const noScroll = e => {
+        e.target.scrollTo(0, e.target.scTop);
+    }
+
     const burgerMachine = () => {
         const burg = document.querySelector(".burger");
         const navL = document.querySelector(".nav-list");
 
         burg.classList.toggle("-open");
         navL.classList.toggle("-open");
+        
+        if ( burg.classList.contains("-not-signed") ) {
+            
+            const bod = document.querySelector("body");
+
+            if ( burg.classList.contains("-open") ) {
+                bod.scTop = bod.scrollTop;
+                bod.eventAt = true
+                bod.addEventListener("scroll", noScroll);
+            } else{
+                bod.scTop = 0;
+                bod.eventAt = false
+                bod.removeEventListener("scroll", noScroll);
+
+            }
+        }
     }
+
+    useEffect(() => {
+        if ( logIn ) {
+            const bod = document.querySelector("body");
+
+            if ( bod?.eventAt ) {
+                bod.removeEventListener("scroll", noScroll)
+            }
+        }
+    }, [logIn])
 
     useEffect(()=>{
         if(document.querySelector(".burger").classList.contains("-open")){

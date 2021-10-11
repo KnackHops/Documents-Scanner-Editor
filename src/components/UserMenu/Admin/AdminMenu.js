@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react/cjs/react.development';
+import { useContext, useEffect } from 'react';
 import SideMenu from '../../SideMenu/SideMenu';
 import AdminSide from '../../SideMenu/Admin/AdminSide';
 import UserLists from '../../../wrappers/UserLists';

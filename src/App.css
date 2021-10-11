@@ -5,11 +5,7 @@
 div#root {
   height: 100%;
   flex-direction: column;
-}
-
-footer {
-  text-align: center;
-  font-size: .6rem;
+  position: relative;
 }
 
 ul {
@@ -26,6 +22,7 @@ ul {
 }
 
 .pop-up-bg > aside {
+  padding: 1rem 2rem;
   margin-top: 20vh;
   z-index: 1000;
   height: 30rem;
@@ -43,12 +40,12 @@ ul {
 
 .universal-container {
   max-width: 96vw;
-  margin: 0 2vw;
+  margin: 0 3vw;
 }
 
-@media only screen and (max-width: 1050px) {
+/* @media only screen and (max-width: 1050px) {
   .universal-container {
     max-width: 98vw;
     margin: 0 1vw;
   }
-}
+} */

@@ -1,11 +1,11 @@
-import { useContext, useLayoutEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import './DocumentCentral.css';
 import DocumentPage from './DocumentPage';
 import DocumentList from '../../../wrappers/DocumentList';
 import AsideHome from './AsideHome';
-import { DocumentContext, SideContext, UserContext } from '../../../wrappers/DocumentsScannerEditor';
-import { useEffect } from 'react/cjs/react.development';
+import { DocumentContext, MenuContext, SideContext, UserContext } from '../../../wrappers/DocumentsScannerEditor';
 import useDocuments from '../../../hooks/useDocuments';
+import QRSavedPopUp from './QRSavedPopUp';
 
 const DocumentCentral = () => {
     const {isAttached} = useContext(SideContext);
@@ -30,7 +30,7 @@ const DocumentCentral = () => {
     }
 
     useEffect(()=>{
-        if(document){
+        if(document && documentList?.documents){
             documentFind(document.id, documentList);
         }
     }, [documentList])
@@ -79,6 +79,8 @@ const DocumentCentral = () => {
         }
     }
 
+    const { popUpHandler } = useContext(MenuContext);
+
     const documentSave = data => {
         fetch('http://127.0.0.1:5000/document/add', {
             method: 'POST',
@@ -93,12 +95,16 @@ const DocumentCentral = () => {
             }else{
                 throw Error('Error adding data');
             }
-        }).then(({id})=>{
+        }).then(( { id, qr_code } )=>{
+
             setDocument({
                 id,
                 body: ""
             });
+
             documentFetch();
+            popUpHandler(true, "qr-saved", <QRSavedPopUp qr_image={qr_code}/>)
+
         }).catch(err=>console.log(err))
     }
 

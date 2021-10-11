@@ -19,8 +19,12 @@ aside.pop-up-container.pop-scan-header {
     justify-content: space-around;
 }
 
-aside.pop-up-container > video {
+aside.pop-up-container > section {
     height: 90rem;
     width: 68rem;
+}
+
+aside.pop-up-container > section > section {
+    height: 100%;
 }
 

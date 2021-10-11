@@ -1,0 +1,35 @@
+aside.pop-profile-change {
+    font-size: 1.5rem;
+    width: 40rem;
+}
+
+aside.pop-profile-change > div {
+    height: 10%;
+}
+
+aside.pop-profile-change > form {
+    height: 90%;
+    padding: 1rem 1rem 0 1rem;
+    flex-direction: column;
+}
+
+aside.pop-profile-change > form > p:first-child {
+    width: 100%;
+    justify-content: space-between;
+}
+
+aside.pop-profile-change > form > p:first-child > label {
+    flex: 1;
+    font-size: 1.85rem;
+}
+
+aside.pop-profile-change > form > p:first-child > input {
+    flex: 3;
+    font-size: 1.7rem;
+    line-height: 1.85rem;
+}
+
+aside.pop-profile-change > form > p:last-child {
+    margin-top: auto;
+    text-align: end;
+}

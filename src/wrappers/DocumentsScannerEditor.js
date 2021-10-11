@@ -23,7 +23,12 @@ export default  function DocumentsScannerEditor() {
                 })
             }).then(resp=>{
                 if(resp.ok){
-                    window.confirm(`Document: ${doctitle} is sent to User ${username}`);
+                    if ( userid === user.id ) {
+                        window.confirm(`Document: ${doctitle} is pinned for you! User ${username}`)
+                    } else {
+                        window.confirm(`Document: ${doctitle} is sent to User ${username}`);
+                    }
+
                     resolve();
                 }else{
                     console.log("error pinning");
@@ -61,6 +66,13 @@ export default  function DocumentsScannerEditor() {
         }else{
             setLogIn(false);
         }
+    }
+
+    const updateUser = (fromWhere, val) => {
+        setUser({
+            ...user,
+            [fromWhere]: val
+        })
     }
 
     const menuHandler = (whichFrom=null) =>{
@@ -170,7 +182,8 @@ export default  function DocumentsScannerEditor() {
                     username: user ? user.username : null,
                     role: user ? user.role : null,
                     mobile: user ? user.mobile : null,
-                    email: user ? user.email : null
+                    email: user ? user.email : null,
+                    updateUser
                 }}>
                     <DocumentContext.Provider value={{
                         document,

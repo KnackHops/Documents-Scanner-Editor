@@ -63,10 +63,10 @@ article.document-container > div.ck-toolbar {
 
 .document-container > div.ck-content {
     background-color: rgba(250, 250, 250);
-    width: 8.5in;
-    height: 11in;
+    width: 8.27in;
+    height: 11.69in;
     margin: 1rem;
-    padding: .5in;
-    font-size: 12px;
+    padding: 1in;
+    font-size: 9px;
     box-shadow: 0 0 .4rem rgba(0, 0, 0, .4);
 }
