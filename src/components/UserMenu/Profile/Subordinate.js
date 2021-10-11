@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react/cjs/react.development";
+import { useContext, useEffect, useState } from "react";
 import { SideContext, MenuContext } from "../../../wrappers/DocumentsScannerEditor";
 import UserLists from "../../../wrappers/UserLists";
 

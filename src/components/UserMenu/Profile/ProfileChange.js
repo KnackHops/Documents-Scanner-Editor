@@ -1,4 +1,4 @@
-import { useContext } from "react/cjs/react.development"
+import { useContext } from "react"
 import { MenuContext, UserContext } from "../../../wrappers/DocumentsScannerEditor"
 import ProfilePopUp from "./ProfilePopUp";
 
