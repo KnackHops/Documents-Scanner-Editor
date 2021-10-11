@@ -1,97 +1,82 @@
-// import { useEffect } from "react/cjs/react.development";
 import './ScanPopUp.css';
-import QrReader from 'react-qr-scanner';
-import { useState } from 'react';
-// import { MultiFormatReader, BarcodeFormat, DecodeHintType, BinaryBitmap, HybridBinarizer, RGBLuminanceSource } from "@zxing/library";
-// import { useMemo, useState } from "react";
+import QrReader from 'react-qr-reader';
+import { useContext, useEffect, useState, useRef } from 'react';
+import { DocumentContext, MenuContext, UserContext } from '../../wrappers/DocumentsScannerEditor';
 
 const ScanPopUp = () => {
-    // const reader = useMemo(()=>{
-    //     const hints = new Map();
-
-    //     hints.set(DecodeHintType.POSSIBLE_FORMATS, [BarcodeFormat.QR_CODE])
-
-    //     const reader = new MultiFormatReader();
-
-    //     reader.setHints(hints);
-
-    //     return reader;
-    // }, [])
-    
-    // const hasUserMedia = () => {
-    //     return !!(navigator?.mediaDevices?.getUserMedia);
-    // }
-    // const [videoLoaded, setVideo] = useState(false);
-    // const setUpMedia = async () => {
-    //     const vid = document.querySelector("#video-media");
-        
-    //     if ( hasUserMedia() ) {
-    //         if ( vid ) {
-    //             let stream = await navigator.mediaDevices.getUserMedia({
-    //                 video: true,
-    //                 audio: false,
-    //             })
-    
-    //             vid.srcObject = stream
-    //             setVideo(true);
-    //         }
-    //     }
-    // }
-
-    // useEffect( () => {
-    //     setUpMedia();
-    // }, [])
-
-    // useEffect( () => {
-    //     if ( videoLoaded ) {
-    //         const can = document.querySelector("#canvas-media");
-    //         const ctx = can.getContext('2d');
-    //         const vid = document.querySelector("#video-media");
-
-    //         const intCan = setInterval( () => {
-    //             if( can && vid ) {
-    //                 if ( vid.srcObject ) {
-                    
-    //                     can.width = 200;
-    //                     can.height = 400;
-    //                     ctx.drawImage(vid, 0, 0, can.width, can.height);
-    //                     /* there might be conflict of data here */
-    //                     const imgData = ctx.getImageData(0, 0, can.width, can.height);
-    //                     const lumiSrc = new RGBLuminanceSource(imgData.data, can.width, can.height);
-    //                     const binBitmap = new BinaryBitmap(new HybridBinarizer(lumiSrc));
-
-    //                     try {
-    //                         let result = reader.decode(binBitmap);
-    //                         clearInterval(intCan);
-    //                         console.log(result)
-    //                     } catch {
-    //                         console.log("none yet")
-    //                     }
-    //                 }
-    //             }
-    //         }, 1000 / 15);
-
-    //         return ()=> {
-    //             clearInterval(intCan);
-    //             vid.srcObject = null
-    //             ctx.clearRect(0, 0, can.width, can.height);
-    //         }
-    //     }
-    // }, [videoLoaded])
-
-    // const captureQR = () => {
-    //     do {
-    //         if( can && vid ) {
-    //             if ( vid.srcObject ) {
-    //             can.width = vid.videoWidth;
-    //             can.height = vid.videoHeight;
-    
-    //             can.getContext('2d').drawImage(vid, 0, 0, can.width, can.height);
-    //             }
-    //         }
-    //     } while (true);
-    // }
     const [ qrLoaded, setQrLoaded ] = useState({isLoaded: false});
+    const { id } = useContext(UserContext);
+    const { popUpHandler } = useContext(MenuContext);
+    const { setDocument } = useContext(DocumentContext);
+
+    const qrFetch = qr_text => {
+        fetch(`http://127.0.0.1:5000/document/fetch-doc-qr/?str_code=${qr_text}&userid=${id}`, {
+            method: 'GET',
+            mode: 'cors'
+        }).then( resp => {
+            if ( resp.ok ){
+                if ( resp.status === 204 ) {
+                    window.alert("not a document!");
+                    return {document: null}
+                } else {
+                    return resp.json();
+                }
+            } else {
+                window.alert("error fetching document!");
+            }
+        }).then( ( { document } ) => {
+            if ( document ) {
+                setDocument(document);
+                popUpHandler();
+            }
+        })
+    }
+
+    useEffect(() => {
+        if ( qrLoaded?.data ) {
+            qrFetch(qrLoaded?.data);
+        }
+    }, [qrLoaded])
+
+    const handleScan = data =>{
+        if ( data ) {
+            if ( data.slice(0, 4) === "doc/" && data.slice(10, 15) ==="/doc/" ) {
+                window.confirm("Qr accepted!");
+                setTimeout(() => {
+                    setQrLoaded({
+                        isLoaded: true,
+                        data
+                    })
+                }, 200);
+            }
+        }
+    }
+
+    const handleError = err => {
+        if( err.toString().includes("The request is not allowed by the user agent or the platform in the current context.") ) {
+            setLegacy(true)
+        }
+    }
+
+    const qrEl = useRef(null);
+
+    const onDialogClicked = () => {
+        qrEl.current.openImageDialog()
+    }
+
+    const [ isLegacy, setLegacy ] = useState(false);
+    
+    const checkOS = () => {
+        var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+        if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+            setLegacy(true)
+        }
+    }
+
+    useEffect(() => {
+        checkOS();
+    }, [])
 
     return (
         <>
@@ -99,32 +84,22 @@ const ScanPopUp = () => {
                 <h1>
                     Hello! Scanning!
                 </h1>
-                {/* <p>
-                    <button onClick={captureQR}>
-                        Capture
-                    </button>
-                </p> */}
+                {
+                    isLegacy ? 
+                    <p>
+                        <button onClick={onDialogClicked}>
+                            Upload Image!
+                        </button>
+                    </p> : ""
+                }
             </div>
-            {   qrLoaded.isLoaded ? "" : 
-                <QrReader 
-                    delay={100}
-                    onError={()=>{
-                        console.log("err");
-                    }}
-                    onScan={(data)=>{
-                        if ( data ) {
-                            setQrLoaded({
-                                isLoaded: true,
-                                data
-                            })
-                        }
-                    }}
-                />
-            }
-            {/* <div id="media-container">
-                <video id="video-media" autoPlay muted />
-                <canvas id="canvas-media" />
-            </div> */}
+            <QrReader 
+                ref={qrEl}
+                delay={100}
+                onError={handleError}
+                onScan={handleScan}
+                legacyMode={isLegacy}
+            />
         </>
     )
 }

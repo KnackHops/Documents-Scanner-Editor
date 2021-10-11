@@ -4,12 +4,18 @@ div.user-menu-bg {
 
 section.user-menu {
     margin-top: 5rem;
-    height: 50rem;
+    height: 60vh;
     width: 40rem;
     background-color: bisque;
     padding: .5rem 1rem 2rem 1rem;
     flex-direction: column;
     position: relative;
+}
+
+@media only screen and (max-height: 720px) {
+    section.user-menu {
+        height: 70vh;
+    }
 }
 
 section.homeuser-menu-container {

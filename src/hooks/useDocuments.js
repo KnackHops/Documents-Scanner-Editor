@@ -1,5 +1,4 @@
-import { useCallback } from "react";
-import { useState, useEffect } from "react";
+import { useCallback, useState, useEffect } from "react";
 
 const useDocuments = (id, load=true) => {
     const [documentList, setDocumentList] = useState({documents: null});
@@ -17,7 +16,15 @@ const useDocuments = (id, load=true) => {
                 throw Error("error fetching!");
             }
         }).then(({_documents})=>{
-            setDocumentList({documents: _documents});
+            let documents = _documents.filter(doc => doc.pinned)
+            let unpinned = _documents.filter(doc => !doc.pinned)
+
+            documents = documents ? documents : [];
+            unpinned = unpinned ? unpinned : [];
+
+            documents = documents.concat(unpinned)
+
+            setDocumentList({documents});
         }).catch(err=>{
             console.log(err);
         })

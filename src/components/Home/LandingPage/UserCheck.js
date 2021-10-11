@@ -73,6 +73,10 @@ const passCheck = (password, whichOpen) => {
     return[passchk, error];
 }
 
+const emailCheck = (email) => {
+    return /^\S+@\S+\.\S+$/.test(email)
+}
+
 const userCheck = ({username, password, mobile, email}, whichOpen) => {
     let returnVar = true;
 
@@ -87,7 +91,7 @@ const userCheck = ({username, password, mobile, email}, whichOpen) => {
                     window.alert('Email is empty!');
                     returnVar = false;
                 }
-                if(!/^\S+@\S+\.\S+$/.test(email)){
+                if(!emailCheck(email)){
                     window.alert('Please provide a proper email');
                     returnVar = false;
                 }
@@ -123,4 +127,4 @@ const userCheck = ({username, password, mobile, email}, whichOpen) => {
     return returnVar;
 }
 
-export { userCheck };
+export { userCheck, mobileCheck, emailCheck };

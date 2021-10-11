@@ -1,0 +1,19 @@
+.about-info {
+    height: calc(50vh - 2.5rem);
+    background-color: darkslategrey;
+}
+
+.about-info > .universal-container {
+    height: 100%;
+    position: relative;
+}
+
+.about-container {
+    position: absolute;
+    top: 2%;
+    left: -100%;
+    height: 90%;
+    width: 80vw;
+    box-shadow: .1rem .1rem 1rem black;
+    background-color: rgba(255, 255, 255, .1);
+}

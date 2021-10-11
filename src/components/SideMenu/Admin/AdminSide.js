@@ -1,6 +1,6 @@
 import './AdminSide.css';
 import DocumentList from '../../../wrappers/DocumentList';
-import { useContext, useEffect } from 'react/cjs/react.development';
+import { useContext, useEffect } from 'react';
 import { DocumentContext, MenuContext, SideContext, UserContext } from '../../../wrappers/DocumentsScannerEditor';
 import SidePopUp from '../SidePopUp';
 import useDocuments from '../../../hooks/useDocuments';

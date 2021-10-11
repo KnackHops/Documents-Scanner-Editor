@@ -1,11 +1,5 @@
 section.profile-container {
-    height: 40rem;
-}
-
-@media only screen and (max-height: 650px) {
-    section.profile-container {
-        height: 90%;
-    }
+    font-size: 1.5rem;
 }
 
 div.subordinate-container, div.user-settings-container{
@@ -20,16 +14,17 @@ div.subordinate-search-container > p {
     position: relative;
 }
 
+div.subordinate-search-container > p > div.user-list-container {
+    top: 100%;
+}
 
 section.homeuser-menu-container > div:last-child  div.subordinate-search-container div.user-list-container {
     left: 0;
-    top: 3rem;
 }
 
 div.subordinate-search-container > p > div.user-list-container {
     position: absolute;
     background-color: darkkhaki;
-    top: 1.5rem;
     left: 8rem;
     width: 20rem;
 }

@@ -1,0 +1,4 @@
+footer {
+    height: calc(50vh - 2.5rem);
+    font-size: 1rem;
+}

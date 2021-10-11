@@ -1,23 +1,32 @@
 import { useContext } from "react/cjs/react.development"
-import { UserContext } from "../../../wrappers/DocumentsScannerEditor"
+import { MenuContext, UserContext } from "../../../wrappers/DocumentsScannerEditor"
+import ProfilePopUp from "./ProfilePopUp";
 
 const ProfileChange = () => {
     const { username, mobile, role, email } = useContext(UserContext);
+    const { popUpHandler } = useContext(MenuContext);
+
+    const emailHandler = e => {
+        e.preventDefault();
+        popUpHandler(true, "profile-change", <ProfilePopUp fromWhere={'email'}/>)
+    }
 
     const mobileHandler = e => {
         e.preventDefault();
-
-        console.log("changing here!");
+        popUpHandler(true, "profile-change", <ProfilePopUp fromWhere={'mobile'}/>)
     }
 
     return (
         <>
             <p>{`User: ${username}`}</p>
             <p>{`Role: ${role}`}</p>
-            <p>{`Email: ${email}`}</p>
             <p>
-                {`Mobile Number: ${mobile}`}
-                <button onClick={mobileHandler}>Change mobile number</button>
+                <label htmlFor="email">Email: </label>
+                <button onClick={emailHandler} id="email">{email}</button>
+            </p>
+            <p>
+                <label htmlFor="mobile">Mobile: </label>
+                <button onClick={mobileHandler} id="mobile">{mobile ? mobile : "None"}</button>
             </p>
         </>
     )

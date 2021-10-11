@@ -1,9 +1,10 @@
 import "./DocumentPage-style.css"
 import DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
-import { useCallback, useContext, useEffect, useState } from "react/cjs/react.development";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { DocumentContext, UserContext, MenuContext } from "../../../wrappers/DocumentsScannerEditor";
 import DocumentPopUp from "./DocumentPopUp";
+import QRSavedPopUp from "./QRSavedPopUp";
 
 const toolbarConfig = {
     toolbar: ['undo', 'redo', '|', 
@@ -13,7 +14,7 @@ const toolbarConfig = {
     'alignment:left', 'alignment:right', 'alignment:center', 'alignment:justify', '|',
     'indent', 'outdent', '|',
     'insertTable', 'tableColumn', 'tableRow', 'mergeTableCells'],
-    fontSize: {options: [9, 10, 11, 12, 13, 14, 15, 16, 18, 20, 22, 24, 26]},
+    fontSize: {options: [9, 10, 11, 12, 13, 14, 15, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36]},
     indentBlock: {
         offset: .1,
         unit: 'in'
@@ -22,7 +23,7 @@ const toolbarConfig = {
 }
 
 const DocumentPage = ({documentLoadHandler, document, documentHandler, documentFetch}) => {
-    const { unpinHandler } = useContext(DocumentContext);
+    const { unpinHandler, pinHandler } = useContext(DocumentContext);
 
     const { id } = useContext(UserContext);
     const [editor, setEditor] = useState(null);
@@ -51,7 +52,19 @@ const DocumentPage = ({documentLoadHandler, document, documentHandler, documentF
         }
     }, [document, editor])
 
-    const {popUpHandler} = useContext(MenuContext);
+    const { popUpHandler } = useContext( MenuContext );
+
+    const { username } = useContext( UserContext )
+
+    const pinPopHandler = async e => {
+        e.preventDefault();
+        const con = window.confirm("Are you sure you want to pin this document?");
+
+        if ( con ) {
+            await pinHandler(username, id, document.id, document.title);
+            documentFetch();
+        }
+    }
 
     const sendPopHandler = e => {
         e.preventDefault();
@@ -62,10 +75,32 @@ const DocumentPage = ({documentLoadHandler, document, documentHandler, documentF
         e.preventDefault();
         const con = window.confirm("Are you sure you want to unpin this document for you?");
 
-        if(con){
+        if ( con ) {
             await unpinHandler(id, document.id);
             documentFetch();
         }
+    }
+
+    const show_QR = () => {
+        fetch(`http://127.0.0.1:5000/document/fetch-qr/?docid=${document.id}`,{
+            method: 'GET',
+            mode: 'cors'
+        }).then(resp=> {
+            if(resp.ok){
+                if(resp.status === 204){
+                    window.alert("document doesn't exist!");
+                    return {qr_code: null};
+                }else{
+                    return resp.json();
+                }
+            }else{
+                window.alert("Error fetching qr code!");
+            }
+        }).then(({qr_code})=>{
+            if ( qr_code ) {
+                popUpHandler(true, "show-qr", <QRSavedPopUp qr_image={qr_code} text={"Here is the QR Code!"}/>)
+            } 
+        })
     }
 
     return (
@@ -80,13 +115,19 @@ const DocumentPage = ({documentLoadHandler, document, documentHandler, documentF
                 {
                     <>
                     <button onClick={sendPopHandler}>
-                    Send
+                        Send
+                    </button>
+                    <button onClick={show_QR}>
+                        Show QR
                     </button>
                     {
                         document.pinned ? 
                         <button onClick={unpinClicked}>
                             Unpin
-                        </button> : ""
+                        </button> :
+                        <button onClick={pinPopHandler}>
+                            Pin
+                        </button>
                     }
                     </>
                 }

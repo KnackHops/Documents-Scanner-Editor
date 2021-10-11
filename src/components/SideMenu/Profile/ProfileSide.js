@@ -1,4 +1,4 @@
-import { useContext } from "react/cjs/react.development";
+import { useContext } from "react";
 import { MenuContext, SideContext, UserContext } from "../../../wrappers/DocumentsScannerEditor";
 import './ProfileSide.css';
 import SidePopUp from "../SidePopUp";
