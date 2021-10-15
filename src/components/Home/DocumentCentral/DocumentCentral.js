@@ -1,9 +1,17 @@
-import { useContext, useEffect } from 'react';
+import {
+    useContext, 
+    useEffect 
+} from 'react';
 import './DocumentCentral.css';
 import DocumentPage from './DocumentPage';
 import DocumentList from '../../../wrappers/DocumentList';
 import AsideHome from './AsideHome';
-import { DocumentContext, MenuContext, SideContext, UserContext } from '../../../wrappers/DocumentsScannerEditor';
+import { 
+    DocumentContext, 
+    MenuContext, 
+    SideContext, 
+    UserContext 
+} from '../../../wrappers/DocumentsScannerEditor';
 import useDocuments from '../../../hooks/useDocuments';
 import QRSavedPopUp from './QRSavedPopUp';
 import {
@@ -11,9 +19,15 @@ import {
     Route,
     Redirect,
     useRouteMatch
-} from 'react-router-dom'
+} from 'react-router-dom';
 
-const DocumentCentral = () => {
+const DocumentCentral = ( { socket } ) => {
+    socket.on("got_sent", data => {
+        if ( !document ) {
+            documentFetch();
+        }
+    })
+
     const { isAttached } = useContext( SideContext );
     const { id } = useContext( UserContext );
 
@@ -139,8 +153,7 @@ const DocumentCentral = () => {
         .catch( err => console.log(err) )
     }
     
-    
-    let match = useRouteMatch();
+    const match = useRouteMatch();
 
     return (
         <div className="fd universal-container">
@@ -161,7 +174,12 @@ const DocumentCentral = () => {
                     <p className="btn-container">
                         <button onClick={()=>documentLoadHandler(true)}>Add</button>
                     </p>
-                        {documentList ? <DocumentList handler={documentLoadHandler} documentList={documentList} fromWhere={'document-central'}/> : "Please wait!"}
+                        {   documentList ? 
+                        <DocumentList 
+                            handler={documentLoadHandler} 
+                            documentList={documentList} 
+                            fromWhere={'document-central'}/> 
+                        : "Please wait!"}
                     </section>
 
                 </Route>
@@ -179,20 +197,6 @@ const DocumentCentral = () => {
                     
                 </Route>
             </Switch>
-            {/* {document ? 
-            <DocumentPage 
-                documentLoadHandler={documentLoadHandler} 
-                document={document} documentHandler={documentHandler} 
-                setDocument={setDocument} 
-                documentFetch={documentFetch}/> : 
-            <>
-            <section className="central-container">
-                <p className="btn-container">
-                    <button onClick={()=>documentLoadHandler(true)}>Add</button>
-                </p>
-                {documentList ? <DocumentList handler={documentLoadHandler} documentList={documentList} fromWhere={'document-central'}/> : "Please wait!"}
-            </section>
-            </>} */}
                 {!isAttached && !document && <AsideHome />}
         </div>
     )

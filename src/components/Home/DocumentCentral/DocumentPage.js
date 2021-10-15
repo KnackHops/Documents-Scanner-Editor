@@ -53,7 +53,7 @@ const DocumentPage = ({documentLoadHandler, document, documentHandler, documentF
 
     const { popUpHandler } = useContext( MenuContext );
 
-    const { username } = useContext( UserContext )
+    const { username } = useContext( UserContext );
 
     const pinPopHandler = async e => {
         e.preventDefault();

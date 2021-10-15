@@ -102,9 +102,9 @@ const Headers = ({logIn}) => {
 
         popUpHandler(true, "scan-header", <ScanPopUp />)
     }
-    
-    const { isAttached } = useContext(SideContext);
 
+    const { isAttached } = useContext( SideContext );
+    
     const nav_arr = useMemo(()=>{
         let _arr = []
 
@@ -129,7 +129,7 @@ const Headers = ({logIn}) => {
             _arr = [
                 {
                     label: 'Sign in',
-                    handler: () => console.log("Sign in!")
+                    handler: () => console.log("sign in")
                 },
                 {
                     label: 'About',

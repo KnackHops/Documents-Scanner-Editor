@@ -5,6 +5,7 @@ import {
 } from "react";
 import Headers from '../components/Headers/Headers';
 import Home from '../components/Home/Home';
+import getConnect from './SocketConnection';
 
 const UserContext = createContext(null);
 const MenuContext = createContext(null);
@@ -12,6 +13,21 @@ const SideContext = createContext(null);
 const DocumentContext = createContext(null);
 
 export default  function DocumentsScannerEditor() {
+    const [ socket, setSocket ] = useState(null);
+    const [ reloadFromSock, setReloadFromSock ] = useState(false);
+
+    useEffect( () => {
+        getConnect()
+        .then( sock => {
+            if ( sock.connected ) {
+                setSocket(sock)
+                sock.emit("hello", "there");
+            }
+        })
+
+        return () => socket ? socket.disconnect() : ""
+    }, [])
+
     const pinHandler = ( username, userid, docid, doctitle) => {
         return new Promise((resolve, reject) => {
             fetch(`http://127.0.0.1:5000/document/pin-doc`, {
@@ -31,6 +47,7 @@ export default  function DocumentsScannerEditor() {
                         window.confirm(`Document: ${doctitle} is pinned for you! User ${username}`)
                     } else {
                         window.confirm(`Document: ${doctitle} is sent to User ${username}`);
+                        socket.emit("send_doc", {docid, userid});
                     }
 
                     resolve();
@@ -65,6 +82,7 @@ export default  function DocumentsScannerEditor() {
 
     const logInHandle = (_user = null) => {
         setUser(_user);
+        socket.emit("set_socketid", {userid: _user.id});
         if(_user){
             setLogIn(true);
         }else{
@@ -203,7 +221,7 @@ export default  function DocumentsScannerEditor() {
                         setAttached
                         }}>
                             <Headers logIn={logIn}/>
-                            <Home logIn={logIn}/>
+                            <Home logIn={logIn} socket={socket}/>
                         </SideContext.Provider>
                     </DocumentContext.Provider>
                 </UserContext.Provider>

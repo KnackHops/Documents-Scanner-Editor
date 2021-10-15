@@ -4,8 +4,7 @@ import DocumentCentral from './DocumentCentral/DocumentCentral';
 import { 
     useContext, 
     useLayoutEffect, 
-    createContext,
-    useCallback
+    createContext
 } from 'react';
 import { 
     MenuContext, 
@@ -18,12 +17,12 @@ import {
     Switch,
     Route,
     Redirect
-} from 'react-router-dom'
+} from 'react-router-dom';
 
 const RouteContext = createContext(null);
 
 
-const Home = ({ logIn }) => {
+const Home = ({ logIn, socket }) => {
     const { popUp, openMenu } = useContext(MenuContext);
     const { setAttached } = useContext(SideContext);
 
@@ -71,7 +70,7 @@ const Home = ({ logIn }) => {
                         <>
                         {
                             logIn ? 
-                            <DocumentCentral /> :
+                            <DocumentCentral socket={socket} /> :
                             <Redirect to="/landing-page" />
                         }
                         </>
