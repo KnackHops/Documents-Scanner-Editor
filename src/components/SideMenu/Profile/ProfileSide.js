@@ -12,7 +12,7 @@ const ProfileSide = ({fetchUsers}) => {
         const whichFrom = e.target.getAttribute('data-sub');
 
         if(whichFrom === 'subordinate'){
-            fetch(`https://document-editor-09.herokuapp.com/remove-subordinate/?id=${id}&userid=${sideUser.id}`, {
+            fetch(`http://127.0.0.1:5000/remove-subordinate/?id=${id}&userid=${sideUser.id}`, {
                 method: 'DELETE',
                 mode: 'cors'
             }).then(resp=>{
@@ -24,7 +24,7 @@ const ProfileSide = ({fetchUsers}) => {
                 }
             })
         }else{
-            fetch(`https://document-editor-09.herokuapp.com/add-subordinate`, {
+            fetch(`http://127.0.0.1:5000/add-subordinate`, {
                 method: 'PUT',
                 mode: 'cors',
                 headers: {

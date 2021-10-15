@@ -32,8 +32,11 @@ const AdminMenu = () => {
                         setSideUser({
                             id: userid,
                             username: user.username,
+                            email_verified: user.email_verified,
+                            attempt: !user.email_verified ? user.attempt : null,
+                            resend: !user.email_verified ? user.resend : null,
                             activated: user.activated,
-                            role: id===0 ? user.role : null,
+                            role: id === 0 ? user.role : null,
                             sideClass: "admin-side"
                         })
                     }

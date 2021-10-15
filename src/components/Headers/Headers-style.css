@@ -52,8 +52,8 @@ div.searchbar-container > p > input {
     background-color: blueviolet;
 }
 
-@media only screen and (max-width: 600px) {
-    p.searchbar-container > input {
+@media only screen and (max-width: 650px) {
+    div.searchbar-container > p {
         width: 15rem;
     }
 
@@ -62,19 +62,40 @@ div.searchbar-container > p > input {
     }
 }
 
-ul.nav-list > li {
-    margin-right: 2rem;
+ul.nav-list, u.nav-list > li {
+    height: 100%;
 }
 
 ul.nav-list > li > button {
-    padding: .25rem .5rem;
+    background: none;
+    border: none;
+    height: 100%;
+    font-size: 2rem;
+    cursor: pointer;
+    padding: 0 2rem;
+}
+
+ul.nav-list > li > button:hover {
+    color: white;
+    text-shadow: .2rem 0 .5rem black;
+}
+
+ul.nav-list > li:nth-child(2) {
+    margin-left: 2rem;
+}
+ul.nav-list.not-signed-list-con > li:nth-child(2) {
+    margin: 0 15vw 0 15vw;
+}
+
+ul.nav-list.not-signed-list-con > li > button {
+    font-size: 2.5rem;
 }
 
 div.profile-panel {
     opacity: 0;
     z-index: 0;
     top: 4rem;
-    right: 1vw;
+    right: 3.5vw;
     position: fixed;
     width: 7rem;
     background-color: black;
@@ -140,7 +161,7 @@ div.profile-panel button {
 }
 
 .burger.-signed.-open {
-    padding-right: 16.5rem;
+    padding-right: 17rem;
 }
 
 .burger.-signed:before {
@@ -174,24 +195,26 @@ div.profile-panel button {
         transform: translateX(-52vw);
     }
 
+    ul.nav-list.signed-list-con > li > button {
+        padding: 0;
+        font-size: 2rem;
+        padding-right: .5rem;
+    }
+
     ul.nav-list.signed-list-con {
         position: absolute;
-        right: -15rem;
+        right: -20rem;
         transition: transform .2s ease-in-out;
     }
 
     ul.nav-list.signed-list-con.-open {
         transition: transform .6s ease-in-out;
-        transform: translateX(-15rem);
+        transform: translateX(-18.5rem);
     }
 
     ul.nav-list.signed-list-con > li {
         margin: .5rem;
         height: 4rem;
-    }
-
-    ul.nav-list.signed-list-con > li > button {
-        height: 100%;
     }
 }
 

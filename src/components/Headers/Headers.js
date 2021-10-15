@@ -174,21 +174,19 @@ const Headers = ({logIn}) => {
         }
     }
 
-    useEffect(() => {
-        if ( logIn ) {
-            const bod = document.querySelector("body");
+    useEffect( () => {
+        const bod = document.querySelector("body");
 
-            if ( bod?.eventAt ) {
-                bod.removeEventListener("scroll", noScroll)
-            }
+        if ( bod?.eventAt ) {
+            bod.removeEventListener("scroll", noScroll)
         }
-    }, [logIn])
+    }, [ logIn ] )
 
-    useEffect(()=>{
-        if(document.querySelector(".burger").classList.contains("-open")){
+    useEffect( () => {
+        if ( document.querySelector(".burger").classList.contains("-open") ) {
             burgerMachine();
         }
-    }, [isAttached])
+    }, [ isAttached ] )
 
     return (
         <header className={`${classForHead}`}>

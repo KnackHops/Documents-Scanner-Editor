@@ -52,3 +52,21 @@ main.landingpage-container  form.land-page-form > p:last-child {
 main.landingpage-container  form.land-page-form > p:last-child > button {
     padding: .1rem .25rem;
 }
+
+main.landingpage-container form.land-page-form.verify-code-container > p:nth-child(2) {
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    height: 35vh;
+}
+
+main.landingpage-container form.land-page-form.verify-code-container > p:nth-child(2) > label {
+    position: absolute;
+    top: 3vh
+}
+
+main.landingpage-container form.land-page-form.verify-code-container > p:nth-child(2) > input {
+    width: 15rem;
+    margin: 0 25rem;
+    text-align: center;
+}

@@ -34,7 +34,6 @@ const DocumentPage = ({documentLoadHandler, document, documentHandler, documentF
 
     useEffect(()=>{
         if(editor){
-            console.log(editor.ui.getEditableElement().parentElement)
             editor.ui.getEditableElement().parentElement.insertBefore(
                 editor.ui.view.toolbar.element,
                 editor.ui.getEditableElement()
@@ -82,7 +81,7 @@ const DocumentPage = ({documentLoadHandler, document, documentHandler, documentF
     }
 
     const show_QR = () => {
-        fetch(`https://document-editor-09.herokuapp.com/document/fetch-qr/?docid=${document.id}`,{
+        fetch(`http://127.0.0.1:5000/document/fetch-qr/?docid=${document.id}`,{
             method: 'GET',
             mode: 'cors'
         }).then(resp=> {
@@ -141,7 +140,6 @@ const DocumentPage = ({documentLoadHandler, document, documentHandler, documentF
                 data={document.body}
                 onReady={editor=>documentInit(editor)}
                 config={toolbarConfig} />
-            
         </article>
     )
 }

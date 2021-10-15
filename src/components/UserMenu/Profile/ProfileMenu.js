@@ -1,5 +1,5 @@
 import './ProfileMenu.css';
-import { useContext, useState } from 'react/cjs/react.development';
+import { useContext, useState } from 'react';
 import ProfileChange from './ProfileChange';
 import { SideContext, UserContext } from '../../../wrappers/DocumentsScannerEditor';
 import SideMenu from '../../SideMenu/SideMenu';

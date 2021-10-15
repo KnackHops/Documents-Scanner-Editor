@@ -31,7 +31,6 @@ const LandingPage = () => {
             setPanSlide( newSlide );
         }
 
-        console.log(scTop, (window.innerHeight * .75) - 25)
         let inScrollComp = (window.innerHeight * .75) - 25;
         if ( scTop <= inScrollComp ) {
 
@@ -42,12 +41,13 @@ const LandingPage = () => {
         }
     }
 
-    useEffect(()=>{
+    useEffect( () => {
         document.querySelector("body").addEventListener("scroll", scrollHandler)
         return () => document.querySelector("body").removeEventListener("scroll", scrollHandler)
     }, [])
+
     return (
-        <>
+        <>  
             <GeneralLand opaMin={opaMin}/>
             <LandPageForm panSlide={panSlide}/>
             <About inSlide={inSlide} />
