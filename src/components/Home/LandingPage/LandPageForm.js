@@ -168,13 +168,20 @@ const LandPageForm = ( { panSlide } ) => {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(_user)
-        }).then(resp=>{
-            if(resp.ok){
-                window.confirm('User registered!');
-            }else{
+        })
+        .then( resp => {
+            if ( resp.ok ) {
+                return resp.json();
+            } else {
                 throw Error('error registering');
             }
-        }).catch(err=>window.alert(err))
+        })
+        .then( data => {
+            window.confirm("User registered!");
+            setWhichOpen("verify-code");
+            setCodeUser( { username: data.username, userid: data.id } )
+        })
+        .catch( err => window.alert(err) )
     }
 
     useEffect(()=>{
