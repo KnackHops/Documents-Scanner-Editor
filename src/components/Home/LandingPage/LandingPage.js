@@ -10,6 +10,10 @@ const LandingPage = () => {
     const [ panSlide, setPanSlide ] = useState(0);
     const [ inSlide, setInslide ] = useState(0);
 
+    const checkMobile = () => {
+        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    }
+
     const scrollHandler = e => {
         if ( document.querySelector(".burger.-not-signed")?.classList.contains("-open") ) {
             return
@@ -23,15 +27,15 @@ const LandingPage = () => {
             setOpa( ( scTop / fortyScroll ).toFixed(2) );
         } 
 
-        if ( ( scTop >= fortyScroll ) && ( scTop < window.innerHeight ) ) {
-            let newSlide = ( ( scTop - fortyScroll ) / window.innerHeight ).toFixed(2) - .01;
+        if ( ( scTop >= window.innerHeight * .5 ) && ( scTop < ( window.innerHeight + fortyScroll - 50 ) ) ) {
+            let newSlide = ( ( scTop - window.innerHeight * .5 ) / ( window.innerHeight + fortyScroll ) ).toFixed(2) - .01;
 
             newSlide = Math.sign(newSlide) === -1 ? 0 : newSlide * 100;
 
             setPanSlide( newSlide );
         }
 
-        let inScrollComp = (window.innerHeight * .75) - 25;
+        let inScrollComp = ( window.innerHeight + fortyScroll ) - 100;
         if ( scTop <= inScrollComp ) {
 
             let new_in = (scTop / inScrollComp) * 100;
@@ -42,8 +46,13 @@ const LandingPage = () => {
     }
 
     useEffect( () => {
-        document.querySelector("body").addEventListener("scroll", scrollHandler)
-        return () => document.querySelector("body").removeEventListener("scroll", scrollHandler)
+        const bod = document.querySelector("body");
+
+        if ( !checkMobile() ) {
+            bod.addEventListener("scroll", scrollHandler);
+        }
+
+        return () => !checkMobile() ? bod.removeEventListener("scroll", scrollHandler) : ""
     }, [])
 
     return (

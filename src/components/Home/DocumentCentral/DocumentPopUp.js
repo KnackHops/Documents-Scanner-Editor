@@ -2,13 +2,14 @@ import { useState, useContext, useEffect } from "react";
 import { UserContext, DocumentContext } from "../../../wrappers/DocumentsScannerEditor";
 import UserLists from "../../../wrappers/UserLists";
 import useUsers from "../../../hooks/useUser";
+import './DocumentPopUp.css';
 
 const DocumentPopUp = ({document}) => {
     const {id} = useContext(UserContext);
     const {pinHandler} = useContext(DocumentContext);
     const {fetchUsers, users} = useUsers(id, true);
 
-    const [popUsers, setPopUsers] = useState(users);
+    const [ popUsers, setPopUsers ] = useState(users);
 
     useEffect(()=>{
         fetchUsers(true);
@@ -77,7 +78,7 @@ const DocumentPopUp = ({document}) => {
                 idFilterGet(id_filtered);
             })
         }
-    }, [users])
+    }, [ users ] )
 
     const sendBtnHandler = async e => {
         e.preventDefault();

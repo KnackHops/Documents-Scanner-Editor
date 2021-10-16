@@ -82,7 +82,6 @@ export default  function DocumentsScannerEditor() {
 
     const logInHandle = (_user = null) => {
         setUser(_user);
-        socket.emit("set_socketid", {userid: _user.id});
         if(_user){
             setLogIn(true);
         }else{
@@ -220,7 +219,7 @@ export default  function DocumentsScannerEditor() {
                         isAttached,
                         setAttached
                         }}>
-                            <Headers logIn={logIn}/>
+                            <Headers logIn={logIn} socket={socket}/>
                             <Home logIn={logIn} socket={socket}/>
                         </SideContext.Provider>
                     </DocumentContext.Provider>
