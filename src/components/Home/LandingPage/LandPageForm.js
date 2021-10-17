@@ -145,7 +145,6 @@ const LandPageForm = ( { panSlide } ) => {
                 throw Error('error logging in');
             }
         }).then( data => {
-            // logInHandle( data );
             if ( 'unverified' in data ) {
                 window.alert("Please Verify your email first!");
                 setWhichOpen("verify-code");
