@@ -1,6 +1,11 @@
-import { useState, useEffect, createContext } from "react";
+import { 
+    useState, 
+    useEffect, 
+    createContext 
+} from "react";
 import Headers from '../components/Headers/Headers';
 import Home from '../components/Home/Home';
+import getConnect from './SocketConnection';
 
 const UserContext = createContext(null);
 const MenuContext = createContext(null);
@@ -8,6 +13,29 @@ const SideContext = createContext(null);
 const DocumentContext = createContext(null);
 
 export default  function DocumentsScannerEditor() {
+    const [ socket, setSocket ] = useState(null);
+
+    useEffect( () => {
+        getConnect()
+        .then( sock => {
+            if ( sock.connected ) {
+                setSocket(sock)
+                sock.emit("hello", "there");
+            }
+        })
+
+        return () => {
+            if ( socket ) {
+                
+                if ( user ) {
+                    socket.emit( "del_socketid", { userid: user.id } );
+                }
+
+                socket.disconnect();
+            }
+        }
+    }, [])
+
     const pinHandler = ( username, userid, docid, doctitle) => {
         return new Promise((resolve, reject) => {
             fetch(`http://127.0.0.1:5000/document/pin-doc`, {
@@ -27,6 +55,7 @@ export default  function DocumentsScannerEditor() {
                         window.confirm(`Document: ${doctitle} is pinned for you! User ${username}`)
                     } else {
                         window.confirm(`Document: ${doctitle} is sent to User ${username}`);
+                        socket.emit("send_doc", {docid, userid});
                     }
 
                     resolve();
@@ -67,6 +96,12 @@ export default  function DocumentsScannerEditor() {
             setLogIn(false);
         }
     }
+
+    useEffect( () => {
+        if ( user ) {
+            socket.emit( "set_socketid", { userid: user.id } );
+        }
+    }, [user])
 
     const updateUser = (fromWhere, val) => {
         setUser({
@@ -152,7 +187,7 @@ export default  function DocumentsScannerEditor() {
     },[isAttached])
 
     
-    const [document, setDocument] = useState(null);
+    const [main_document, setDocument] = useState(null);
 
     const documentFind = (id, documentList) => {
         documentList.documents.forEach(doc => {
@@ -167,6 +202,16 @@ export default  function DocumentsScannerEditor() {
         });
     }
 
+    const getMainChildrenHeights = () => {
+        const main = document.querySelector("main");
+
+        return [ 
+            main.children[0].offsetHeight, 
+            main.children[0].offsetHeight + main.children[1].offsetHeight, 
+            main.children[0].offsetHeight + main.children[1].offsetHeight + main.children[2].offsetHeight
+        ]
+    }
+
     return (
         <>
             <MenuContext.Provider value={{
@@ -175,7 +220,8 @@ export default  function DocumentsScannerEditor() {
                 searchHandler,
                 popUpHandler,
                 popUp,
-                openMenu
+                openMenu,
+                getMainChildrenHeights
             }}>
                 <UserContext.Provider value={{
                     id: user ? user.id : null,
@@ -186,7 +232,7 @@ export default  function DocumentsScannerEditor() {
                     updateUser
                 }}>
                     <DocumentContext.Provider value={{
-                        document,
+                        main_document,
                         documentFind,
                         setDocument,
                         pinHandler,
@@ -198,8 +244,8 @@ export default  function DocumentsScannerEditor() {
                         isAttached,
                         setAttached
                         }}>
-                            <Headers logIn={logIn}/>
-                            <Home logIn={logIn}/>
+                            <Headers logIn={logIn} socket={socket}/>
+                            <Home logIn={logIn} socket={socket}/>
                         </SideContext.Provider>
                     </DocumentContext.Provider>
                 </UserContext.Provider>

@@ -2,22 +2,25 @@ const mobileCheck = mobile => {
     let mobilechk = true;
     let error = 'Mobile Number has invalid characters!';
 
-    if(mobile.length >= 11 && mobile.length <= 13){
-        if(!isNaN(mobile)){
-            if(mobile.includes('E') || mobile.includes('e')){
+    if ( mobile.length >= 11 && mobile.length <= 13 ) {
+        if ( !isNaN(mobile) ) {
+            if ( mobile.includes('E') || mobile.includes('e') ) {
                 mobilechk = false;
-            }else{
-                if(mobile.slice(0,2) === '09' || mobile.slice(0,3) === '639'){
-                    if(mobile.slice(0,2) === '09' && mobile.length !== 11){
+            } else {
+                if ( mobile.slice(0,2) === '09' || mobile.slice(0,3) === '639' ) {
+                    let errVar = [null, null];
+                    if ( mobile.slice(0,2) === '09' && mobile.length !== 11 ) {
                         mobilechk = false;
+                        errVar = ["09", "11"];
                     }
-                    if(mobile.slice(0,3) === '639' && mobile.length !== 13){
+                    if ( mobile.slice(0,3) === '639' && mobile.length !== 13 ) {
                         mobilechk = false;
+                        errVar = ["63 9", "13"];
                     }
-                    if(mobilechk){
-                        error = 'Mobile number must be valid';
+                    if ( !mobilechk ) {
+                        error = `Mobile number must be valid. Mobile number starting with ${errVar[0]} must be ${errVar[1]} characters`;
                     }
-                }else{
+                } else {
                     mobilechk = false;
                     error = 'Mobile number must start with 09 and 639'
                 }

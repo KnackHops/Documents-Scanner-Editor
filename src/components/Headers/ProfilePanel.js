@@ -1,3 +1,5 @@
+import './ProfilePanel.css';
+
 const ProfilePanel = ({panelStatus, menuClicked, logOutHandler, role}) => {
     return (
         <div className={`profile-panel ${panelStatus}`}>

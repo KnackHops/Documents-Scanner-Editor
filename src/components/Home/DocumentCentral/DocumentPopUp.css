@@ -1,0 +1,12 @@
+aside.pop-document-page {
+    display: flex;
+    flex-direction: column;
+    height: 40rem;
+    width: 40rem;
+    background-color: gainsboro;
+    font-size: 1.2rem;
+}
+
+aside.pop-document-page > div.user-list-container > ul {
+    overflow-y: scroll;
+}

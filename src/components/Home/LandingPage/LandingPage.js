@@ -3,54 +3,60 @@ import FooterInfo from "./FooterInfo";
 import GeneralLand from "./GeneralLand";
 import "./LandingPage-style.css";
 import LandPageForm from './LandPageForm';
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { MenuContext } from "../../../wrappers/DocumentsScannerEditor";
 
 const LandingPage = () => {
+    const { getMainChildrenHeights } = useContext(MenuContext);
     const [ opaMin, setOpa ] = useState(0);
-    const [ panSlide, setPanSlide ] = useState(0);
-    const [ inSlide, setInslide ] = useState(0);
+    const [ loginSlideClass, setLoginSlideClass ] = useState("panel-slide-deactivate");
+    const [ aboutSlideClass, setAboutSlideClass ] = useState("panel-slide-deactivate");
+
+    const checkMobile = () => {
+        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    }
 
     const scrollHandler = e => {
         if ( document.querySelector(".burger.-not-signed")?.classList.contains("-open") ) {
             return
         }
+        const [ firstCompo, secondCompo, thirdCompo ] = getMainChildrenHeights();
 
-        const fortyScroll = window.innerHeight * .4;
         const scTop = e.target.scrollTop;
 
-        if ( fortyScroll > scTop ) {
-            setPanSlide(0)
-            setOpa( ( scTop / fortyScroll ).toFixed(2) );
+        if ( firstCompo > scTop ) {
+            setOpa( ( scTop / firstCompo ).toFixed(2) );
         } 
+        if ( scTop >= firstCompo * .5 && scTop <= secondCompo * .8 ) {
 
-        if ( ( scTop >= fortyScroll ) && ( scTop < window.innerHeight ) ) {
-            let newSlide = ( ( scTop - fortyScroll ) / window.innerHeight ).toFixed(2) - .01;
+            setLoginSlideClass("panel-slide-activate");
+        } else {
 
-            newSlide = Math.sign(newSlide) === -1 ? 0 : newSlide * 100;
-
-            setPanSlide( newSlide );
+            setLoginSlideClass("panel-slide-deactivate");
         }
 
-        console.log(scTop, (window.innerHeight * .75) - 25)
-        let inScrollComp = (window.innerHeight * .75) - 25;
-        if ( scTop <= inScrollComp ) {
-
-            let new_in = (scTop / inScrollComp) * 100;
-            setInslide( new_in )
+        if ( scTop >= secondCompo * .7 && scTop <= thirdCompo * .8 ) {
+            setAboutSlideClass("panel-slide-activate")
         } else {
-            setInslide(100)
+            setAboutSlideClass("panel-slide-deactivate")
         }
     }
 
-    useEffect(()=>{
-        document.querySelector("body").addEventListener("scroll", scrollHandler)
-        return () => document.querySelector("body").removeEventListener("scroll", scrollHandler)
+    useEffect( () => {
+        const bod = document.querySelector("body");
+
+        if ( !checkMobile() ) {
+            bod.addEventListener("scroll", scrollHandler);
+        }
+
+        return () => !checkMobile() ? bod.removeEventListener("scroll", scrollHandler) : ""
     }, [])
+
     return (
-        <>
+        <>  
             <GeneralLand opaMin={opaMin}/>
-            <LandPageForm panSlide={panSlide}/>
-            <About inSlide={inSlide} />
+            <LandPageForm loginSlideClass={loginSlideClass}/>
+            <About aboutSlideClass={aboutSlideClass} />
             <FooterInfo/>
         </>
     )

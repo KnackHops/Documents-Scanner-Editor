@@ -13,22 +13,30 @@ const ScanPopUp = () => {
         fetch(`http://127.0.0.1:5000/document/fetch-doc-qr/?str_code=${qr_text}&userid=${id}`, {
             method: 'GET',
             mode: 'cors'
-        }).then( resp => {
+        })
+        .then( resp => {
             if ( resp.ok ){
                 if ( resp.status === 204 ) {
-                    window.alert("not a document!");
+                    window.alert("This document doesn't exist!");
                     return {document: null}
                 } else {
                     return resp.json();
                 }
             } else {
-                window.alert("error fetching document!");
+                throw resp
             }
-        }).then( ( { document } ) => {
+        })
+        .then( ( { document } ) => {
             if ( document ) {
                 setDocument(document);
                 popUpHandler();
             }
+        })
+        .catch( err => {
+            err.json()
+            .then( ( { error } ) => {
+                window.alert(error)
+            })
         })
     }
 
@@ -48,35 +56,47 @@ const ScanPopUp = () => {
                         data
                     })
                 }, 200);
+            } else {
+                window.confirm("Please scan a proper qr for this website!");
             }
         }
     }
 
-    const handleError = err => {
-        if( err.toString().includes("The request is not allowed by the user agent or the platform in the current context.") ) {
-            setLegacy(true)
-        }
+    const [ isLegacy, setLegacy ] = useState(false);
+    const [ isApple, setIsApple ] = useState(false);
+    const qrEl = useRef(null);
+
+    const changeQRScanner = () => {
+        setLegacy(!isLegacy);
     }
 
-    const qrEl = useRef(null);
+    const handleError = err => {
+        if( err.toString().includes("The request is not allowed by the user agent or the platform in the current context.") ) {
+            setLegacy(true);
+        }
+    }
 
     const onDialogClicked = () => {
         qrEl.current.openImageDialog()
     }
 
-    const [ isLegacy, setLegacy ] = useState(false);
+    useEffect(() => {
+        checkOS();
+    }, [])
     
     const checkOS = () => {
         var userAgent = navigator.userAgent || navigator.vendor || window.opera;
 
         if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-            setLegacy(true)
+            setIsApple(true)
         }
     }
 
     useEffect(() => {
-        checkOS();
-    }, [])
+        if ( isApple ) {
+            setLegacy(isApple);
+        }
+    }, [ isApple ])
 
     return (
         <>
@@ -84,14 +104,20 @@ const ScanPopUp = () => {
                 <h1>
                     Hello! Scanning!
                 </h1>
-                {
-                    isLegacy ? 
-                    <p>
-                        <button onClick={onDialogClicked}>
-                            Upload Image!
-                        </button>
-                    </p> : ""
-                }
+                {   !isApple ?
+                <p>
+                    <button onClick={changeQRScanner}>
+                        { isLegacy ? "Change to camera" : "Change to upload" }
+                    </button>
+                </p>
+                : ""    }
+                {   isLegacy ? 
+                <p>
+                    <button onClick={onDialogClicked}>
+                        Upload Image
+                    </button>
+                </p>
+                : ""    }
             </div>
             <QrReader 
                 ref={qrEl}

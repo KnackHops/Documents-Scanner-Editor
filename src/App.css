@@ -39,8 +39,12 @@ ul {
 }
 
 .universal-container {
-  max-width: 96vw;
-  margin: 0 3vw;
+  max-width: 80vw;
+  margin: 0 10vw;
+}
+
+.border-rad {
+  border-radius: 5rem;
 }
 
 /* @media only screen and (max-width: 1050px) {

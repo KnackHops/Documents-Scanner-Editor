@@ -1,6 +1,7 @@
 .about-info {
-    height: calc(50vh - 2.5rem);
-    background-color: darkslategrey;
+    height: calc(100vh - 5rem);
+    min-height: 80rem;
+    background: linear-gradient(190deg, rgba(0, 120, 150, 1) 40vh, white 90vh);
 }
 
 .about-info > .universal-container {
@@ -10,10 +11,83 @@
 
 .about-container {
     position: absolute;
-    top: 2%;
-    left: -100%;
-    height: 90%;
-    width: 80vw;
-    box-shadow: .1rem .1rem 1rem black;
-    background-color: rgba(255, 255, 255, .1);
+    top: 10%;
+    height: 60%;
+    width: 70%;
+    box-shadow: 0 1rem 5rem rgba(0, 0, 0, .65);
+    background: linear-gradient(45deg, rgba(0, 120, 120, .8) 20%, rgba(0, 120, 150, 1) 80%);
+    padding: 5rem;
+    border-radius: 5rem;
+    font-size: 2rem;
+    transition: all .5s ease-in;
+}
+
+.about-container.panel-slide-deactivate {
+    opacity: 0;
+    transform: translateX(-50%);
+}
+
+.about-container.panel-slide-activate {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+@media only screen and ( max-height: 850px) {
+    .about-container {
+        top: 2%;
+        height: 80%;
+    }
+}
+
+@media only screen and ( max-width: 700px ) {
+    .about-container {
+        width: 100%;
+    }
+}
+
+.about-bob-header {
+    position: relative;
+}
+
+.about-bob-header::before, .about-bob-header::after {
+    content: "";
+    position: absolute;
+}
+
+.about-bob-header::before {
+    top: -.5rem;
+    width: 15rem;
+    height: .25rem;
+    background: linear-gradient(to right, rgba(0, 120, 120, 1) 0%, rgba(0, 0, 0, .75) 60%, rgba(255, 50, 100, 1) 100%);
+    /* background-color: rgba(0, 0, 0, .75); */
+    transition: all .75s;
+    transition-delay: .5s;
+}
+
+.about-container.panel-slide-deactivate .about-bob-header::before {
+    left: -5rem;
+}
+
+.about-container.panel-slide-activate .about-bob-header::before {
+    left: 0;
+}
+
+.about-bob-header::after {
+    height: .5rem;
+    width: .5rem;
+    top: -.65rem;
+    left: 15.5rem;
+    background-color: rgba(255, 50, 100, 1);
+    transition: transform .55s ease-in;
+    transition-delay: .5s;
+}
+
+.about-container.panel-slide-deactivate .about-bob-header::after {
+    transform: translateX(6rem);
+    transform: scaleX(8);
+}
+
+.about-container.panel-slide-activate .about-bob-header::after {
+    transform: translateX(0);
+    transform: scaleX(1);
 }

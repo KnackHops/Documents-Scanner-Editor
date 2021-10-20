@@ -31,6 +31,37 @@ const AdminSide = ({fetchUsers}) => {
         
     }
 
+    
+
+    const resetVerifyHandler = e => {
+        const which_change = e.target.getAttribute('data-func');
+        const conf = window.confirm(`Are you sure you want to reset this users ${which_change}?`);
+
+        if ( conf ) {
+            adminCheck(resetVerificationInfo, {userid: sideUser.id, which_change});
+        }
+    }
+ 
+    const resetVerificationInfo = ( data ) => {
+        console.log(data)
+        fetch(`http://127.0.0.1:5000/reset-user-verify-info`,{
+            method: 'PUT',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then( resp => {
+            if ( resp.ok ) {
+                window.confirm(`${data.which_change} reset done!`);
+                fetchUsers();
+            } else {
+                window.alert('error resetting info');
+            }
+        })
+    }
+
     const deleteUser = txt => {
         window.confirm(`${txt} User ${sideUser.username}!`);
         fetch(`http://127.0.0.1:5000/admin-delete-user/?id=${id}&userid=${sideUser.id}`, {
@@ -58,12 +89,19 @@ const AdminSide = ({fetchUsers}) => {
                 userid: sideUser.id,
                 role
             })
-        }).then(resp=>{
+        })
+        .then(resp=>{
             if(resp.ok){
                 fetchUsers();
             }else{
                 window.alert(`Error changing role!`);
             }
+        })
+        .catch( err => {
+            err.json()
+            .then( ( { error } ) => {
+                window.alert(error)
+            })
         })
     }
 
@@ -161,7 +199,29 @@ const AdminSide = ({fetchUsers}) => {
         <>
             <h1>{`User: ${sideUser.username}`}</h1>
             <p>
-                <button type="button" onClick={activateHandler}>{sideUser.activated ? "Deactivate" : "Activate"} this User</button>
+                <button
+                    disabled={!sideUser.email_verified}
+                    type="button" 
+                    onClick={activateHandler}>
+                        {sideUser.email_verified ? (sideUser.activated ? "Deactivate" : "Activate") + " this User" : "User email not verified"}
+                </button>
+                {!sideUser.email_verified ? 
+                <>
+                    <button
+                        data-func="attempt"
+                        type="button"
+                        onClick={resetVerifyHandler}
+                    >
+                        Number of attempt: {sideUser?.attempt}
+                    </button>
+                    <button
+                        data-func="resend"
+                        type="button"
+                        onClick={resetVerifyHandler}
+                    >
+                        Number of code resend: {sideUser?.resend}
+                    </button>
+                </> :""}
             </p>
             {!sideUser.activated && id === 0 ?
             <p>
@@ -185,7 +245,7 @@ const AdminSide = ({fetchUsers}) => {
                     /> : "None"}
                 </div>
             </div>}
-            {sideUser.role ? 
+            {sideUser.role && sideUser.activated ? 
             <p>
                 <button type="button" onClick={roleHandler}>Change User role to {sideUser.role === 'admin' ? 'Normal' : 'Admin'}</button>
             </p> : ""}

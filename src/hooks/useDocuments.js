@@ -13,20 +13,24 @@ const useDocuments = (id, load=true) => {
             if(resp.ok){
                 return resp.json()
             }else{
-                throw Error("error fetching!");
+                throw resp
             }
-        }).then(({_documents})=>{
-            let documents = _documents.filter(doc => doc.pinned)
-            let unpinned = _documents.filter(doc => !doc.pinned)
+        }).then( ( { _documents } ) => {
+            let documents = null;
+            let unpinned = [];
+            if ( _documents ) {
+                documents = [];
+                documents = _documents.filter( doc => doc.pinned )
+                unpinned = _documents.filter( doc => !doc.pinned )
+                documents = documents.concat( unpinned )
+            }
 
-            documents = documents ? documents : [];
-            unpinned = unpinned ? unpinned : [];
-
-            documents = documents.concat(unpinned)
-
-            setDocumentList({documents});
-        }).catch(err=>{
-            console.log(err);
+            setDocumentList( { documents } );
+        }).catch( err => {
+            err.json()
+            .then( ( { error } ) => {
+                window.alert(error)
+            })
         })
     }, [id])
 

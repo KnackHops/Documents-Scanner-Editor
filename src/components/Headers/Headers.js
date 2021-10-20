@@ -7,32 +7,33 @@ import useDocuments from "../../hooks/useDocuments";
 import NavPanelList from "./NavPanelList";
 import ScanPopUp from "./ScanPopUp";
 
-const Headers = ({logIn}) => {
+const Headers = ( { logIn, socket  } ) => {
     const classForHead = logIn ? "homepage-header" : "landingpage-header";
-    const { logInHandle, menuHandler, searchHandler, openMenu } = useContext(MenuContext);
+    const { logInHandle, menuHandler, searchHandler, openMenu, getMainChildrenHeights } = useContext( MenuContext );
 
     const bodyEventListener_panel = e => {
-        if(e.target.className !== 'panel-btn-container' && e.target.className !== 'panel-btn' && e.target.className !== 'nav-btn'){
-            if(panelStatus==='active'){
+        if ( e.target.className !== 'panel-btn-container' 
+        && e.target.className !== 'panel-btn' && e.target.className !== 'nav-btn' ) {
+            if ( panelStatus==='active' ) {
                 setPanel('inactive');
             }
         }
     }
 
-    const [panelStatus, setPanel] = useState("inactive");
+    const [ panelStatus, setPanel ] = useState("inactive");
 
-    const panelClicked = (e=null) => {
-        if(e){
+    const panelClicked = ( e = null ) => {
+        if ( e ) {
             e.preventDefault();
         }
         
-        if(panelStatus === 'inactive'){
-            if(searchDoc){
+        if ( panelStatus === 'inactive' ) {
+            if( searchDoc ) {
                 setSearchDoc("");
             }   
         }
 
-        if(openMenu){
+        if ( openMenu ) {
             menuHandler();
         }
 
@@ -40,20 +41,22 @@ const Headers = ({logIn}) => {
         
     }
 
-    useEffect(()=>{
+    useEffect( () => {
         const body = document.querySelector('body');
-        if(logIn){
-            if(panelStatus === 'active'){
+        if ( logIn ) {
+            if ( panelStatus === 'active' ) {
                 body.addEventListener('click', bodyEventListener_panel);
-            }else{
-                body.removeEventListener('click', bodyEventListener_panel);
-        }}
-        return ()=>{
-            if(panelStatus==='active'){
+            } else {
                 body.removeEventListener('click', bodyEventListener_panel);
             }
         }
-    }, [panelStatus])
+
+        return () => {
+            if ( panelStatus === 'active' ) {
+                body.removeEventListener('click', bodyEventListener_panel);
+            }
+        }
+    }, [ panelStatus ] )
 
     const menuClicked = e => {
         const fromWhere = e.target.getAttribute('data');
@@ -64,47 +67,48 @@ const Headers = ({logIn}) => {
     const { id, username, role } = useContext(UserContext);
 
     const logOutHandler = () => {
+        socket.emit( "del_socketid", { userid: id } )
         logInHandle();
     }
 
-    const {documentList} = useDocuments(id);
-    const {documentFind} = useContext(DocumentContext);
-    const [searchDoc, setSearchDoc] = useState("");
-    const [docsSearched, setSearched] = useState(null);
+    const { documentList } = useDocuments( id );
+    const { documentFind } = useContext( DocumentContext );
+    const [ searchDoc, setSearchDoc ] = useState( "" );
+    const [ docsSearched, setSearched ] = useState( null );
 
-    useEffect(()=>{
-        if(documentList?.documents){
-            setSearched(searchHandler(documentList.documents, searchDoc, 'document'));
+    useEffect( () => {
+        if ( documentList?.documents ) {
+            setSearched( searchHandler( documentList.documents, searchDoc, 'document' ) );
         }
-    }, [searchDoc])
+    }, [ searchDoc ] )
 
     const documentSearchHandler = id =>{
-        documentFind(id, documentList);
+        documentFind( id, documentList );
         setSearchDoc("");
     }
 
     const onSearchEnter = e => {
-        if(searchDoc){
+        if ( searchDoc ) {
             const code = e.code;
-            if(code === "Enter"){
-                if(documentList?.documents.length > 0){
-                    documentFind(documentList?.documents[0].id, documentList);
+            if ( code === "Enter" ) {
+                if ( documentList?.documents.length > 0 ) {
+                    documentFind( documentList?.documents[0].id, documentList );
                     setSearchDoc("");
                 }
             }
         }
     }
 
-    const {popUpHandler} = useContext(MenuContext);
+    const { popUpHandler } = useContext( MenuContext );
 
     const scanPopHandler = e => {
         e.preventDefault();
 
-        popUpHandler(true, "scan-header", <ScanPopUp />)
+        popUpHandler( true, "scan-header", <ScanPopUp /> )
     }
-    
-    const { isAttached } = useContext(SideContext);
 
+    const { isAttached } = useContext( SideContext );
+    
     const nav_arr = useMemo(()=>{
         let _arr = []
 
@@ -116,10 +120,10 @@ const Headers = ({logIn}) => {
 
             if ( isAttached ) {
                 _arr.push({
-                    label: username,
+                    label: username.toUpperCase(),
                     handler: panelClicked
                 })
-            }else{
+            } else {
                 _arr.push({
                     label: 'Log Out',
                     handler: logOutHandler
@@ -129,26 +133,96 @@ const Headers = ({logIn}) => {
             _arr = [
                 {
                     label: 'Sign in',
-                    handler: () => console.log("Sign in!")
+                    handler: e => scrollCustomTo(e)
                 },
                 {
                     label: 'About',
-                    handler: () => console.log("About!")
+                    handler: e => scrollCustomTo(e)
                 },
                 {
                     label: 'Contacts',
-                    handler: () => console.log("Contacts!")
+                    handler: e => scrollCustomTo(e)
                 }
             ]
         }
 
         return _arr
 
-    }, [logIn, username, isAttached])
+    }, [ logIn, username, isAttached ] )
 
     const noScroll = e => {
-        e.target.scrollTo(0, e.target.scTop);
+        if ( e.target.eventAt ) {
+            e.target.scrollTo( 0, e.target.scTop );
+        } else if ( document.querySelector("ul.nav-list").classList.contains("not-signed-list-con") ) {
+            scrollNavUpdate( e.target.scrollTop );
+        }
     }
+
+    const labelArr = useMemo(()=>{
+        return [
+            [true, false, false],
+            [false, true, false],
+            [false, false, true],
+            [false, false, false]
+        ]
+    }, [])
+
+    const scrollNavUpdate = scrollTop => {
+        const [ firstCompo, secondCompo, thirdCompo ] = getMainChildrenHeights();
+
+        if ( scrollTop > secondCompo * .8 ) {
+            document.querySelector(".navigate-top").classList.add("active");
+        } else {
+            document.querySelector(".navigate-top").classList.remove("active");
+        }
+
+        if ( scrollTop >= firstCompo && scrollTop < secondCompo ) {
+            shuffleLabel(...labelArr[0]);
+        } else if ( scrollTop >=  secondCompo && scrollTop < thirdCompo ) {
+            shuffleLabel(...labelArr[1]);
+        } else if ( scrollTop >= thirdCompo ) {
+            shuffleLabel(...labelArr[2]);
+        } else {
+            shuffleLabel(...labelArr[3]);
+        }
+    }
+
+    const shuffleLabel = ( firstDisable = null, secondDisable = null, thirdDisable = null ) => {
+        const nav = document.querySelector("ul.nav-list");
+        console.log(nav.childNodes[0].childNodes[0])
+
+        nav.childNodes[0].childNodes[0].disabled = firstDisable;
+        nav.childNodes[1].childNodes[0].disabled = secondDisable;
+        nav.childNodes[2].childNodes[0].disabled = thirdDisable;
+    }
+
+    const scrollCustomTo = e => {
+        e.preventDefault();
+        
+        const [ firstCompo, secondCompo, thirdCompo ] = getMainChildrenHeights();
+
+        const whereTo = e.target.innerText;
+        const bod = document.querySelector("body");
+        const burg = document.querySelector(".burger");
+
+        if ( burg.classList.contains("-open") ) {
+            burgerMachine();
+        }
+
+        if ( whereTo === "Sign in" ) {
+            // bod.scrollTo( 0, window.innerHeight * .4);
+            bod.scroll({ top: firstCompo,  behavior: 'smooth' });
+        } else if ( whereTo === "About" ) {
+            bod.scroll({ top: secondCompo,  behavior: 'smooth' })
+        } else if ( whereTo === "Contacts" ) {
+            bod.scroll({ top: thirdCompo,  behavior: 'smooth' })
+            // bod.scrollTo( 0, ( window.innerHeight * 2.4 ) - 50 );
+        } else {
+            bod.scroll({ top: 0,  behavior: 'smooth' })
+            // bod.scrollTo( 0, 0 );
+        }
+    }
+
 
     const burgerMachine = () => {
         const burg = document.querySelector(".burger");
@@ -164,31 +238,31 @@ const Headers = ({logIn}) => {
             if ( burg.classList.contains("-open") ) {
                 bod.scTop = bod.scrollTop;
                 bod.eventAt = true
-                bod.addEventListener("scroll", noScroll);
-            } else{
+            } else {
                 bod.scTop = 0;
                 bod.eventAt = false
-                bod.removeEventListener("scroll", noScroll);
-
             }
         }
     }
 
-    useEffect(() => {
-        if ( logIn ) {
-            const bod = document.querySelector("body");
 
-            if ( bod?.eventAt ) {
-                bod.removeEventListener("scroll", noScroll)
-            }
-        }
-    }, [logIn])
+    useEffect( () => {
+        const bod = document.querySelector("body");
+        
+        bod.addEventListener("scroll", noScroll);
 
-    useEffect(()=>{
-        if(document.querySelector(".burger").classList.contains("-open")){
+        return () => bod.removeEventListener("scroll", noScroll)
+    }, [ logIn ] )
+
+
+    useEffect( () => {
+        const bod = document.querySelector("body");
+
+        if ( document.querySelector(".burger").classList.contains("-open") ) {
             burgerMachine();
         }
-    }, [isAttached])
+    }, [ isAttached ] )
+
 
     return (
         <header className={`${classForHead}`}>
@@ -222,6 +296,13 @@ const Headers = ({logIn}) => {
                     <span></span>
                     <span></span>
                     <span></span>
+                </div>
+                <div className={`navigate-top`}>
+                        <p>
+                            <button type="button" className="navigate-top-btn" onClick={scrollCustomTo}>
+                                Top
+                            </button>
+                        </p>
                 </div>
             </div>
         </header>

@@ -4,19 +4,19 @@ import DocumentList from "../../wrappers/DocumentList";
 import { DocumentContext, SideContext } from "../../wrappers/DocumentsScannerEditor";
 
 const SidePopUp = () => {
-    const {sideUser} = useContext(SideContext);
-    const {pinHandler} = useContext(DocumentContext);
-    const {documentList, documentFetch, setDocumentList} = useDocuments(sideUser.id, false);
+    const { sideUser } = useContext(SideContext);
+    const { pinHandler } = useContext(DocumentContext);
+    const { documentList, documentFetch, setDocumentList } = useDocuments( sideUser.id, false );
 
-    useEffect(()=>{
-        if(sideUser){
+    useEffect( () => {
+        if ( sideUser ) {
             documentFetch(true);
         }
 
         return () =>{
-            if(sideUser?.sideClass === "admin-side"){
+            if ( sideUser?.sideClass === "admin-side" ) {
                 documentFetch(true, true);
-            }else{
+            } else {
                 setDocumentList({documents: null});
             }
         };
