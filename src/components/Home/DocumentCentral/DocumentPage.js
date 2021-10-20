@@ -22,7 +22,7 @@ const toolbarConfig = {
     placeholder: "Fresh start is what we need...start typing!"
 }
 
-const DocumentPage = ({documentLoadHandler, document, documentHandler, documentFetch}) => {
+const DocumentPage = ({documentLoadHandler, main_document, documentHandler, documentFetch}) => {
     const { unpinHandler, pinHandler } = useContext(DocumentContext);
 
     const { id } = useContext(UserContext);
@@ -44,12 +44,12 @@ const DocumentPage = ({documentLoadHandler, document, documentHandler, documentF
     const dataHandler = useCallback(()=>{
         const data = editor.getData();
         
-        if(document.id || document.id === 0){
-            return [document.id, data];
-        }else{
+        if( main_document.id || main_document.id === 0 ) {
+            return [ main_document.id, data];
+        } else {
             return [null, data];
         }
-    }, [document, editor])
+    }, [ main_document, editor ] )
 
     const { popUpHandler } = useContext( MenuContext );
 
@@ -60,14 +60,14 @@ const DocumentPage = ({documentLoadHandler, document, documentHandler, documentF
         const con = window.confirm("Are you sure you want to pin this document?");
 
         if ( con ) {
-            await pinHandler(username, id, document.id, document.title);
+            await pinHandler(username, id, main_document.id, main_document.title);
             documentFetch();
         }
     }
 
     const sendPopHandler = e => {
         e.preventDefault();
-        popUpHandler(true, 'document-page', <DocumentPopUp document={document} />);
+        popUpHandler(true, 'document-page', <DocumentPopUp main_document={main_document} />);
     }
 
     const unpinClicked = async e => {
@@ -75,16 +75,17 @@ const DocumentPage = ({documentLoadHandler, document, documentHandler, documentF
         const con = window.confirm("Are you sure you want to unpin this document for you?");
 
         if ( con ) {
-            await unpinHandler(id, document.id);
+            await unpinHandler(id, main_document.id);
             documentFetch();
         }
     }
 
     const show_QR = () => {
-        fetch(`http://127.0.0.1:5000/document/fetch-qr/?docid=${document.id}`,{
+        fetch(`http://127.0.0.1:5000/document/fetch-qr/?docid=${main_document.id}`,{
             method: 'GET',
             mode: 'cors'
-        }).then(resp=> {
+        })
+        .then(resp=> {
             if(resp.ok){
                 if(resp.status === 204){
                     window.alert("document doesn't exist!");
@@ -93,12 +94,19 @@ const DocumentPage = ({documentLoadHandler, document, documentHandler, documentF
                     return resp.json();
                 }
             }else{
-                window.alert("Error fetching qr code!");
+                throw resp;
             }
-        }).then(({qr_code})=>{
+        })
+        .then(({qr_code})=>{
             if ( qr_code ) {
                 popUpHandler(true, "show-qr", <QRSavedPopUp qr_image={qr_code} text={"Here is the QR Code!"}/>)
             } 
+        })
+        .catch( err => {
+            err.json()
+            .then( ( { error } ) => {
+                window.alert(error)
+            })
         })
     }
 
@@ -107,10 +115,10 @@ const DocumentPage = ({documentLoadHandler, document, documentHandler, documentF
             <p className="doc-btn-container">
                 <button onClick={()=>documentHandler(...dataHandler())}>
                     {
-                        document.id || document.id === 0 ? "Edit" : "Save"
+                        main_document.id || main_document.id === 0 ? "Edit" : "Save"
                     }
                 </button>
-                {document.id || document.id === 0 ?<>
+                { main_document.id || main_document.id === 0 ?<>
                 {
                     <>
                     <button onClick={sendPopHandler}>
@@ -120,7 +128,7 @@ const DocumentPage = ({documentLoadHandler, document, documentHandler, documentF
                         Show QR
                     </button>
                     {
-                        document.pinned ? 
+                        main_document.pinned ? 
                         <button onClick={unpinClicked}>
                             Unpin
                         </button> :
@@ -137,7 +145,7 @@ const DocumentPage = ({documentLoadHandler, document, documentHandler, documentF
             </p>
             <CKEditor 
                 editor={DecoupledEditor}
-                data={document.body}
+                data={main_document.body}
                 onReady={editor=>documentInit(editor)}
                 config={toolbarConfig} />
         </article>

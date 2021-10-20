@@ -1,21 +1,36 @@
 section.land-page-section {
     height: calc(100vh - 5rem);
+    min-height: 40rem;
     justify-content: flex-end;
     align-items: center;
     width: 100%;
-    background-color: cornflowerblue;
+    /* background-color: rgba(0, 120, 150, 1); */;
+    background: linear-gradient(-10deg, rgba(0, 120, 150, 1) 40vh, white 90vh);
 }
 
 main.landingpage-container > section.land-page-section >  form.land-page-form {
     position: relative;
     height: calc(58vh - 5rem);
+    min-height: 35rem;
     width: 50rem;
     box-shadow: 0 0 3px black;
     padding: 3rem 1rem;
     transition: .25s all;
     margin-right: 3vw;
     flex-direction: column;
-    background-color: rgba(255, 255, 255, .1);
+    background-color: rgba(0, 0, 0, .6);
+    color: white;
+    transition: all .5s ease-in;
+}
+
+main.landingpage-container > section.land-page-section > form.land-page-form.panel-slide-deactivate {
+    opacity: 0;
+    transform: translateX(25rem);
+}
+
+main.landingpage-container > section.land-page-section > form.land-page-form.panel-slide-activate {
+    opacity: 1;
+    transform: translate(0);
 }
 
 @media only screen and (max-width: 750px) {
@@ -69,4 +84,26 @@ main.landingpage-container form.land-page-form.verify-code-container > p:nth-chi
     width: 15rem;
     margin: 0 25rem;
     text-align: center;
+}
+
+@keyframes each_input_fade {
+    0% {
+        opacity: 0;
+        transform: translateX(2rem);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes each_input_fade_reverse {
+    0% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
 }

@@ -89,12 +89,19 @@ const AdminSide = ({fetchUsers}) => {
                 userid: sideUser.id,
                 role
             })
-        }).then(resp=>{
+        })
+        .then(resp=>{
             if(resp.ok){
                 fetchUsers();
             }else{
                 window.alert(`Error changing role!`);
             }
+        })
+        .catch( err => {
+            err.json()
+            .then( ( { error } ) => {
+                window.alert(error)
+            })
         })
     }
 

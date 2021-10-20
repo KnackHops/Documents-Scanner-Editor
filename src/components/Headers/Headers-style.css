@@ -62,8 +62,13 @@ div.searchbar-container > p > input {
     }
 }
 
-ul.nav-list, u.nav-list > li {
+ul.nav-list, ul.nav-list > li {
     height: 100%;
+}
+
+ul.nav-list > li {
+    display: flex;
+    justify-content: end;
 }
 
 ul.nav-list > li > button {
@@ -72,7 +77,7 @@ ul.nav-list > li > button {
     height: 100%;
     font-size: 2rem;
     cursor: pointer;
-    padding: 0 2rem;
+    padding: 0 0 0 2rem;
 }
 
 ul.nav-list > li > button:hover {
@@ -84,7 +89,7 @@ ul.nav-list > li:nth-child(2) {
     margin-left: 2rem;
 }
 ul.nav-list.not-signed-list-con > li {
-    width: 14vw
+    width: 9vw
 }
 
 ul.nav-list.not-signed-list-con > li:nth-child(2) {
@@ -115,7 +120,7 @@ ul.nav-list.not-signed-list-con > li > button {
     height: 5rem;
     width: 10rem;
     top: -.5rem;
-    right: -15rem;
+    right: -30rem;
     /* background-color: bisque; */
     border-top-left-radius: 2rem;
     border-bottom-left-radius: 2rem;
@@ -126,7 +131,7 @@ ul.nav-list.not-signed-list-con > li > button {
 
 .burger.-signed:before {
     transition: transform .4s ease-in;
-    transform: translateX(-11rem);
+    transform: translateX(0);
 }
 
 .burger.-signed {
@@ -134,7 +139,7 @@ ul.nav-list.not-signed-list-con > li > button {
 }
 
 .burger.-signed.-open {
-    padding-right: 17rem;
+    padding-right: 14rem;
 }
 
 .burger.-signed:before {
@@ -142,7 +147,7 @@ ul.nav-list.not-signed-list-con > li > button {
 }
 
 .burger.-signed.-open:before{
-    width: 22rem;
+    width: 40rem;
 }
 
 @media only screen and (max-width: 1050px) {
@@ -153,19 +158,32 @@ ul.nav-list.not-signed-list-con > li > button {
     ul.nav-list.not-signed-list-con {
         position: absolute;
         top: 5rem;
-        right: -55vw;
+        right: -70vw;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: space-around;
         height: calc(100vh - 5rem);
-        width: 50vw;
+        width: 60vw;
         background-color: lavenderblush;
         transition: transform .7s ease-in-out;
     }
 
     ul.nav-list.not-signed-list-con.-open {
-        transform: translateX(-52vw);
+        transform: translateX(-60vw);
+    }
+
+    ul.nav-list.not-signed-list-con > li {
+        height: 100%;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+    }
+
+    ul.nav-list.not-signed-list-con > li > button {
+        height: 4rem;
+        padding: 0;
+        margin: 0;
     }
 
     ul.nav-list.signed-list-con > li > button {
@@ -176,13 +194,13 @@ ul.nav-list.not-signed-list-con > li > button {
 
     ul.nav-list.signed-list-con {
         position: absolute;
-        right: -20rem;
+        right: -25rem;
         transition: transform .2s ease-in-out;
     }
 
     ul.nav-list.signed-list-con.-open {
         transition: transform .6s ease-in-out;
-        transform: translateX(-18.5rem);
+        transform: translateX(-20rem);
     }
 
     ul.nav-list.signed-list-con > li {
@@ -191,10 +209,10 @@ ul.nav-list.not-signed-list-con > li > button {
     }
 }
 
-@media only screen and (max-width: 650px) {
+@media only screen and (max-width: 850px) {
     ul.nav-list.not-signed-list-con {
         width: 100vw;
-        right: -103vw;
+        right: -110vw;
     }
 
     ul.nav-list.not-signed-list-con.-open {
@@ -220,7 +238,7 @@ ul.nav-list.not-signed-list-con > li > button {
     height: 1rem;
     width: 4rem;
     border-radius: 1rem;
-    background-color: green;
+    background-color: rgba(255, 50, 100, 1);
     transition: transform .1s ease;
 }
 
@@ -235,4 +253,69 @@ ul.nav-list.not-signed-list-con > li > button {
 
 .burger.-open > span:nth-child(3) {
     transform: rotate(45deg) translate(-1.1rem, -1rem);
+}
+
+.navigate-top {
+    position: fixed;
+    width: 4rem;
+    height: 4rem;
+    left: 92%;
+    bottom: 1rem;
+    opacity: 0;
+    transition: all .25s ease-in;
+}
+
+.navigate-top.active {
+    opacity: 1;
+}
+
+@media only screen and (max-width: 1000px) {
+    .navigate-top {
+        left: 88%;
+    }
+}
+
+@media only screen and (max-width: 620px) {
+    .navigate-top {
+        left: 82%;
+    }
+}
+
+.navigate-top::before {
+    content: "";
+    position: absolute;
+    height: 0;
+    width: 0;
+    top: -4rem;
+    left: -2rem;
+    border-bottom: 8rem solid rgba(255, 50, 100, 1);
+    border-left: 4rem solid transparent;
+    border-right: 4rem solid transparent;
+}
+
+.navigate-top > p {
+    height: 100%;
+    width: 100%;
+}
+
+.navigate-top > p > button {
+    position: absolute;
+    border: none;
+    outline: none;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(255, 50, 100, 1);
+    cursor: pointer;
+    border-radius: 20rem;
+    box-shadow: 0 0 .5rem black;
+    top: -.5rem;
+    font-size: 2rem;
+}
+
+.navigate-top > p > button:hover {
+    transform: scale(1.1);
+}
+
+.navigate-top > p > button:active {
+    transform: scale(.8);
 }

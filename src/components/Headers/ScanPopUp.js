@@ -13,7 +13,8 @@ const ScanPopUp = () => {
         fetch(`http://127.0.0.1:5000/document/fetch-doc-qr/?str_code=${qr_text}&userid=${id}`, {
             method: 'GET',
             mode: 'cors'
-        }).then( resp => {
+        })
+        .then( resp => {
             if ( resp.ok ){
                 if ( resp.status === 204 ) {
                     window.alert("This document doesn't exist!");
@@ -22,13 +23,20 @@ const ScanPopUp = () => {
                     return resp.json();
                 }
             } else {
-                window.alert("error fetching document!");
+                throw resp
             }
-        }).then( ( { document } ) => {
+        })
+        .then( ( { document } ) => {
             if ( document ) {
                 setDocument(document);
                 popUpHandler();
             }
+        })
+        .catch( err => {
+            err.json()
+            .then( ( { error } ) => {
+                window.alert(error)
+            })
         })
     }
 

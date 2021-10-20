@@ -1,4 +1,99 @@
 footer {
-    height: calc(60vh - 5rem);
+    height: calc(100vh - 5rem);
+    min-height: 80rem;
     font-size: 1rem;
+    padding: 10rem 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, .2) 20vh, White 80vh)
+}
+
+@media only screen and (max-height: 850px) {
+    footer {
+        padding: 5rem 0;
+    }
+}
+
+div.grid-contacts {
+    height: 100%;
+    display: flex;
+    display: grid;
+    grid-template-areas: "a"
+                         "b";
+    grid-template-rows: 10fr 1fr;
+    grid-template-columns: minmax(20rem, 120rem);
+    gap: 5rem;
+    justify-content: center;
+}
+
+.grid-contacts > div {
+    background-color: rgba(0, 120, 150, 1);
+}
+
+.grid-contacts > div.footer-bob {
+    border-top-right-radius: 5rem;
+    border-top-left-radius: 5rem;
+    grid-area: a;
+    box-shadow: 0 .5rem 2rem white;
+}
+
+.grid-contacts > div:nth-child(2) {
+    border-bottom-right-radius: 5rem;
+    border-bottom-left-radius: 5rem;
+    padding: 2rem;
+    grid-area: b;
+    flex-direction: column;
+    align-items: center;
+    font-size: 1.2rem;
+    color: white;
+    box-shadow: 0 0 2rem white;
+}
+
+.footer-bob-header, .footer-bob-body {
+    position: relative;
+}
+
+.footer-bob-header {
+    border-top: solid rgba(0, 120, 150, 1) .5rem;
+    margin: 0;
+    background: white;
+    font-size: 3rem;
+    height: 5.5rem;
+    padding-left: 6.5rem;
+}
+
+.footer-bob-header::before, .footer-bob-header::after, .footer-bob-body::before {
+    content: "";
+    position: absolute;
+}
+
+.footer-bob-header::before {
+    background: rgba(255, 50, 100, 1);
+    height: .4rem;
+    width: 3.5rem;
+    top: 50%;
+    left: 1rem;
+    border-top-left-radius: 1rem;
+}
+
+.footer-bob-header::after {
+    background: rgba(255, 50, 100, 1);
+    height: .4rem;
+    width: .4rem;
+    top: 50%;
+    left: 5rem;
+    border-radius: 1rem;
+}
+
+.footer-bob-body {
+    margin: .5rem 0;
+    height: calc(100% - 6.5rem);
+    width: 100%;
+}
+
+.footer-bob-body::before {
+    background: white;
+    height: calc(100% + 1rem);
+    width: 2rem;
+    top: -.5rem;
+    right: .5rem;
+    box-shadow: -.5rem 1.5rem 1.5rem rgba(0, 0, 0, .75);
 }

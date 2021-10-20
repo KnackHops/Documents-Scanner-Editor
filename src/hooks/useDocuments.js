@@ -13,7 +13,7 @@ const useDocuments = (id, load=true) => {
             if(resp.ok){
                 return resp.json()
             }else{
-                throw Error("error fetching!");
+                throw resp
             }
         }).then( ( { _documents } ) => {
             let documents = null;
@@ -26,8 +26,11 @@ const useDocuments = (id, load=true) => {
             }
 
             setDocumentList( { documents } );
-        }).catch(err=>{
-            console.log(err);
+        }).catch( err => {
+            err.json()
+            .then( ( { error } ) => {
+                window.alert(error)
+            })
         })
     }, [id])
 

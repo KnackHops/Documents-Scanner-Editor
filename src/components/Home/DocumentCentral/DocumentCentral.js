@@ -23,7 +23,7 @@ import {
 
 const DocumentCentral = ( { socket } ) => {
     socket.on("got_sent", data => {
-        if ( !document ) {
+        if ( !main_document ) {
             documentFetch();
         }
     })
@@ -32,7 +32,7 @@ const DocumentCentral = ( { socket } ) => {
     const { id } = useContext( UserContext );
 
     const { documentList, documentFetch } = useDocuments( id )
-    const { document, setDocument, documentFind } = useContext( DocumentContext );
+    const { main_document, setDocument, documentFind } = useContext( DocumentContext );
 
     const documentLoadHandler = id => {
         if ( !id && id !== 0 ) {
@@ -50,16 +50,16 @@ const DocumentCentral = ( { socket } ) => {
     }
 
     useEffect( () => {
-        if( document && documentList?.documents ) {
-            documentFind( document.id, documentList );
+        if( main_document && documentList?.documents ) {
+            documentFind( main_document.id, documentList );
         }
     }, [ documentList ] )
     
     useEffect( () => {
-        if ( document?.id && !document?.body ) {
-            documentFind( document.id, documentList );
+        if ( main_document?.id && !main_document?.body ) {
+            documentFind( main_document.id, documentList );
         }
-    }, [ document ] )
+    }, [ main_document ] )
 
     const documentChk = ( text ) => {
         const title = window.prompt( text );
@@ -73,14 +73,13 @@ const DocumentCentral = ( { socket } ) => {
     }
 
     const documentHandler = ( id, doc ) => {
-        console.log(id, doc)
         if ( doc ) {
             let data = {
                 document: doc
             }
 
             if ( id || id === 0 ) {
-                if ( data.document === document.body ) {
+                if ( data.document === main_document.body ) {
                     window.alert("No change detected!");
                 } else {
                     data.title = documentChk("Enter the title of the document you are editing!");
@@ -115,7 +114,7 @@ const DocumentCentral = ( { socket } ) => {
             if(resp.ok){
                 return resp.json();
             }else{
-                throw Error('Error adding data');
+                throw resp
             }
         })
         .then(( { id, qr_code } )=>{
@@ -128,7 +127,12 @@ const DocumentCentral = ( { socket } ) => {
             documentFetch();
             popUpHandler(true, "qr-saved", <QRSavedPopUp qr_image={qr_code}/>)
         })
-        .catch( err=> console.log( err ) )
+        .catch( err => {
+            err.json()
+            .then( ( { error } ) => {
+                window.alert(error)
+            })
+        })
     }
 
     const documentEdit = data => {
@@ -144,13 +148,18 @@ const DocumentCentral = ( { socket } ) => {
             if ( resp.ok ) {
                 return resp.json();
             } else {
-                throw Error('Error updating data');
+                throw resp;
             }
         })
         .then( () => {
             documentFetch();
         })
-        .catch( err => console.log(err) )
+        .catch( err => {
+            err.json()
+            .then( ( { error } ) => {
+                window.alert(error)
+            })
+        })
     }
     
     const match = useRouteMatch();
@@ -158,8 +167,8 @@ const DocumentCentral = ( { socket } ) => {
     return (
         <div className="fd universal-container">
             {
-                document ? 
-                    <Redirect to={`${match.path}/document-page/doc-${document.id || document.id == 0 ? `${document.id}+title-${document.title}` : "new-doc"}`} /> 
+                main_document ? 
+                    <Redirect to={`${match.path}/document-page/doc-${main_document.id || main_document.id == 0 ? `${main_document.id}+title-${main_document.title}` : "new-doc"}`} /> 
                     :
                     <Redirect to={`${match.path}/`} />
             }
@@ -187,17 +196,17 @@ const DocumentCentral = ( { socket } ) => {
                 <Route path={`${match.path}/document-page/`}>
 
                     {
-                        document ? 
+                        main_document ? 
                         <DocumentPage 
                                 documentLoadHandler={documentLoadHandler}
-                                document={document} documentHandler={documentHandler}
+                                main_document={main_document} documentHandler={documentHandler}
                                 setDocument={setDocument} documentFetch={documentFetch}
                             /> : <Redirect to={`${match.path}/`} />
                     }
                     
                 </Route>
             </Switch>
-                {!isAttached && !document && <AsideHome />}
+                {!isAttached && !main_document && <AsideHome />}
         </div>
     )
 }

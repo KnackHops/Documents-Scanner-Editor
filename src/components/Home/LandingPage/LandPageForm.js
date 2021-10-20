@@ -25,7 +25,7 @@ const codeUserInit = {
     userid: null
 }
 
-const LandPageForm = ( { panSlide } ) => {
+const LandPageForm = ( { loginSlideClass } ) => {
     const [ whichOpen, setWhichOpen ] = useState("login");
     const [ userInp, setUserInput ] = useState(initialState)
     const { logInHandle } = useContext(MenuContext);
@@ -98,8 +98,14 @@ const LandPageForm = ( { panSlide } ) => {
                 window.confirm("User Email Verified! Please ask for your account to be activated by an admin");
                 openHandler(null);
             } else {
-                window.alert("Error verifying Email! Please make sure you Entered the correct code")
+                throw resp
             }
+        })
+        .catch( err => {
+            err.json()
+            .then( ( { error } ) => {
+                window.alert(error)
+            })
         })
     }
 
@@ -125,8 +131,14 @@ const LandPageForm = ( { panSlide } ) => {
             if ( resp.ok ) {
                 window.confirm("New code is sent! Please check your email");
             } else {
-                window.alert("Error resending Email!");
+                throw resp;
             }
+        })
+        .catch( err => {
+            err.json()
+            .then( ( { error } ) => {
+                window.alert(error)
+            })
         })
     }
 
@@ -142,7 +154,7 @@ const LandPageForm = ( { panSlide } ) => {
             if(resp.ok){
                 return resp.json();
             }else{
-                throw Error('error logging in');
+                throw resp
             }
         }).then( data => {
             if ( 'unverified' in data ) {
@@ -156,7 +168,12 @@ const LandPageForm = ( { panSlide } ) => {
                     window.alert("Your account is not yet activated");
                 }
             }
-        }).catch(err=>window.alert(err))
+        }).catch( err => {
+            err.json()
+            .then( ( { error } ) => {
+                window.alert(error)
+            })
+        })
     }
 
     const registerUser = _user => {
@@ -172,7 +189,7 @@ const LandPageForm = ( { panSlide } ) => {
             if ( resp.ok ) {
                 return resp.json();
             } else {
-                throw Error('error registering');
+                throw resp;
             }
         })
         .then( data => {
@@ -180,7 +197,12 @@ const LandPageForm = ( { panSlide } ) => {
             setWhichOpen("verify-code");
             setCodeUser( { username: data.username, userid: data.id } )
         })
-        .catch( err => window.alert(err) )
+        .catch( err => {
+            err.json()
+            .then( ( { error } ) => {
+                window.alert(error)
+            })
+        })
     }
 
     useEffect(()=>{
@@ -191,11 +213,30 @@ const LandPageForm = ( { panSlide } ) => {
         setUserInput({...userInp, [whichFrom]: e.target.value});
     }
 
+    useEffect(() => {
+        const each_input = document.querySelectorAll("form.land-page-form p");
+        console.log(loginSlideClass.includes("deactivate"))
+        if ( loginSlideClass.includes("deactivate") ) {
+            each_input.forEach( ( p, i ) => {
+                if ( i < ( each_input.length - 1 )){
+                    p.style.animation = `each_input_fade_reverse .1s ease forwards ${i / 15}s`;
+                }
+            })
+        } else {
+            each_input.forEach( ( p, i ) => {
+                if ( i < ( each_input.length - 1 )){
+                    p.style.animation = `each_input_fade .5s ease forwards ${i / 7 + .25}s`;
+                }
+            })
+        }
+
+    }, [ loginSlideClass ] )
+
     const match = useRouteMatch();
 
     return (
         <section className="land-page-section fd" >
-            <form className={`land-page-form ${whichOpen}-container fd`} style={{transform: `translateX(${panSlide}rem)`}} onSubmit={formHandler}>
+            <form className={`land-page-form ${whichOpen}-container fd ${loginSlideClass}`} onSubmit={formHandler}>
                 {   whichOpen === "verify-code" ?
                     <Redirect to={`${match.url}/code-verification/${codeUser.username}`} /> :
                     <Redirect to={`${match.url}`} />

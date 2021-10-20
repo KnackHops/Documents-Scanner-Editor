@@ -7,9 +7,9 @@ import useDocuments from "../../hooks/useDocuments";
 import NavPanelList from "./NavPanelList";
 import ScanPopUp from "./ScanPopUp";
 
-const Headers = ( { logIn , socket } ) => {
+const Headers = ( { logIn, socket  } ) => {
     const classForHead = logIn ? "homepage-header" : "landingpage-header";
-    const { logInHandle, menuHandler, searchHandler, openMenu } = useContext( MenuContext );
+    const { logInHandle, menuHandler, searchHandler, openMenu, getMainChildrenHeights } = useContext( MenuContext );
 
     const bodyEventListener_panel = e => {
         if ( e.target.className !== 'panel-btn-container' 
@@ -67,7 +67,7 @@ const Headers = ( { logIn , socket } ) => {
     const { id, username, role } = useContext(UserContext);
 
     const logOutHandler = () => {
-        socket.emit( "set_socketid", { userid: id } );
+        socket.emit( "del_socketid", { userid: id } )
         logInHandle();
     }
 
@@ -160,17 +160,22 @@ const Headers = ( { logIn , socket } ) => {
 
     const labelArr = useMemo(()=>{
         return [
-            ["Top", "About", "Contacts"],
-            ["Top", "Sign in", "Contacts"],
-            ["Top", "Sign in", "About"],
-            ["Sign in", "About", "Contacts"]
+            [true, false, false],
+            [false, true, false],
+            [false, false, true],
+            [false, false, false]
         ]
     }, [])
 
     const scrollNavUpdate = scrollTop => {
-        const firstCompo = ( window.innerHeight * .4 ) - 50;
-        const secondCompo = ( window.innerHeight * .9 ) - 50;
-        const thirdCompo = ( window.innerHeight * 1.75 ) - 50;
+        const [ firstCompo, secondCompo, thirdCompo ] = getMainChildrenHeights();
+
+        if ( scrollTop > secondCompo * .8 ) {
+            document.querySelector(".navigate-top").classList.add("active");
+        } else {
+            document.querySelector(".navigate-top").classList.remove("active");
+        }
+
         if ( scrollTop >= firstCompo && scrollTop < secondCompo ) {
             shuffleLabel(...labelArr[0]);
         } else if ( scrollTop >=  secondCompo && scrollTop < thirdCompo ) {
@@ -182,23 +187,20 @@ const Headers = ( { logIn , socket } ) => {
         }
     }
 
-    const shuffleLabel = ( firstLabel = null, secondLabel = null, thirdLabel = null ) => {
+    const shuffleLabel = ( firstDisable = null, secondDisable = null, thirdDisable = null ) => {
         const nav = document.querySelector("ul.nav-list");
-        if ( firstLabel ) {
-            nav.childNodes[0].childNodes[0].innerText = firstLabel;
-        }
+        console.log(nav.childNodes[0].childNodes[0])
 
-        if ( secondLabel ) {
-            nav.childNodes[1].childNodes[0].innerText = secondLabel;
-        }
-
-        if ( thirdLabel ) {
-            nav.childNodes[2].childNodes[0].innerText = thirdLabel;
-        }
+        nav.childNodes[0].childNodes[0].disabled = firstDisable;
+        nav.childNodes[1].childNodes[0].disabled = secondDisable;
+        nav.childNodes[2].childNodes[0].disabled = thirdDisable;
     }
 
     const scrollCustomTo = e => {
         e.preventDefault();
+        
+        const [ firstCompo, secondCompo, thirdCompo ] = getMainChildrenHeights();
+
         const whereTo = e.target.innerText;
         const bod = document.querySelector("body");
         const burg = document.querySelector(".burger");
@@ -209,17 +211,18 @@ const Headers = ( { logIn , socket } ) => {
 
         if ( whereTo === "Sign in" ) {
             // bod.scrollTo( 0, window.innerHeight * .4);
-            bod.scroll({ top: window.innerHeight * .4,  behavior: 'smooth' });
+            bod.scroll({ top: firstCompo,  behavior: 'smooth' });
         } else if ( whereTo === "About" ) {
-            bod.scroll({ top: ( window.innerHeight * 1.4 ) - 50,  behavior: 'smooth' })
+            bod.scroll({ top: secondCompo,  behavior: 'smooth' })
         } else if ( whereTo === "Contacts" ) {
-            bod.scroll({ top: ( window.innerHeight * 2.4 ) - 50,  behavior: 'smooth' })
+            bod.scroll({ top: thirdCompo,  behavior: 'smooth' })
             // bod.scrollTo( 0, ( window.innerHeight * 2.4 ) - 50 );
         } else {
             bod.scroll({ top: 0,  behavior: 'smooth' })
             // bod.scrollTo( 0, 0 );
         }
     }
+
 
     const burgerMachine = () => {
         const burg = document.querySelector(".burger");
@@ -242,6 +245,7 @@ const Headers = ( { logIn , socket } ) => {
         }
     }
 
+
     useEffect( () => {
         const bod = document.querySelector("body");
         
@@ -250,6 +254,7 @@ const Headers = ( { logIn , socket } ) => {
         return () => bod.removeEventListener("scroll", noScroll)
     }, [ logIn ] )
 
+
     useEffect( () => {
         const bod = document.querySelector("body");
 
@@ -257,6 +262,7 @@ const Headers = ( { logIn , socket } ) => {
             burgerMachine();
         }
     }, [ isAttached ] )
+
 
     return (
         <header className={`${classForHead}`}>
@@ -290,6 +296,13 @@ const Headers = ( { logIn , socket } ) => {
                     <span></span>
                     <span></span>
                     <span></span>
+                </div>
+                <div className={`navigate-top`}>
+                        <p>
+                            <button type="button" className="navigate-top-btn" onClick={scrollCustomTo}>
+                                Top
+                            </button>
+                        </p>
                 </div>
             </div>
         </header>

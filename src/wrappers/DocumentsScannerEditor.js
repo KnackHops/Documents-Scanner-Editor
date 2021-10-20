@@ -14,7 +14,6 @@ const DocumentContext = createContext(null);
 
 export default  function DocumentsScannerEditor() {
     const [ socket, setSocket ] = useState(null);
-    const [ reloadFromSock, setReloadFromSock ] = useState(false);
 
     useEffect( () => {
         getConnect()
@@ -25,7 +24,16 @@ export default  function DocumentsScannerEditor() {
             }
         })
 
-        return () => socket ? socket.disconnect() : ""
+        return () => {
+            if ( socket ) {
+                
+                if ( user ) {
+                    socket.emit( "del_socketid", { userid: user.id } );
+                }
+
+                socket.disconnect();
+            }
+        }
     }, [])
 
     const pinHandler = ( username, userid, docid, doctitle) => {
@@ -88,6 +96,12 @@ export default  function DocumentsScannerEditor() {
             setLogIn(false);
         }
     }
+
+    useEffect( () => {
+        if ( user ) {
+            socket.emit( "set_socketid", { userid: user.id } );
+        }
+    }, [user])
 
     const updateUser = (fromWhere, val) => {
         setUser({
@@ -173,7 +187,7 @@ export default  function DocumentsScannerEditor() {
     },[isAttached])
 
     
-    const [document, setDocument] = useState(null);
+    const [main_document, setDocument] = useState(null);
 
     const documentFind = (id, documentList) => {
         documentList.documents.forEach(doc => {
@@ -188,6 +202,16 @@ export default  function DocumentsScannerEditor() {
         });
     }
 
+    const getMainChildrenHeights = () => {
+        const main = document.querySelector("main");
+
+        return [ 
+            main.children[0].offsetHeight, 
+            main.children[0].offsetHeight + main.children[1].offsetHeight, 
+            main.children[0].offsetHeight + main.children[1].offsetHeight + main.children[2].offsetHeight
+        ]
+    }
+
     return (
         <>
             <MenuContext.Provider value={{
@@ -196,7 +220,8 @@ export default  function DocumentsScannerEditor() {
                 searchHandler,
                 popUpHandler,
                 popUp,
-                openMenu
+                openMenu,
+                getMainChildrenHeights
             }}>
                 <UserContext.Provider value={{
                     id: user ? user.id : null,
@@ -207,7 +232,7 @@ export default  function DocumentsScannerEditor() {
                     updateUser
                 }}>
                     <DocumentContext.Provider value={{
-                        document,
+                        main_document,
                         documentFind,
                         setDocument,
                         pinHandler,
