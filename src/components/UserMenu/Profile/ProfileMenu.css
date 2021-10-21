@@ -24,8 +24,9 @@ section.homeuser-menu-container > div:last-child  div.subordinate-search-contain
 
 div.subordinate-search-container > p > div.user-list-container {
     position: absolute;
-    background-color: darkkhaki;
+    background-color: rgba(0, 150, 120, 1);
     left: 8rem;
+    padding: 0 .5rem .5rem .5rem;
     width: 20rem;
 }
 

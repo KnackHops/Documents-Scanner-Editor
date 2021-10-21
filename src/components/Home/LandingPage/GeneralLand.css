@@ -1,5 +1,101 @@
 .general-land {
     margin-top: 5rem;
     height: 60vh;
-    background-color: coral;
+    min-height: 50rem;
+    /* background: linear-gradient(to bottom, rgba(255, 50, 100, 1) 20%, white 80%); */
+    background: rgba(0, 120, 150, 1);
+    border-bottom-right-radius: 10rem;
+    border-bottom-left-radius: 10rem;
+    transition: all .25s ease-out;
+}
+
+.general-land.panel-slide-activate {
+    border-radius: 0;
+}
+
+.box-container {
+    height: 100%;
+    width: 100%;
+    display: grid;
+    grid-template-areas: "a b c";
+    grid-template-rows: 45vh;
+    gap: 5rem;
+    padding: 5vh 5vw;
+}
+
+.box-container > div {
+    background: rgba(0, 120, 120, 1);
+    box-shadow: 0 0 1rem black;
+    cursor: pointer;
+    justify-content: center;
+    align-items: center;
+    transition: all .25s ease-in;
+}
+
+.box-container > div:hover {
+    background: rgba(0, 120, 120, .75);
+    box-shadow: 0 0 1.5rem white;
+    transform: scale(1.1);
+}
+
+.box-container > div > p {
+    display: flex;
+    justify-content: center;
+}
+
+.box-inside-1 {
+    margin-top: 5rem;
+    grid-area: a;
+}
+
+.box-inside-2 {
+    margin-bottom: 5rem;
+    grid-area: b;
+}
+
+.box-inside-3 {
+    margin-top: 5rem;
+    grid-area: c;
+}
+
+@media only screen and (max-width: 1300px) {
+    .box-container {
+        grid-template-areas: "a b"
+                             "c c";
+        grid-template-rows: minmax(20rem, 25vh);
+        gap: 2rem;
+    }
+
+    .box-container > div {
+        height: 100%;
+        border-radius: 5rem;
+        align-items: center;
+    }
+
+    .box-container > div > p {
+        align-items: center;
+        height: 100%;
+    }
+
+    .box-container > div > p img {
+        height: 20rem;
+    }
+
+    .box-inside-1 {
+        margin-top: 0;
+    }
+    
+    .box-inside-2 {
+        margin-bottom: 0;
+    }
+    
+    .box-inside-3 {
+        margin-top: 0;
+    }
+}
+
+@media only screen and (max-width: 800px) {
+    .box-container {
+        gap: 2rem;
+    }
 }

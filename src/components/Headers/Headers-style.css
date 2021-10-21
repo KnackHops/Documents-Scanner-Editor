@@ -1,7 +1,7 @@
 header {
     height: 5rem;
     width: 100%;
-    background-color: lavenderblush;
+    background-color: rgba(0, 120, 150, 1);
     flex-shrink: 0;
 }
 
@@ -26,7 +26,7 @@ header > div.universal-container {
 
 div.searchbar-container, ul.nav-list {
     position: relative;
-    z-index: 10000;
+    z-index: 1000
 }
 
 div.searchbar-container > p {
@@ -44,12 +44,27 @@ div.searchbar-container > p > input {
     position: absolute;
     top: 3.2rem;
     width: 25rem;
-    font-size: 1.4rem;
-    background-color: blanchedalmond;
+    font-size: 1.5rem;
+    background-color: rgba(255, 255, 255, .75);
+    padding: .25rem .5rem .5rem .5rem;
+    text-align: center;
+}
+
+.header-search.document-list-container > ul {
+    max-height: 10rem;
+}
+
+.header-search.document-list-container > ul > li {
+    height: 2rem;
+    background-color: rgba(0, 120, 150, 1);
+    box-shadow: 0 0 .25rem black;
+    color: white;
+    cursor: pointer;
+
 }
 
 .header-search.document-list-container > ul > li:hover {
-    background-color: blueviolet;
+    color: black;
 }
 
 @media only screen and (max-width: 650px) {
@@ -78,18 +93,31 @@ ul.nav-list > li > button {
     font-size: 2rem;
     cursor: pointer;
     padding: 0 0 0 2rem;
+    color: rgba(255, 255, 255, 15);
+    text-shadow: .1rem .1rem .5rem black;
 }
 
 ul.nav-list > li > button:hover {
-    color: white;
+    color: rgba(255, 50, 100, 1);
     text-shadow: .2rem 0 .5rem black;
+}
+
+ul.nav-list > li > button:active {
+    color: black;
+}
+
+ul.nav-list > li > button:disabled {
+    cursor:not-allowed;
+    color: rgba(255, 50, 100, 1);
+    text-shadow: none;
 }
 
 ul.nav-list > li:nth-child(2) {
     margin-left: 2rem;
 }
+
 ul.nav-list.not-signed-list-con > li {
-    width: 9vw
+    width: 9vw;
 }
 
 ul.nav-list.not-signed-list-con > li:nth-child(2) {
@@ -151,6 +179,12 @@ ul.nav-list.not-signed-list-con > li > button {
 }
 
 @media only screen and (max-width: 1050px) {
+    header.-open {
+        transition: all .2s ease;
+        background: rgba(0, 120, 120, 1);
+        box-shadow: 0 .4rem .5rem black;
+    }
+    
     header .burger {
         display: inherit;
     }
@@ -165,7 +199,8 @@ ul.nav-list.not-signed-list-con > li > button {
         justify-content: space-around;
         height: calc(100vh - 5rem);
         width: 60vw;
-        background-color: lavenderblush;
+        background-color: rgba(0, 120, 120, 1);
+        box-shadow: 0 .8rem .5rem black;
         transition: transform .7s ease-in-out;
     }
 
@@ -263,10 +298,12 @@ ul.nav-list.not-signed-list-con > li > button {
     bottom: 1rem;
     opacity: 0;
     transition: all .25s ease-in;
+    z-index: 0;
 }
 
 .navigate-top.active {
     opacity: 1;
+    z-index: 50;
 }
 
 @media only screen and (max-width: 1000px) {
@@ -305,11 +342,15 @@ ul.nav-list.not-signed-list-con > li > button {
     height: 100%;
     width: 100%;
     background-color: rgba(255, 50, 100, 1);
-    cursor: pointer;
     border-radius: 20rem;
     box-shadow: 0 0 .5rem black;
     top: -.5rem;
     font-size: 2rem;
+    cursor: default;
+}
+
+.navigate-top.active button {
+    cursor: pointer;
 }
 
 .navigate-top > p > button:hover {

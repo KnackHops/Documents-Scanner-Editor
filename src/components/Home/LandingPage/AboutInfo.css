@@ -47,6 +47,32 @@
 
 .about-bob-header {
     position: relative;
+    transition: all .55s .55s ease-out;
+}
+
+.about-bob-body {
+    transition: all 1s .55s ease-out;
+}
+
+
+.about-container.panel-slide-deactivate > .about-bob-header, .about-container.about-container.panel-slide-deactivate > .about-bob-body {
+    transition: all .55s ease-out;
+    opacity: 0;
+    transform: translateX(-2rem);
+}
+
+.about-container.panel-slide-activate > .about-bob-header, .about-container.about-container.panel-slide-activate > .about-bob-body  {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.about-container.about-container.panel-slide-deactivate > .about-bob-body {
+    transform: translateY(2rem);
+}
+
+
+.about-container.about-container.panel-slide-activate > .about-bob-body {
+    transform: translateY(0);
 }
 
 .about-bob-header::before, .about-bob-header::after {
@@ -56,20 +82,20 @@
 
 .about-bob-header::before {
     top: -.5rem;
+    left: 0;
     width: 15rem;
     height: .25rem;
     background: linear-gradient(to right, rgba(0, 120, 120, 1) 0%, rgba(0, 0, 0, .75) 60%, rgba(255, 50, 100, 1) 100%);
-    /* background-color: rgba(0, 0, 0, .75); */
-    transition: all .75s;
+    transition: all .75s ease-out;
     transition-delay: .5s;
 }
 
 .about-container.panel-slide-deactivate .about-bob-header::before {
-    left: -5rem;
+    transform: translateX(-5rem);
 }
 
 .about-container.panel-slide-activate .about-bob-header::before {
-    left: 0;
+    transform: translateX(0);
 }
 
 .about-bob-header::after {
@@ -78,16 +104,14 @@
     top: -.65rem;
     left: 15.5rem;
     background-color: rgba(255, 50, 100, 1);
-    transition: transform .55s ease-in;
-    transition-delay: .5s;
+    transition: transform .55s ease-out;
+    transition-delay: .55s;
 }
 
 .about-container.panel-slide-deactivate .about-bob-header::after {
-    transform: translateX(6rem);
-    transform: scaleX(8);
+    transform: translateX(8rem) scaleX(8);
 }
 
 .about-container.panel-slide-activate .about-bob-header::after {
-    transform: translateX(0);
-    transform: scaleX(1);
+    transform: translateX(0) scaleX(1);
 }

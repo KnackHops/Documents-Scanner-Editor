@@ -1,3 +1,5 @@
 aside.pop-show-qr, aside.pop-qr-saved {
+    background-color: rgba(0, 120, 120, 1);
+    height: auto;
     width: auto;
 }

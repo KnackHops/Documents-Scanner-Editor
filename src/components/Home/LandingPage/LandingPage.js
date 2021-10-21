@@ -9,8 +9,10 @@ import { MenuContext } from "../../../wrappers/DocumentsScannerEditor";
 const LandingPage = () => {
     const { getMainChildrenHeights } = useContext(MenuContext);
     const [ opaMin, setOpa ] = useState(0);
+    const [ generalSlideClass, setGeneralSlideClass ] = useState("panel-slide-deactivate");
     const [ loginSlideClass, setLoginSlideClass ] = useState("panel-slide-deactivate");
     const [ aboutSlideClass, setAboutSlideClass ] = useState("panel-slide-deactivate");
+    const [ contactSlideClass, setContactSlideClass ] = useState("panel-slide-deactivate");
 
     const checkMobile = () => {
         return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -24,9 +26,16 @@ const LandingPage = () => {
 
         const scTop = e.target.scrollTop;
 
+        if ( scTop >  firstCompo * .65 ) {
+            setGeneralSlideClass("panel-slide-activate");
+        } else {
+            setGeneralSlideClass("panel-side-deactivate");
+        }
+
         if ( firstCompo > scTop ) {
-            setOpa( ( scTop / firstCompo ).toFixed(2) );
-        } 
+            setOpa( ( scTop / ( firstCompo * .8 ) ).toFixed(2) );
+        }
+
         if ( scTop >= firstCompo * .5 && scTop <= secondCompo * .8 ) {
 
             setLoginSlideClass("panel-slide-activate");
@@ -39,6 +48,12 @@ const LandingPage = () => {
             setAboutSlideClass("panel-slide-activate")
         } else {
             setAboutSlideClass("panel-slide-deactivate")
+        }
+
+        if ( scTop >= thirdCompo *.8 ) {
+            setContactSlideClass("panel-slide-activate");
+        } else {
+            setContactSlideClass("panel-slide-deactivate")
         }
     }
 
@@ -54,10 +69,10 @@ const LandingPage = () => {
 
     return (
         <>  
-            <GeneralLand opaMin={opaMin}/>
+            <GeneralLand opaMin={opaMin} generalSlideClass={generalSlideClass}/>
             <LandPageForm loginSlideClass={loginSlideClass}/>
             <About aboutSlideClass={aboutSlideClass} />
-            <FooterInfo/>
+            <FooterInfo contactSlideClass={contactSlideClass}/>
         </>
     )
 }

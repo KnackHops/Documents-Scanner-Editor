@@ -24,18 +24,14 @@ div.grid-contacts {
     justify-content: center;
 }
 
-.grid-contacts > div {
-    background-color: rgba(0, 120, 150, 1);
-}
-
 .grid-contacts > div.footer-bob {
-    border-top-right-radius: 5rem;
-    border-top-left-radius: 5rem;
+    position: relative;
     grid-area: a;
     box-shadow: 0 .5rem 2rem white;
+    background: linear-gradient(to bottom, rgba(0, 120, 120, .8) 20%, rgba(0, 120, 150, 1));
 }
 
-.grid-contacts > div:nth-child(2) {
+.grid-contacts > .footer-dev-ad {
     border-bottom-right-radius: 5rem;
     border-bottom-left-radius: 5rem;
     padding: 2rem;
@@ -44,7 +40,59 @@ div.grid-contacts {
     align-items: center;
     font-size: 1.2rem;
     color: white;
+    background-color: rgba(0, 120, 150, 1);
+    transition: transform .55s .55s ease-in-out;
+}
+
+.footer-dev-ad.panel-slide-activate {
+    transform: translateY(0);
     box-shadow: 0 0 2rem white;
+}
+
+.footer-dev-ad.panel-slide-deactivate {
+    transform: translateY(-5rem);
+    transition: transform .25s;
+    box-shadow: none;
+}
+
+div.footer-bob::before {
+    content: "";
+    position: absolute;
+    background-color: rgba(0, 120, 120, .8);
+    height: .5rem;
+    width: 100%;
+    transition: all .55s .75s ease-in-out;
+}
+
+div.footer-bob::after {
+    content: "";
+    position: absolute;
+    background: white;
+    height: 100%;
+    width: 100%;
+    transition: all .55s .25s ease-in-out;
+    bottom: 0;
+    left: 0;
+}
+
+div.footer-bob.panel-slide-deactivate::before {
+    transition: all .25s;
+    top: 0;
+}
+
+div.footer-bob.panel-slide-activate::before {
+    top: -.5rem;
+}
+
+div.footer-bob.panel-slide-activate::after {
+    height: 0;
+    width: 0;
+}
+
+div.footer-bob.panel-slide-deactivate::after {
+    transition: all .25s;
+    height: 100%;
+    width: 100%;
 }
 
 .footer-bob-header, .footer-bob-body {
@@ -52,35 +100,78 @@ div.grid-contacts {
 }
 
 .footer-bob-header {
-    border-top: solid rgba(0, 120, 150, 1) .5rem;
     margin: 0;
     background: white;
     font-size: 3rem;
     height: 5.5rem;
+    /* padding-left: 6.5rem; */
+    transition: all .55s .25s ease-in-out;
+}
+
+.footer-bob.panel-slide-deactivate .footer-bob-header {
+    transition: all .25s;
+    margin-left: 90%;
+    padding-left: 20rem;
+}
+
+.footer-bob.panel-slide-activate .footer-bob-header {
     padding-left: 6.5rem;
+    margin-left: 0;
+}
+
+.footer-bob-header > h3 {
+    transition: all .55s .75s ease-in-out;
+}
+
+.footer-bob.panel-slide-deactivate .footer-bob-header > h3 {
+    opacity: 0;
+    transition: all .1s;
+}
+
+.footer-bob.panel-slide-activate .footer-bob-header > h3 {
+    opacity: 1;
 }
 
 .footer-bob-header::before, .footer-bob-header::after, .footer-bob-body::before {
     content: "";
     position: absolute;
+    background: rgba(255, 50, 100, 1);
+    top: 50%;
+    height: .4rem;
 }
 
 .footer-bob-header::before {
-    background: rgba(255, 50, 100, 1);
-    height: .4rem;
     width: 3.5rem;
-    top: 50%;
     left: 1rem;
-    border-top-left-radius: 1rem;
+    transition: all .45s .1s ease-in-out;
 }
 
 .footer-bob-header::after {
-    background: rgba(255, 50, 100, 1);
-    height: .4rem;
     width: .4rem;
-    top: 50%;
     left: 5rem;
     border-radius: 1rem;
+    transition: all .25s .55s ease-in-out;
+}
+
+.footer-bob.panel-slide-deactivate .footer-bob-header::before {
+    /* opacity: 0; */
+    border-top-left-radius: 0;
+    transform: scaleY(10);
+}
+
+.footer-bob.panel-slide-activate .footer-bob-header::before {
+    /* opacity: 1; */
+    border-top-left-radius: 1rem;
+    transform: scaleY(1);
+}
+
+.footer-bob.panel-slide-deactivate .footer-bob-header::after {
+    transition: all .1s ease-in-out;
+    transform: translateX(-2rem);
+}
+
+.footer-bob.panel-slide-activate .footer-bob-header::after {
+    transform: translateX(0);
 }
 
 .footer-bob-body {
@@ -90,10 +181,21 @@ div.grid-contacts {
 }
 
 .footer-bob-body::before {
-    background: white;
+    background: linear-gradient(to top, rgba(0, 0, 0, 1) -150%, white);
     height: calc(100% + 1rem);
     width: 2rem;
-    top: -.5rem;
     right: .5rem;
+    transition: all .55s ease-in;
+}
+
+.footer-bob.panel-slide-deactivate .footer-bob-body::before {
+    box-shadow: none;
+    transform: scaleY(.05);
+    top: calc(-55% - 1rem);
+}
+
+.panel-slide-activate .footer-bob-body::before {
     box-shadow: -.5rem 1.5rem 1.5rem rgba(0, 0, 0, .75);
+    transform: scaleY(1);
+    top: -.5rem;
 }

@@ -1,9 +1,9 @@
 aside.pop-document-page {
     display: flex;
     flex-direction: column;
+    background-color: rgba(0, 120, 120, .75);
     height: 40rem;
     width: 40rem;
-    background-color: gainsboro;
     font-size: 1.2rem;
 }
 
