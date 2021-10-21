@@ -37,17 +37,31 @@ article.document-container > p.doc-btn-container {
     }
 }
 
-@media only screen and (max-width: 850px) {
+@media only screen and (max-width: 1050px) {
     article.document-container > div.ck-content {
         margin-top: -6rem;
         transform: scale(.8);
     }
 }
 
-@media only screen and (max-width: 675px) {
+@media only screen and (max-width: 840px) {
+    article.document-container > div.ck-content {
+        margin-top: -12rem;
+        transform: scale(.7);
+    }
+}
+
+@media only screen and (max-width: 715px) {
     article.document-container > div.ck-content {
         margin-top: -16rem;
         transform: scale(.6)
+    }
+}
+
+@media only screen and (max-width: 635px) {
+    article.document-container > div.ck-content {
+        margin-top: -22rem;
+        transform: scale(.45)
     }
 }
 

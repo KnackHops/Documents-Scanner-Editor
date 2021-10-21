@@ -5,6 +5,6 @@ div.side-menu-not-att-bg {
 }
 
 aside.side-menu {
-    background-color: blanchedalmond;
-    padding: 0 .5rem;
+    background-color: rgba(0, 150, 120, 1);
+    padding: 1rem 2rem;
 }

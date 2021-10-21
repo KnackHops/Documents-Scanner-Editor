@@ -4,8 +4,11 @@ const UserLists = ({users, handler, fromWhere}) => {
             <ul className={`${fromWhere}-list user-list fd`}>
             {users && users.length > 0? 
             users.map(user=>
-                <li className="fd" key={user.id} onClick={handler}>
-                    <p data-id={user.id} style={fromWhere === 'admin' ? (user.activated === false ? {color: 'red'} : {color: 'black'}) : {}}>
+                <li 
+                className={`fd ${fromWhere === 'admin' ? (user.activated === false ? "inactive" : "active") : ""}`}
+                key={user.id} 
+                onClick={handler}>
+                    <p data-id={user.id}>
                         {user.username}
                         {user?.fullname ? `/${user.fullname}` : ""}
                     </p>

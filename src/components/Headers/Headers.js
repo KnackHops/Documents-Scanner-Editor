@@ -169,11 +169,14 @@ const Headers = ( { logIn, socket  } ) => {
 
     const scrollNavUpdate = scrollTop => {
         const [ firstCompo, secondCompo, thirdCompo ] = getMainChildrenHeights();
+        const nav_top = document.querySelector(".navigate-top");
 
-        if ( scrollTop > secondCompo * .8 ) {
-            document.querySelector(".navigate-top").classList.add("active");
+        if ( scrollTop > firstCompo * .8 ) {
+            nav_top.classList.add("active");
+            nav_top.disabled = false;
         } else {
-            document.querySelector(".navigate-top").classList.remove("active");
+            nav_top.classList.remove("active");
+            nav_top.disabled = true;
         }
 
         if ( scrollTop >= firstCompo && scrollTop < secondCompo ) {
@@ -189,7 +192,6 @@ const Headers = ( { logIn, socket  } ) => {
 
     const shuffleLabel = ( firstDisable = null, secondDisable = null, thirdDisable = null ) => {
         const nav = document.querySelector("ul.nav-list");
-        console.log(nav.childNodes[0].childNodes[0])
 
         nav.childNodes[0].childNodes[0].disabled = firstDisable;
         nav.childNodes[1].childNodes[0].disabled = secondDisable;
@@ -227,11 +229,13 @@ const Headers = ( { logIn, socket  } ) => {
     const burgerMachine = () => {
         const burg = document.querySelector(".burger");
         const navL = document.querySelector(".nav-list");
+        const header = document.querySelector("header");
 
         burg.classList.toggle("-open");
         navL.classList.toggle("-open");
         
         if ( burg.classList.contains("-not-signed") ) {
+            header.classList.toggle("-open");
             
             const bod = document.querySelector("body");
 

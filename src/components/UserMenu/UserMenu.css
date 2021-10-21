@@ -6,7 +6,7 @@ section.user-menu {
     margin-top: 5rem;
     height: 60vh;
     width: 40rem;
-    background-color: bisque;
+    background-color: rgba(0, 120, 120, 1);
     padding: .5rem 1rem 2rem 1rem;
     flex-direction: column;
     position: relative;
@@ -23,7 +23,7 @@ section.homeuser-menu-container {
     padding: 0 .5rem;
     height: 100%;
     width: 50%;
-    background-color: darkgrey;
+    background-color: rgba(0, 120, 150, 1);
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: 1fr 1fr;
@@ -67,8 +67,8 @@ ul.user-list > li {
     width: 100%;
     padding: .1rem;
     justify-content: center;
-    margin: .1rem 0;
-    box-shadow: 0 0 .1rem black;
+    margin: .25rem 0;
+    box-shadow: 0 0 .4rem black;
 }
 
 ul.user-list > li {
@@ -77,12 +77,27 @@ ul.user-list > li {
 
 ul.user-list > li > p {
     pointer-events: auto;
+    cursor: pointer;
 }
 
 ul.user-list > li:hover {
-    background-color: rgba(255, 255, 255, .4);
+    background-color: rgba(255, 50, 100, 1);
+    box-shadow: 0 0 .4rem white;
 }
 
-ul.user-list > li > p {
-    cursor: pointer;
+ul.user-list > li > p:hover {
+    text-shadow: 0 0 .3rem black;
+    color: white;
+}
+
+ul.user-list > li.inactive {
+    background-color: rgba(255, 100, 150, 1);
+}
+
+ul.user-list > li.inactive:hover {
+    background-color: black;
+}
+
+ul.user-list > li.inactive > p:hover {
+    color: rgba(255, 50, 100, 1);
 }

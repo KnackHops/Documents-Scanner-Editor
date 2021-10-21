@@ -61,7 +61,7 @@ main.landingpage-container  form.land-page-form > p > input {
 main.landingpage-container  form.land-page-form > p:last-child {
     margin-top: auto;
     justify-content: space-between;
-    transition: transform .1s ease-in;
+    transition: transform .1s ease-out;
 }
 
 main.landingpage-container  form.land-page-form > p:last-child > button {

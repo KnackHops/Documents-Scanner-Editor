@@ -1,10 +1,10 @@
 import './FooterInfo.css'
 
-const FooterInfo = () => {
+const FooterInfo = ( { contactSlideClass } ) => {
     return (
         <footer>
             <div className="universal-container grid-contacts">
-                <div className="footer-bob">
+                <div className={`footer-bob ${contactSlideClass}`}>
                     <div className="footer-bob-header">
                         <h3>
                             CONTACT US
@@ -16,7 +16,7 @@ const FooterInfo = () => {
                         </p>
                     </div>
                 </div>
-                <div className="fd">
+                <div className={`fd footer-dev-ad ${contactSlideClass}`}>
                     <p>Source code https://github.com/KnackHops/documents-scanner-editor</p>
                     <p>Developed by KnackHops</p>
                 </div>
